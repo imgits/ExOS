@@ -20,7 +20,7 @@
 
 #include "lib/assert.h"
 
-// Reference to a mutable array. Small enough to be passed by-value.
+// Reference to an immutable(const) array. Small enough to be passed by-value.
 
 template <class T>
 class ImmutArrayRef {
@@ -54,7 +54,7 @@ public:
 
     constexpr ImmutArrayRef<T> slice_from(std::size_t begin) const
     {
-        assert(begin < m_size);
+        assert(begin <= m_size);
         return ImmutArrayRef<T>(m_ptr + begin, m_size - begin);
     }
 
