@@ -22,9 +22,9 @@
 #include "lib/util.h"
 #include "lib/assert.h"
 
-// Reference to a mutable array. Usually, you want to mutate the array this
-// refers to, so pass it as non-const reference. If you feel the need to pass
-// as const reference, consider using method "to_immut_ref()".
+// Reference to a mutable array. Usually you want to mutate the array this
+// refers to, so pass it as a non-const reference. If you feel the need to pass
+// it as a const reference, consider using the method "to_immut_ref()".
 
 template <class T>
 class MutArrayRef {
@@ -74,11 +74,6 @@ public:
         assert(start <= m_curr_idx);
         assert(n <= m_curr_idx);
         reverse_array_inplace(m_ptr + start, n);
-    }
-
-    constexpr ImmutArrayRef<T> immut_ref() const
-    {
-        return ImmutArrayRef<T>(m_ptr, m_curr_idx);
     }
 };
 
