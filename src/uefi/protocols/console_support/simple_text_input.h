@@ -1,0 +1,38 @@
+/*
+ * Copyright (c) 2014, Thorben Hasenpusch <t.hasenpusch@icloud.com>
+ *
+ * Permission to use, copy, modify, and/or distribute this software for any
+ * purpose with or without fee is hereby granted, provided that the above
+ * copyright notice and this permission notice appear in all copies.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+ * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
+ * SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+ * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION
+ * OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
+ * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ */
+
+#pragma once
+
+#include "uefi/types.h"
+
+constexpr EFI_GUID EFI_SIMPLE_TEXT_INPUT_PROTOCOL_GUID =
+{ 0x387477c1, 0x69c7, 0x11d2, 0x8e, 0x39, 0x00, 0xa0, 0xc9, 0x69, 0x72, 0x3b };
+
+struct EFI_SIMPLE_TEXT_INPUT_PROTOCOL;
+
+using EFI_INPUT_RESET = EFIAPI EFI_STATUS (*)
+(EFI_SIMPLE_TEXT_INPUT_PROTOCOL *This,
+ BOOLEAN ExtendedVerfification);
+
+using EFI_INPUT_READ_KEY = EFIAPI EFI_STATUS (*)
+(EFI_SIMPLE_TEXT_INPUT_PROTOCOL *This,
+ EFI_INPUT_KEY *Key);
+
+struct EFI_SIMPLE_TEXT_INPUT_PROTOCOL {
+    EFI_INPUT_RESET Reset;
+    EFI_INPUT_READ_KEY ReadKeyStroke;
+    EFI_EVENT WaitForKey;
+};
