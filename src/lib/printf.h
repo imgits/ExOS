@@ -148,6 +148,14 @@ constexpr bool flags_valid(StringRef fmt, const void *const &)
     return true;
 }
 
+constexpr bool flags_valid(StringRef fmt, void *const &)
+{
+    for (const char c : fmt)
+        if (c != 'x' && c != 'X')
+            return false;
+    return true;
+}
+
 constexpr bool flags_valid(StringRef fmt, const int &)
 {
     for (const char c : fmt)
