@@ -232,7 +232,7 @@ constexpr bool is_valid(StringRef fmt, const Arg &arg, const Args &...args)
         return is_valid(fmt.slice_from(i), args...);
     }
 
-    return true;
+    return false;
 }
 
 template <char ...Fmt, class ...Args>
