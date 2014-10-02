@@ -7,11 +7,11 @@ CXXFLAGS = -Weverything \
 	   -Wno-c++98-compat -Wno-c++98-c++11-compat-pedantic \
 	   -Wno-c++98-compat-pedantic -Wno-c99-extensions \
 	   -Wno-gnu-designator -Wno-gnu-string-literal-operator-template \
-	   -ffreestanding -flto \
+	   -ffreestanding \
 	   -fno-exceptions -fno-rtti -fno-stack-protector \
 	   -std=c++1y \
 	   -iquote src/ \
-	   -O2
+	   -g
 
 LDFLAGS = -static -e _kmain -pie -pagezero_size 0x0 -image_base 0x1000 \
 	  -macosx_version_min `sw_vers -productVersion` \
