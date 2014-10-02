@@ -25,32 +25,75 @@
 
 #include "lib/util.h"
 
+namespace {
+
 // Framebuffer start address
-static std::uint32_t *g_framebuffer;
+std::uint32_t *g_framebuffer;
 
 // Size of the framebuffer in bytes
-static std::size_t g_framebuffer_size;
+std::size_t g_framebuffer_size;
 
 // max visible horizontal pixels
-static unsigned int g_max_width;
+unsigned int g_max_width;
 // max vertical pixels
-static unsigned int g_max_height;
+unsigned int g_max_height;
 // actual amount of horizontal pixels
-static unsigned int g_pixels_per_scan_line;
+unsigned int g_pixels_per_scan_line;
 
-static unsigned int g_current_width;
-static unsigned int g_current_height;
+unsigned int g_current_width;
+unsigned int g_current_height;
 
 // amount of pixels of one font line
-static std::size_t g_font_line_size;
+std::size_t g_font_line_size;
 
 // height of the last column which can display the full font height
-static unsigned int g_last_font_column;
+unsigned int g_last_font_column;
 
-static Framebuffer::Color g_current_bg_color;
-static Framebuffer::Color g_current_fg_color;
+Framebuffer::Color g_current_bg_color;
+Framebuffer::Color g_current_fg_color;
 
-static std::uint32_t g_color_array[to_underlying_type(Framebuffer::Color::NAVY) + 1];
+std::uint32_t g_color_array[to_underlying_type(Framebuffer::Color::NAVY) + 1];
+
+// Move every line until the current one up, make current row blank
+void scroll()
+{
+    const std::size_t limit = g_current_height * g_pixels_per_scan_line;
+
+    for (std::size_t i = 0; i < limit; ++i)
+        g_framebuffer[i] = g_framebuffer[i + g_font_line_size];
+
+    for (std::size_t i = 0; i < g_font_line_size; ++i)
+        g_framebuffer[limit + i] = 0;
+}
+
+void newline()
+{
+    g_current_width = 0;
+
+    if (g_current_height + Font::Glyph::HEIGHT > g_last_font_column)
+        scroll();
+    else
+        g_current_height += Font::Glyph::HEIGHT;
+}
+
+void put_glyph(Font::Glyph glyph)
+{
+    for (unsigned int i = 0; i < Font::Glyph::HEIGHT; ++i) {
+        const unsigned int height = g_current_height + i;
+
+        for (unsigned int j = 0; j < Font::Glyph::WIDTH; ++j) {
+            const unsigned int width = g_current_width + j;
+            const std::size_t idx = height * g_pixels_per_scan_line + width;
+
+            if (glyph.data[i] & (0x80 >> j))
+                g_framebuffer[idx] = g_color_array[to_underlying_type(g_current_fg_color)];
+            else
+                g_framebuffer[idx] = g_color_array[to_underlying_type(g_current_bg_color)];
+        }
+    }
+}
+
+} // end anonymous namespace
 
 Error Framebuffer::init(const EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE &gop_mode)
 {
@@ -111,45 +154,6 @@ Error Framebuffer::init(const EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE &gop_mode)
     g_current_fg_color = Color::WHITE;
 
     return Error::SUCCESS;
-}
-
-// Move every line until the current one up, make current row blank
-static void scroll()
-{
-    const std::size_t limit = g_current_height * g_pixels_per_scan_line;
-
-    for (std::size_t i = 0; i < limit; ++i)
-        g_framebuffer[i] = g_framebuffer[i + g_font_line_size];
-
-    for (std::size_t i = 0; i < g_font_line_size; ++i)
-        g_framebuffer[limit + i] = 0;
-}
-
-static void newline()
-{
-    g_current_width = 0;
-
-    if (g_current_height + Font::Glyph::HEIGHT > g_last_font_column)
-        scroll();
-    else
-        g_current_height += Font::Glyph::HEIGHT;
-}
-
-static void put_glyph(Font::Glyph glyph)
-{
-    for (unsigned int i = 0; i < Font::Glyph::HEIGHT; ++i) {
-        const unsigned int height = g_current_height + i;
-
-        for (unsigned int j = 0; j < Font::Glyph::WIDTH; ++j) {
-            const unsigned int width = g_current_width + j;
-            const std::size_t idx = height * g_pixels_per_scan_line + width;
-
-            if (glyph.data[i] & (0x80 >> j))
-                g_framebuffer[idx] = g_color_array[to_underlying_type(g_current_fg_color)];
-            else
-                g_framebuffer[idx] = g_color_array[to_underlying_type(g_current_bg_color)];
-        }
-    }
 }
 
 void Framebuffer::put_char(char c)

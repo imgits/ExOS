@@ -18,16 +18,9 @@
 
 #include "lib/util.h"
 
-std::size_t to_string(MutStringRef &buf, ConvFlags, StringRef arg)
-{
-    for (const char c : arg)
-        if (buf.is_space_left())
-            buf.push_back(c);
+namespace {
 
-    return arg.length();
-}
-
-static char digit_to_ascii(unsigned char c, Case letter_case)
+char digit_to_ascii(unsigned char c, Case letter_case)
 {
     static constexpr char lowercase_letters[] = "0123456789abcdefghijklmnopqrstuvwxyz";
     static constexpr char uppercase_letters[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -36,6 +29,17 @@ static char digit_to_ascii(unsigned char c, Case letter_case)
     case Case::LOWER: return lowercase_letters[c];
     case Case::UPPER: return uppercase_letters[c];
     }
+}
+
+} // anonymous namespace end
+
+std::size_t to_string(MutStringRef &buf, ConvFlags, StringRef arg)
+{
+    for (const char c : arg)
+        if (buf.is_space_left())
+            buf.push_back(c);
+
+    return arg.length();
 }
 
 std::size_t to_string(MutStringRef &buf, ConvFlags flags, int arg)
