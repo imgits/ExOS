@@ -39,23 +39,33 @@ struct ConvFlags {
     std::uint8_t base;
 };
 
-ValueOrError<std::size_t> to_string(MutStringRef &buf, ConvFlags flags, StringRef arg);
-ValueOrError<std::size_t> to_string(MutStringRef &buf, ConvFlags flags, const void *arg);
-ValueOrError<std::size_t> to_string(MutStringRef &buf, ConvFlags flags, int arg);
-ValueOrError<std::size_t> to_string(MutStringRef &buf, ConvFlags flags, unsigned int arg);
-ValueOrError<std::size_t> to_string(MutStringRef &buf, ConvFlags flags, long arg);
-ValueOrError<std::size_t> to_string(MutStringRef &buf, ConvFlags flags, unsigned long arg);
-ValueOrError<std::size_t> to_string(MutStringRef &buf, ConvFlags flags, long long arg);
-ValueOrError<std::size_t> to_string(MutStringRef &buf, ConvFlags flags, unsigned long long arg);
+std::size_t to_string(MutStringRef &buf, ConvFlags flags, StringRef arg);
+std::size_t to_string(MutStringRef &buf, ConvFlags flags, const void *arg);
+std::size_t to_string(MutStringRef &buf, ConvFlags flags, int arg);
+std::size_t to_string(MutStringRef &buf, ConvFlags flags, unsigned int arg);
+std::size_t to_string(MutStringRef &buf, ConvFlags flags, long arg);
+std::size_t to_string(MutStringRef &buf, ConvFlags flags, unsigned long arg);
+std::size_t to_string(MutStringRef &buf, ConvFlags flags, long long arg);
+std::size_t to_string(MutStringRef &buf, ConvFlags flags, unsigned long long arg);
 
-ValueOrError<std::size_t> format(MutStringRef &buf, StringRef fmt);
+template <size_t N>
+constexpr std::size_t to_string(MutStringRef &buf, ConvFlags, const String<N> &str)
+{
+    for (const char c : str)
+        if (buf.is_space_left())
+            buf.push_back(c);
+
+    return N;
+}
+
+std::size_t format(MutStringRef &buf, StringRef fmt);
 
 template <class Arg, class ...Args>
-constexpr ValueOrError<std::size_t> format(MutStringRef &buf, StringRef fmt, Arg arg, Args ...args)
+constexpr std::size_t format(MutStringRef &buf, StringRef fmt, Arg arg, Args ...args)
 {
     std::size_t cnt = 0;
 
-    for (std::size_t i = 0; i < fmt.length(); ++i) {
+    for (std::size_t i = 0;; ++i) {
         if (fmt[i] != '(') {
             ++cnt;
 
@@ -105,19 +115,9 @@ constexpr ValueOrError<std::size_t> format(MutStringRef &buf, StringRef fmt, Arg
 
         ++i;
 
-        ValueOrError<std::size_t> result = to_string(buf, flags, arg);
-        if (result.is_error())
-            return result.error();
-
-        cnt += result.value();
-
-        result = format(buf, fmt.slice_from(i), args...);
-        if (result.is_error())
-            return result.error();
+        cnt += to_string(buf, flags, arg);
         
-        cnt += result.value();
-        
-        return cnt;
+        return cnt + format(buf, fmt.slice_from(i), args...);
     }
     
     return cnt;
@@ -133,6 +133,15 @@ constexpr bool is_valid(StringRef fmt)
 }
 
 constexpr bool flags_valid(StringRef fmt, const StringRef &)
+{
+    if (fmt.length() > 0)
+        return false;
+
+    return true;
+}
+
+template <class T, std::size_t N>
+constexpr bool flags_valid(StringRef fmt, const Array<T, N> &)
 {
     if (fmt.length() > 0)
         return false;
@@ -244,7 +253,7 @@ constexpr bool is_valid(StringRef fmt, const Arg &arg, const Args &...args)
 }
 
 template <char ...Fmt, class ...Args>
-constexpr ValueOrError<std::size_t> snprintf(MutStringRef &buf, CTString<Fmt...>, Args ...args)
+constexpr std::size_t snprintf(MutStringRef &buf, CTString<Fmt...>, Args ...args)
 {
     constexpr String<sizeof...(Fmt)> fmt = { { Fmt... } };
 
@@ -261,13 +270,11 @@ constexpr ValueOrError<std::size_t> printf(CTString<Fmt...> fmt, Args ...args)
     String<2048> buf;
     MutStringRef mut_ref = buf.mut_ref();
 
-    ValueOrError<std::size_t> result = snprintf(mut_ref, fmt, args...);
-    if (result.is_error())
-        return result.error();
+    std::size_t result = snprintf(mut_ref, fmt, args...);
 
     Error err = print_func(mut_ref.to_immut_ref());
     if (err != Error::SUCCESS)
         return err;
 
-    return result.value();
+    return result;
 }

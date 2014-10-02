@@ -18,7 +18,7 @@
 
 #include "lib/util.h"
 
-ValueOrError<std::size_t> to_string(MutStringRef &buf, ConvFlags, StringRef arg)
+std::size_t to_string(MutStringRef &buf, ConvFlags, StringRef arg)
 {
     for (const char c : arg)
         if (buf.is_space_left())
@@ -38,33 +38,33 @@ static char digit_to_ascii(unsigned char c, Case letter_case)
     }
 }
 
-ValueOrError<std::size_t> to_string(MutStringRef &buf, ConvFlags flags, int arg)
+std::size_t to_string(MutStringRef &buf, ConvFlags flags, int arg)
 {
     return to_string(buf, flags, static_cast<long long>(arg));
 }
 
-ValueOrError<std::size_t> to_string(MutStringRef &buf, ConvFlags flags, unsigned int arg)
+std::size_t to_string(MutStringRef &buf, ConvFlags flags, unsigned int arg)
 {
     return to_string(buf, flags, static_cast<unsigned long long>(arg));
 }
 
-ValueOrError<std::size_t> to_string(MutStringRef &buf, ConvFlags flags, long arg)
+std::size_t to_string(MutStringRef &buf, ConvFlags flags, long arg)
 {
     return to_string(buf, flags, static_cast<long long>(arg));
 }
 
-ValueOrError<std::size_t> to_string(MutStringRef &buf, ConvFlags flags, unsigned long arg)
+std::size_t to_string(MutStringRef &buf, ConvFlags flags, unsigned long arg)
 {
     return to_string(buf, flags, static_cast<unsigned long long>(arg));
 }
 
-ValueOrError<std::size_t> to_string(MutStringRef &buf, ConvFlags, const void *arg)
+std::size_t to_string(MutStringRef &buf, ConvFlags, const void *arg)
 {
     ConvFlags flags = { .base = 16, .letter_case = Case::LOWER };
     return to_string(buf, flags, reinterpret_cast<uintptr_t>(arg));
 }
 
-ValueOrError<std::size_t> to_string(MutStringRef &buf, ConvFlags flags, unsigned long long arg)
+std::size_t to_string(MutStringRef &buf, ConvFlags flags, unsigned long long arg)
 {
     std::size_t cnt = 0;
 
@@ -86,7 +86,7 @@ ValueOrError<std::size_t> to_string(MutStringRef &buf, ConvFlags flags, unsigned
     return cnt;
 }
 
-ValueOrError<std::size_t> to_string(MutStringRef &buf, ConvFlags flags, long long arg)
+std::size_t to_string(MutStringRef &buf, ConvFlags flags, long long arg)
 {
     std::size_t cnt = 0;
 
@@ -97,14 +97,10 @@ ValueOrError<std::size_t> to_string(MutStringRef &buf, ConvFlags flags, long lon
             buf.push_back('-');
     }
 
-    ValueOrError<std::size_t> result = to_string(buf, flags, unsigned_abs(arg));
-    if (result.is_error())
-        return result.error();
-
-    return cnt + result.value();
+    return cnt + to_string(buf, flags, unsigned_abs(arg));
 }
 
-ValueOrError<std::size_t> format(MutStringRef &buf, StringRef fmt)
+std::size_t format(MutStringRef &buf, StringRef fmt)
 {
     std::size_t cnt = 0;
 

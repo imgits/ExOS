@@ -43,7 +43,29 @@ struct Array {
         assert(i < N);
         return m_data[i];
     }
+
+    constexpr const T *data() const
+    {
+        return m_data;
+    }
+
+    constexpr std::size_t size() const
+    {
+        return N;
+    }
 };
+
+template <class T, std::size_t N>
+constexpr const T *begin(const Array<T, N> &x)
+{
+    return x.data();
+}
+
+template <class T, std::size_t N>
+constexpr const T *end(const Array<T, N> &x)
+{
+    return x.data() + x.size();
+}
 
 template <std::size_t N>
 using String = Array<char, N>;
