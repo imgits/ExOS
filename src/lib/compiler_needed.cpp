@@ -14,7 +14,14 @@
  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#include "lib/compiler_needed.h"
+#include <cstddef>
+
+// Symbols needed by the compiler, even when freestanding.
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wmissing-prototypes"
+
+extern "C" {
 
 void *memset(void *b, int c, std::size_t len)
 {
@@ -30,3 +37,7 @@ void __bzero(void *s, std::size_t n)
 {
     memset(s, 0, n);
 }
+
+}
+
+#pragma clang diagnostic pop
