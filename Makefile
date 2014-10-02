@@ -3,7 +3,7 @@ VPATH = src:src/lib/:src/font/:src/framebuffer/:src/uefi/:src/cpuid/
 OBJECTS = main.o error.o printf.o compiler_needed.o assert.o font.o \
 	  framebuffer.o uefi.o cpuid.o
 
-CXXFLAGS = -Weverything \
+CXXFLAGS = -Weverything -Werror \
 	   -Wno-c++98-compat -Wno-c++98-c++11-compat-pedantic \
 	   -Wno-c++98-compat-pedantic -Wno-c99-extensions \
 	   -Wno-gnu-designator -Wno-gnu-string-literal-operator-template \
