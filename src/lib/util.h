@@ -46,10 +46,10 @@ constexpr void reverse_array_inplace(T *ptr, std::size_t n)
 }
 
 template <class T>
-constexpr bool are_memory_equal(const T &x, const T &y)
+constexpr bool are_memory_equal(T const &x, T const &y)
 {
-    const std::uint8_t *a = reinterpret_cast<const std::uint8_t *>(&x);
-    const std::uint8_t *b = reinterpret_cast<const std::uint8_t *>(&y);
+    auto a = reinterpret_cast<std::uint8_t const *>(&x);
+    auto b = reinterpret_cast<std::uint8_t const *>(&y);
 
     for (std::size_t i = 0; i < sizeof(T); ++i)
         if (a[i] != b[i])

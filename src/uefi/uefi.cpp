@@ -28,7 +28,7 @@ bool Uefi::status_is_error(EFI_STATUS x)
     return x & efi_high_bit;
 }
 
-EFI_STATUS Uefi::get_memory_map(const EFI_BOOT_SERVICES &bs, Uefi::MemoryMap &map)
+EFI_STATUS Uefi::get_memory_map(EFI_BOOT_SERVICES const &bs, Uefi::MemoryMap &map)
 {
     map.memory_map_size = 0;
     EFI_STATUS status = bs.GetMemoryMap(&map.memory_map_size, map.memory_map,
@@ -54,7 +54,7 @@ EFI_STATUS Uefi::get_memory_map(const EFI_BOOT_SERVICES &bs, Uefi::MemoryMap &ma
     return EFI_SUCCESS;
 }
 
-Acpi::rsdp *Uefi::get_acpi_rsdp(const EFI_SYSTEM_TABLE &systab)
+Acpi::rsdp *Uefi::get_acpi_rsdp(EFI_SYSTEM_TABLE const &systab)
 {
     const EFI_GUID acpi = EFI_ACPI_TABLE_GUID;
 
@@ -65,7 +65,7 @@ Acpi::rsdp *Uefi::get_acpi_rsdp(const EFI_SYSTEM_TABLE &systab)
     return nullptr;
 }
 
-EFI_STATUS Uefi::get_gop(EFI_HANDLE handle, const EFI_BOOT_SERVICES &bs, EFI_GRAPHICS_OUTPUT_PROTOCOL *&gop)
+EFI_STATUS Uefi::get_gop(EFI_HANDLE handle, EFI_BOOT_SERVICES const &bs, EFI_GRAPHICS_OUTPUT_PROTOCOL *&gop)
 {
     gop = nullptr;
     

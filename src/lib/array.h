@@ -38,13 +38,13 @@ struct Array {
         return MutArrayRef<T>(m_data);
     }
 
-    constexpr const T &operator[](std::size_t i) const
+    constexpr T const &operator[](std::size_t i) const
     {
         assert(i < N);
         return m_data[i];
     }
 
-    constexpr const T *data() const
+    constexpr T const *data() const
     {
         return m_data;
     }
@@ -56,13 +56,13 @@ struct Array {
 };
 
 template <class T, std::size_t N>
-constexpr const T *begin(const Array<T, N> &x)
+constexpr T const *begin(Array<T, N> const &x)
 {
     return x.data();
 }
 
 template <class T, std::size_t N>
-constexpr const T *end(const Array<T, N> &x)
+constexpr T const *end(Array<T, N> const &x)
 {
     return x.data() + x.size();
 }

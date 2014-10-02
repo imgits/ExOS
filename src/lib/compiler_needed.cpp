@@ -25,7 +25,7 @@ extern "C" {
 
 void *memset(void *b, int c, std::size_t len)
 {
-    unsigned char *a = reinterpret_cast<unsigned char *>(b);
+    auto a = reinterpret_cast<unsigned char *>(b);
 
     for (std::size_t i = 0; i < len; ++i)
         a[i] = static_cast<unsigned char>(c);

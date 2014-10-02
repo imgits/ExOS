@@ -43,7 +43,7 @@ public:
 
     }
 
-    constexpr void push_back(const T &x)
+    constexpr void push_back(T const &x)
     {
         assert(m_curr_idx < m_capacity);
         m_ptr[m_curr_idx++] = x;

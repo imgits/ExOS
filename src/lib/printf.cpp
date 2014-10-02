@@ -35,7 +35,7 @@ char digit_to_ascii(unsigned char c, Case letter_case)
 
 std::size_t to_string(MutStringRef &buf, ConvFlags, StringRef arg)
 {
-    for (const char c : arg)
+    for (char const c : arg)
         if (buf.is_space_left())
             buf.push_back(c);
 
@@ -72,13 +72,13 @@ std::size_t to_string(MutStringRef &buf, ConvFlags flags, unsigned long long arg
 {
     std::size_t cnt = 0;
 
-    const std::size_t start = buf.curr_idx();
+    std::size_t const start = buf.curr_idx();
 
     do {
         ++cnt;
 
         if (buf.is_space_left()) {
-            const unsigned char x = static_cast<unsigned char>(arg % flags.base);
+            auto x = static_cast<unsigned char const>(arg % flags.base);
             buf.push_back(digit_to_ascii(x, flags.letter_case));
         }
 

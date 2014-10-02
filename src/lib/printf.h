@@ -40,7 +40,7 @@ struct ConvFlags {
 };
 
 std::size_t to_string(MutStringRef &buf, ConvFlags flags, StringRef arg);
-std::size_t to_string(MutStringRef &buf, ConvFlags flags, const void *arg);
+std::size_t to_string(MutStringRef &buf, ConvFlags flags, void const *arg);
 std::size_t to_string(MutStringRef &buf, ConvFlags flags, int arg);
 std::size_t to_string(MutStringRef &buf, ConvFlags flags, unsigned int arg);
 std::size_t to_string(MutStringRef &buf, ConvFlags flags, long arg);
@@ -49,9 +49,9 @@ std::size_t to_string(MutStringRef &buf, ConvFlags flags, long long arg);
 std::size_t to_string(MutStringRef &buf, ConvFlags flags, unsigned long long arg);
 
 template <size_t N>
-constexpr std::size_t to_string(MutStringRef &buf, ConvFlags, const String<N> &str)
+constexpr std::size_t to_string(MutStringRef &buf, ConvFlags, String<N> const &str)
 {
-    for (const char c : str)
+    for (char const c : str)
         if (buf.is_space_left())
             buf.push_back(c);
 
@@ -132,7 +132,7 @@ constexpr bool is_valid(StringRef fmt)
     return true;
 }
 
-constexpr bool flags_valid(StringRef fmt, const StringRef &)
+constexpr bool flags_valid(StringRef fmt, StringRef const &)
 {
     if (fmt.length() > 0)
         return false;
@@ -141,7 +141,7 @@ constexpr bool flags_valid(StringRef fmt, const StringRef &)
 }
 
 template <class T, std::size_t N>
-constexpr bool flags_valid(StringRef fmt, const Array<T, N> &)
+constexpr bool flags_valid(StringRef fmt, Array<T, N> const &)
 {
     if (fmt.length() > 0)
         return false;
@@ -149,9 +149,9 @@ constexpr bool flags_valid(StringRef fmt, const Array<T, N> &)
     return true;
 }
 
-constexpr bool flags_valid(StringRef fmt, const void *const &)
+constexpr bool flags_valid(StringRef fmt, void const *const &)
 {
-    for (const char c : fmt)
+    for (char const c : fmt)
         if (c != 'x' && c != 'X')
             return false;
     return true;
@@ -159,62 +159,62 @@ constexpr bool flags_valid(StringRef fmt, const void *const &)
 
 constexpr bool flags_valid(StringRef fmt, void *const &)
 {
-    for (const char c : fmt)
+    for (char const c : fmt)
         if (c != 'x' && c != 'X')
             return false;
     return true;
 }
 
-constexpr bool flags_valid(StringRef fmt, const int &)
+constexpr bool flags_valid(StringRef fmt, int const &)
 {
-    for (const char c : fmt)
+    for (char const c : fmt)
         if (c != 'x' && c != 'X' && c != 'o' && c != 'O')
             return false;
     return true;
 }
 
-constexpr bool flags_valid(StringRef fmt, const unsigned int &)
+constexpr bool flags_valid(StringRef fmt, unsigned int const &)
 {
-    for (const char c : fmt)
+    for (char const c : fmt)
         if (c != 'x' && c != 'X' && c != 'o' && c != 'O')
             return false;
     return true;
 }
 
-constexpr bool flags_valid(StringRef fmt, const long &)
+constexpr bool flags_valid(StringRef fmt, long const &)
 {
-    for (const char c : fmt)
+    for (char const c : fmt)
         if (c != 'x' && c != 'X' && c != 'o' && c != 'O')
             return false;
     return true;
 }
 
-constexpr bool flags_valid(StringRef fmt, const unsigned long &)
+constexpr bool flags_valid(StringRef fmt, unsigned long const &)
 {
-    for (const char c : fmt)
+    for (char const c : fmt)
         if (c != 'x' && c != 'X' && c != 'o' && c != 'O')
             return false;
     return true;
 }
 
-constexpr bool flags_valid(StringRef fmt, const long long &)
+constexpr bool flags_valid(StringRef fmt, long long const &)
 {
-    for (const char c : fmt)
+    for (char const c : fmt)
         if (c != 'x' && c != 'X' && c != 'o' && c != 'O')
             return false;
     return true;
 }
 
-constexpr bool flags_valid(StringRef fmt, const unsigned long long &)
+constexpr bool flags_valid(StringRef fmt, unsigned long long const &)
 {
-    for (const char c : fmt)
+    for (char const c : fmt)
         if (c != 'x' && c != 'X' && c != 'o' && c != 'O')
             return false;
     return true;
 }
 
 template <class Arg, class ...Args>
-constexpr bool is_valid(StringRef fmt, const Arg &arg, const Args &...args)
+constexpr bool is_valid(StringRef fmt, Arg const &arg, Args const &...args)
 {
     for (std::size_t i = 0; i < fmt.length(); ++i) {
         if (fmt[i] != '(')

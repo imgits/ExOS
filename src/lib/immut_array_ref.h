@@ -25,18 +25,18 @@
 template <class T>
 class ImmutArrayRef {
 private:
-    const T *m_ptr;
+    T const *m_ptr;
     std::size_t m_size;
 
 public:
-    explicit constexpr ImmutArrayRef(const T *s, std::size_t l) :
+    explicit constexpr ImmutArrayRef(T const *s, std::size_t l) :
     m_ptr(s),
     m_size(l)
     {
 
     }
 
-    constexpr const T *data() const
+    constexpr T const *data() const
     {
         return m_ptr;
     }
@@ -68,13 +68,13 @@ public:
 };
 
 template <class T>
-constexpr const T *begin(ImmutArrayRef<T> x)
+constexpr T const *begin(ImmutArrayRef<T> x)
 {
     return x.data();
 }
 
 template <class T>
-constexpr const T *end(ImmutArrayRef<T> x)
+constexpr T const *end(ImmutArrayRef<T> x)
 {
     return x.data() + x.length();
 }
@@ -82,12 +82,12 @@ constexpr const T *end(ImmutArrayRef<T> x)
 using StringRef = ImmutArrayRef<char>;
 using StringRefUefi = ImmutArrayRef<char16_t>;
 
-constexpr StringRef operator"" _s(const char *s, std::size_t l)
+constexpr StringRef operator"" _s(char const *s, std::size_t l)
 {
     return StringRef(s, l);
 }
 
-constexpr StringRefUefi operator"" _s(const char16_t *s, std::size_t l)
+constexpr StringRefUefi operator"" _s(char16_t const *s, std::size_t l)
 {
     return StringRefUefi(s, l);
 }

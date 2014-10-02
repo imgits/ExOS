@@ -45,7 +45,7 @@ enum class Color {
 
 // Initializes the framebuffer. You must call this before calling any other
 // framebuffer function.
-Error init(const EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE &gop_mode);
+Error init(EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE const &gop_mode);
 
 // Redraws the entire screen in the current background color.
 void clear_screen();

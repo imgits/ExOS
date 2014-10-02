@@ -43,16 +43,16 @@ struct MemoryMap {
 };
 
 // If it returns EFI_SUCCESS, @map will hold the current memory map.
-EFI_STATUS get_memory_map(const EFI_BOOT_SERVICES &bs, MemoryMap &map);
+EFI_STATUS get_memory_map(EFI_BOOT_SERVICES const &bs, MemoryMap &map);
 
 // Either returns a pointer to the ACPI RSDP table if found, or NULL.
-Acpi::rsdp *get_acpi_rsdp(const EFI_SYSTEM_TABLE &systab);
+Acpi::rsdp *get_acpi_rsdp(EFI_SYSTEM_TABLE const &systab);
 
 // Returns the first instance of a GOP that supports RGB or BGR.
 // If no suitable GOP was found, gop will be NULL, and either EFI_SUCCESS or
 // an error code will be returned, depending on whether the failure to retrieve
 // a GOP was due to an UEFI function or not.
-EFI_STATUS get_gop(EFI_HANDLE handle, const EFI_BOOT_SERVICES &bs, EFI_GRAPHICS_OUTPUT_PROTOCOL *&gop);
+EFI_STATUS get_gop(EFI_HANDLE handle, EFI_BOOT_SERVICES const &bs, EFI_GRAPHICS_OUTPUT_PROTOCOL *&gop);
 
 // Translates @status into a string representation residing in static memory.
 StringRefUefi status_to_string(EFI_STATUS status);

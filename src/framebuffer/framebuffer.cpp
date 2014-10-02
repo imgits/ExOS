@@ -57,7 +57,7 @@ std::uint32_t g_color_array[to_underlying_type(Framebuffer::Color::NAVY) + 1];
 // Move every line until the current one up, make current row blank
 void scroll()
 {
-    const std::size_t limit = g_current_height * g_pixels_per_scan_line;
+    std::size_t const limit = g_current_height * g_pixels_per_scan_line;
 
     for (std::size_t i = 0; i < limit; ++i)
         g_framebuffer[i] = g_framebuffer[i + g_font_line_size];
@@ -79,11 +79,11 @@ void newline()
 void put_glyph(Font::Glyph glyph)
 {
     for (unsigned int i = 0; i < Font::Glyph::HEIGHT; ++i) {
-        const unsigned int height = g_current_height + i;
+        unsigned int const height = g_current_height + i;
 
         for (unsigned int j = 0; j < Font::Glyph::WIDTH; ++j) {
-            const unsigned int width = g_current_width + j;
-            const std::size_t idx = height * g_pixels_per_scan_line + width;
+            unsigned int const width = g_current_width + j;
+            std::size_t const idx = height * g_pixels_per_scan_line + width;
 
             if (glyph.data[i] & (0x80 >> j))
                 g_framebuffer[idx] = g_color_array[to_underlying_type(g_current_fg_color)];
@@ -95,7 +95,7 @@ void put_glyph(Font::Glyph glyph)
 
 } // end anonymous namespace
 
-Error Framebuffer::init(const EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE &gop_mode)
+Error Framebuffer::init(EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE const &gop_mode)
 {
     g_framebuffer = reinterpret_cast<std::uint32_t *>(gop_mode.FrameBufferBase);
     g_framebuffer_size = gop_mode.FrameBufferSize;
@@ -173,7 +173,7 @@ void Framebuffer::put_char(char c)
 
 void Framebuffer::put_string(StringRef x)
 {
-    for (const char c : x)
+    for (char const c : x)
         put_char(c);
 }
 
