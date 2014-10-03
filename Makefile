@@ -1,17 +1,20 @@
-VPATH = src:src/lib/:src/font/:src/framebuffer/:src/uefi/:src/cpuid/
+SOURCES = $(shell find src/ -name "*.cpp")
 
-OBJECTS = main.o error.o printf.o compiler_needed.o assert.o font.o \
-	  framebuffer.o uefi.o cpuid.o
+OBJECTS := $(SOURCES:.cpp=.o)
 
 CXXFLAGS = -Weverything -Werror \
 	   -Wno-c++98-compat -Wno-c++98-c++11-compat-pedantic \
 	   -Wno-c++98-compat-pedantic -Wno-c99-extensions \
 	   -Wno-gnu-designator -Wno-gnu-string-literal-operator-template \
-	   -ffreestanding \
-	   -fno-exceptions -fno-rtti -fno-stack-protector \
+	   -ffreestanding -flto \
+	   -fno-exceptions -fno-rtti \
 	   -std=c++1y \
 	   -iquote src/ \
-	   -g
+	   -O \
+	   -target x86_64--macho \
+	   -I $(CPLUS_INCLUDE_PATH)
+
+CPLUS_INCLUDE_PATH = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1/
 
 LDFLAGS = -static -e _kmain -pie -pagezero_size 0x0 -image_base 0x1000 \
 	  -macosx_version_min `sw_vers -productVersion` \
@@ -20,11 +23,12 @@ LDFLAGS = -static -e _kmain -pie -pagezero_size 0x0 -image_base 0x1000 \
 HDIUTIL_FLAGS = create -srcfolder image -fs MS-DOS -fsargs "-F 32" \
 		-format UDRW -layout GPTSPUD -size 40m -volname LUMINOS -ov
 
-QEMU_FLAGS = -pflash OVMF.fd -no-reboot -cpu Haswell
+QEMU_FLAGS = -pflash OVMF.fd
 
 QEMU_DEBUG_FLAGS = $(QEMU_FLAGS) -debugcon file:ovmf_debug.log \
 		   -global isa-debugcon.iobase=0x402 \
-		   -d guest_errors,cpu_reset,in_asm -S -s
+		   -d guest_errors,cpu_reset,in_asm -S -s \
+		   -no-reboot
 
 all: exos.efi
 
