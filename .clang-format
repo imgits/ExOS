@@ -10,7 +10,7 @@ AllowShortFunctionsOnASingleLine : None
 AllowShortIfStatementsOnASingleLine: false
 AllowShortLoopsOnASingleLine: false
 AlwaysBreakAfterDefinitionReturnType: false
-AlwaysBreakBeforeMultilineStrings: true
+AlwaysBreakBeforeMultilineStrings: false
 AlwaysBreakTemplateDeclarations: true
 BinPackParameters: true
 BreakBeforeBinaryOperators: NonAssignment
@@ -27,12 +27,12 @@ IndentWrappedFunctionNames: false
 KeepEmptyLinesAtTheStartOfBlocks: true
 MaxEmptyLinesToKeep: 1
 NamespaceIndentation: None
-PenaltyBreakBeforeFirstCallParameter: 100
-PenaltyBreakComment: 1
-PenaltyBreakFirstLessLess: 100
-PenaltyBreakString: 1
-PenaltyExcessCharacter: 10000
-PenaltyReturnTypeOnItsOwnLine: 1
+PenaltyBreakBeforeFirstCallParameter: 0
+PenaltyBreakComment: 0
+PenaltyBreakFirstLessLess: 0
+PenaltyBreakString: 0
+PenaltyExcessCharacter: 100
+PenaltyReturnTypeOnItsOwnLine: 0
 PointerAlignment: Right
 SpaceAfterCStyleCast: false
 SpaceBeforeAssignmentOperators: true
