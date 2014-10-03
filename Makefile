@@ -1,6 +1,6 @@
-SOURCES = $(shell find src/ -name "*.cpp")
+SOURCES = $(shell find src -name "*.cpp")
 
-OBJECTS := $(SOURCES:.cpp=.o)
+OBJECTS = $(SOURCES:.cpp=.o)
 
 CXXFLAGS = -Weverything -Werror \
 	   -Wno-c++98-compat -Wno-c++98-c++11-compat-pedantic \
@@ -11,14 +11,16 @@ CXXFLAGS = -Weverything -Werror \
 	   -std=c++1y \
 	   -iquote src/ \
 	   -O \
-	   -target x86_64--macho \
-	   -I $(CPLUS_INCLUDE_PATH)
+	   -target x86_64--macho
 
-CPLUS_INCLUDE_PATH = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1/
-
-LDFLAGS = -static -e _kmain -pie -pagezero_size 0x0 -image_base 0x1000 \
+LDFLAGS = -static \
+	  -e _kmain \
+	  -pie \
+	  -pagezero_size 0x0 \
+	  -image_base 0x1000 \
 	  -macosx_version_min `sw_vers -productVersion` \
-	  -u _memset -u ___bzero -arch x86_64
+	  -u _memset -u ___bzero \
+	  -arch x86_64
 
 HDIUTIL_FLAGS = create -srcfolder image -fs MS-DOS -fsargs "-F 32" \
 		-format UDRW -layout GPTSPUD -size 40m -volname LUMINOS -ov
@@ -37,14 +39,14 @@ disk: exos.efi
 	hdiutil $(HDIUTIL_FLAGS) -o disk
 	mv disk.dmg disk
 
-run: disk
+run: disk OVMF.fd
 	qemu-system-x86_64 $(QEMU_FLAGS) disk
 
-run-debug: disk
+run-debug: disk OVMF.fd
 	qemu-system-x86_64 $(QEMU_DEBUG_FLAGS) disk
 
 exos.macho: $(OBJECTS)
 	$(LD) $(LDFLAGS) $(OBJECTS) -o exos.macho
 
-exos.efi: exos.macho
+exos.efi: exos.macho mtoc
 	./mtoc exos.macho exos.efi

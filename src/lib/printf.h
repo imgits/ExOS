@@ -153,23 +153,13 @@ constexpr bool is_valid(StringRef fmt)
 
 constexpr bool flags_valid(StringRef fmt, StringRef const &)
 {
-    if (fmt.length() > 0)
-    {
-        return false;
-    }
-
-    return true;
+    return fmt.length() == 0;
 }
 
-template <class T, std::size_t N>
-constexpr bool flags_valid(StringRef fmt, Array<T, N> const &)
+template <std::size_t N>
+constexpr bool flags_valid(StringRef fmt, String<N> const &)
 {
-    if (fmt.length() > 0)
-    {
-        return false;
-    }
-
-    return true;
+    return fmt.length() == 0;
 }
 
 constexpr bool flags_valid(StringRef fmt, void const *const &)
