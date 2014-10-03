@@ -27,10 +27,10 @@ class ImmutArrayRef
 {
 private:
     T const *m_ptr;
-    std::size_t m_size;
+    size_t m_size;
 
 public:
-    explicit constexpr ImmutArrayRef(T const *s, std::size_t l)
+    explicit constexpr ImmutArrayRef(T const *s, size_t l)
     : m_ptr(s)
     , m_size(l)
     {
@@ -41,7 +41,7 @@ public:
         return m_ptr;
     }
 
-    constexpr std::size_t length() const
+    constexpr size_t length() const
     {
         return m_size;
     }
@@ -52,14 +52,13 @@ public:
         return m_ptr[i];
     }
 
-    constexpr ImmutArrayRef<T> slice_from(std::size_t begin) const
+    constexpr ImmutArrayRef<T> slice_from(size_t begin) const
     {
         assert(begin <= m_size);
         return ImmutArrayRef<T>(m_ptr + begin, m_size - begin);
     }
 
-    constexpr ImmutArrayRef<T>
-    slice_from_until(std::size_t begin, std::size_t end) const
+    constexpr ImmutArrayRef<T> slice_from_until(size_t begin, size_t end) const
     {
         assert(begin < m_size);
         assert(end < m_size);
@@ -83,12 +82,12 @@ constexpr T const *end(ImmutArrayRef<T> x)
 using StringRef = ImmutArrayRef<char>;
 using StringRefUefi = ImmutArrayRef<char16_t>;
 
-constexpr StringRef operator"" _s(char const *s, std::size_t l)
+constexpr StringRef operator"" _s(char const *s, size_t l)
 {
     return StringRef(s, l);
 }
 
-constexpr StringRefUefi operator"" _s(char16_t const *s, std::size_t l)
+constexpr StringRefUefi operator"" _s(char16_t const *s, size_t l)
 {
     return StringRefUefi(s, l);
 }

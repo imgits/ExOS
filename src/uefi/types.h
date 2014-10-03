@@ -25,19 +25,19 @@
 #define EFIAPI __attribute__((ms_abi))
 #define CONST const
 
-using BOOLEAN = std::uint8_t;
+using BOOLEAN = uint8_t;
 constexpr BOOLEAN FALSE = 0;
 constexpr BOOLEAN TRUE = 1;
-using INTN = std::int64_t;
-using UINTN = std::uint64_t;
-using INT8 = std::int8_t;
-using UINT8 = std::uint8_t;
-using INT16 = std::int16_t;
-using UINT16 = std::uint16_t;
+using INTN = int64_t;
+using UINTN = uint64_t;
+using INT8 = int8_t;
+using UINT8 = uint8_t;
+using INT16 = int16_t;
+using UINT16 = uint16_t;
 using INT32 = std::int32_t;
-using UINT32 = std::uint32_t;
-using INT64 = std::int64_t;
-using UINT64 = std::uint64_t;
+using UINT32 = uint32_t;
+using INT64 = int64_t;
+using UINT64 = uint64_t;
 using CHAR8 = char;
 static_assert(sizeof(char16_t) == 2, "char16_t is not 16-bits!");
 using CHAR16 = char16_t;

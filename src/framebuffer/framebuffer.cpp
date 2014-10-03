@@ -29,10 +29,10 @@ namespace
 {
 
 // Framebuffer start address
-std::uint32_t *g_framebuffer;
+uint32_t *g_framebuffer;
 
 // Size of the framebuffer in bytes
-std::size_t g_framebuffer_size;
+size_t g_framebuffer_size;
 
 // max visible horizontal pixels
 unsigned int g_max_width;
@@ -45,7 +45,7 @@ unsigned int g_current_width;
 unsigned int g_current_height;
 
 // amount of pixels of one font line
-std::size_t g_font_line_size;
+size_t g_font_line_size;
 
 // height of the last column which can display the full font height
 unsigned int g_last_font_column;
@@ -53,19 +53,19 @@ unsigned int g_last_font_column;
 Framebuffer::Color g_current_bg_color;
 Framebuffer::Color g_current_fg_color;
 
-std::uint32_t g_color_array[to_underlying_type(Framebuffer::Color::NAVY) + 1];
+uint32_t g_color_array[to_underlying_type(Framebuffer::Color::NAVY) + 1];
 
 // Move every line until the current one up, make current row blank
 void scroll()
 {
-    std::size_t const limit = g_current_height * g_pixels_per_scan_line;
+    size_t const limit = g_current_height * g_pixels_per_scan_line;
 
-    for (std::size_t i = 0; i < limit; ++i)
+    for (size_t i = 0; i < limit; ++i)
     {
         g_framebuffer[i] = g_framebuffer[i + g_font_line_size];
     }
 
-    for (std::size_t i = 0; i < g_font_line_size; ++i)
+    for (size_t i = 0; i < g_font_line_size; ++i)
     {
         g_framebuffer[limit + i] = 0;
     }
@@ -94,7 +94,7 @@ void put_glyph(Font::Glyph glyph)
         for (unsigned int j = 0; j < Font::Glyph::WIDTH; ++j)
         {
             unsigned int const width = g_current_width + j;
-            std::size_t const idx = height * g_pixels_per_scan_line + width;
+            size_t const idx = height * g_pixels_per_scan_line + width;
 
             if (glyph.data[i] & (0x80 >> j))
             {
@@ -114,7 +114,7 @@ void put_glyph(Font::Glyph glyph)
 
 Error Framebuffer::init(EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE const &gop_mode)
 {
-    g_framebuffer = reinterpret_cast<std::uint32_t *>(gop_mode.FrameBufferBase);
+    g_framebuffer = reinterpret_cast<uint32_t *>(gop_mode.FrameBufferBase);
     g_framebuffer_size = gop_mode.FrameBufferSize;
     g_max_width = gop_mode.Info->HorizontalResolution;
     g_max_height = gop_mode.Info->VerticalResolution;

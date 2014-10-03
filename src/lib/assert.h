@@ -21,8 +21,8 @@
 // Assert macro. Currently does not print a diagnostic message.
 
 [[noreturn]] void
-abort(const char *cond, std::size_t cond_size, const char *func,
-      std::size_t func_size, const char *file, std::size_t file_size, int line);
+abort(const char *cond, size_t cond_size, const char *func, size_t func_size,
+      const char *file, size_t file_size, int line);
 
 #define assert(x)                                                             \
     (x) ? (void)0 : abort(#x, sizeof(#x) - 1, __func__, sizeof(__func__) - 1, \

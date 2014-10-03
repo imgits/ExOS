@@ -39,7 +39,7 @@ char digit_to_ascii(unsigned char c, Case letter_case)
 
 } // anonymous namespace end
 
-std::size_t to_string(MutStringRef &buf, ConvFlags, StringRef arg)
+size_t to_string(MutStringRef &buf, ConvFlags, StringRef arg)
 {
     for (char const c : arg)
     {
@@ -52,38 +52,37 @@ std::size_t to_string(MutStringRef &buf, ConvFlags, StringRef arg)
     return arg.length();
 }
 
-std::size_t to_string(MutStringRef &buf, ConvFlags flags, int arg)
+size_t to_string(MutStringRef &buf, ConvFlags flags, int arg)
 {
     return to_string(buf, flags, static_cast<long long>(arg));
 }
 
-std::size_t to_string(MutStringRef &buf, ConvFlags flags, unsigned int arg)
+size_t to_string(MutStringRef &buf, ConvFlags flags, unsigned int arg)
 {
     return to_string(buf, flags, static_cast<unsigned long long>(arg));
 }
 
-std::size_t to_string(MutStringRef &buf, ConvFlags flags, long arg)
+size_t to_string(MutStringRef &buf, ConvFlags flags, long arg)
 {
     return to_string(buf, flags, static_cast<long long>(arg));
 }
 
-std::size_t to_string(MutStringRef &buf, ConvFlags flags, unsigned long arg)
+size_t to_string(MutStringRef &buf, ConvFlags flags, unsigned long arg)
 {
     return to_string(buf, flags, static_cast<unsigned long long>(arg));
 }
 
-std::size_t to_string(MutStringRef &buf, ConvFlags, const void *arg)
+size_t to_string(MutStringRef &buf, ConvFlags, const void *arg)
 {
     ConvFlags flags = { .base = 16, .letter_case = Case::LOWER };
     return to_string(buf, flags, reinterpret_cast<uintptr_t>(arg));
 }
 
-std::size_t
-to_string(MutStringRef &buf, ConvFlags flags, unsigned long long arg)
+size_t to_string(MutStringRef &buf, ConvFlags flags, unsigned long long arg)
 {
-    std::size_t cnt = 0;
+    size_t cnt = 0;
 
-    std::size_t const start = buf.curr_idx();
+    size_t const start = buf.curr_idx();
 
     do
     {
@@ -103,9 +102,9 @@ to_string(MutStringRef &buf, ConvFlags flags, unsigned long long arg)
     return cnt;
 }
 
-std::size_t to_string(MutStringRef &buf, ConvFlags flags, long long arg)
+size_t to_string(MutStringRef &buf, ConvFlags flags, long long arg)
 {
-    std::size_t cnt = 0;
+    size_t cnt = 0;
 
     if (arg < 0)
     {
@@ -120,11 +119,11 @@ std::size_t to_string(MutStringRef &buf, ConvFlags flags, long long arg)
     return cnt + to_string(buf, flags, unsigned_abs(arg));
 }
 
-std::size_t format(MutStringRef &buf, StringRef fmt)
+size_t format(MutStringRef &buf, StringRef fmt)
 {
-    std::size_t cnt = 0;
+    size_t cnt = 0;
 
-    for (std::size_t i = 0; i < fmt.length(); ++i)
+    for (size_t i = 0; i < fmt.length(); ++i)
     {
         if (fmt[i] == '(' && fmt[i + 1] == '(')
         {

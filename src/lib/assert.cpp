@@ -17,8 +17,8 @@
 #include "lib/assert.h"
 #include "asm/asm.h"
 
-void abort(const char *, std::size_t, const char *, std::size_t, const char *,
-           std::size_t, int)
+void
+abort(const char *, size_t, const char *, size_t, const char *, size_t, int)
 {
     Asm::hlt();
 }
