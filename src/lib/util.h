@@ -38,7 +38,8 @@ constexpr void set_array(T *ptr, T c, std::size_t size)
 template <class T>
 constexpr void reverse_array_inplace(T *ptr, std::size_t n)
 {
-    for (std::size_t i = n - 1, j = 0; j < i; --i, ++j) {
+    for (std::size_t i = n - 1, j = 0; j < i; --i, ++j)
+    {
         T x = ptr[i];
         ptr[i] = ptr[j];
         ptr[j] = x;

@@ -25,7 +25,8 @@
 // Replacement for C-style arrays.
 
 template <class T, std::size_t N>
-struct Array {
+struct Array
+{
     T m_data[N];
 
     constexpr ImmutArrayRef<T> ref() const

@@ -24,21 +24,20 @@
 // seperate error codes and out-parameters.
 
 template <class T>
-class ValueOrError {
+class ValueOrError
+{
 private:
     Either<T, Error> m_data;
 
 public:
-    constexpr ValueOrError(T val) :
-    m_data(val)
+    constexpr ValueOrError(T val)
+    : m_data(val)
     {
-
     }
 
-    constexpr ValueOrError(Error err) :
-    m_data(err)
+    constexpr ValueOrError(Error err)
+    : m_data(err)
     {
-
     }
 
     constexpr T value() const

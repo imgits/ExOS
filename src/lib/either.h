@@ -22,7 +22,8 @@
 
 // Tagged union for 2 data members.
 
-enum class Tag : std::uint8_t {
+enum class Tag : std::uint8_t
+{
     LEFT,
     RIGHT
 };
@@ -31,27 +32,27 @@ enum class Tag : std::uint8_t {
 #pragma clang diagnostic ignored "-Wpadded"
 
 template <class T, class U>
-class Either {
+class Either
+{
 private:
-    union {
+    union
+    {
         T m_left;
         U m_right;
     };
     Tag m_tag;
 
 public:
-    constexpr Either(T x) :
-    m_left(x),
-    m_tag(Tag::LEFT)
+    constexpr Either(T x)
+    : m_left(x)
+    , m_tag(Tag::LEFT)
     {
-
     }
 
-    constexpr Either(U x) :
-    m_right(x),
-    m_tag(Tag::RIGHT)
+    constexpr Either(U x)
+    : m_right(x)
+    , m_tag(Tag::RIGHT)
     {
-
     }
 
     constexpr T left() const

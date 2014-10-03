@@ -18,27 +18,26 @@
 
 #include "uefi/types.h"
 
-constexpr EFI_GUID EFI_ADAPTER_INFORMATION_PROTOCOL_GUID =
-{ 0xE5DD1403, 0xD622, 0xC24E, 0x84, 0x88, 0xC7, 0x1B, 0x17, 0xF5, 0xE8, 0x02 };
+constexpr EFI_GUID EFI_ADAPTER_INFORMATION_PROTOCOL_GUID = {
+    0xE5DD1403, 0xD622, 0xC24E, 0x84, 0x88, 0xC7, 0x1B, 0x17, 0xF5, 0xE8, 0x02
+};
 
-using EFI_ADAPTER_INFO_GET_INFO = EFIAPI EFI_STATUS (*)
-(EFI_ADAPTER_INFORMATION_PROTOCOL *This,
- EFI_GUID *InformationType,
- VOID **InformationBlock,
- UINTN *InformationBlockSize);
+using EFI_ADAPTER_INFO_GET_INFO = EFIAPI
+EFI_STATUS (*)(EFI_ADAPTER_INFORMATION_PROTOCOL *This,
+               EFI_GUID *InformationType, VOID **InformationBlock,
+               UINTN *InformationBlockSize);
 
-using EFI_ADAPTER_INFO_SET_INFO = EFIAPI EFI_STATUS (*)
-(EFI_ADAPTER_INFORMATION_PROTOCOL *This,
- EFI_GUID *InformationType,
- VOID *InformationBlock,
- UINTN InformationBlockSize);
+using EFI_ADAPTER_INFO_SET_INFO = EFIAPI
+EFI_STATUS (*)(EFI_ADAPTER_INFORMATION_PROTOCOL *This,
+               EFI_GUID *InformationType, VOID *InformationBlock,
+               UINTN InformationBlockSize);
 
-using EFI_ADAPTER_INFO_GET_SUPPORTED_TYPES = EFIAPI EFI_STATUS (*)
-(EFI_ADAPTER_INFORMATION_PROTOCOL *This,
- EFI_GUID **InfoTypesBuffer,
- UINTN *InfoTypesBufferCount);
+using EFI_ADAPTER_INFO_GET_SUPPORTED_TYPES = EFIAPI
+EFI_STATUS (*)(EFI_ADAPTER_INFORMATION_PROTOCOL *This,
+               EFI_GUID **InfoTypesBuffer, UINTN *InfoTypesBufferCount);
 
-struct EFI_ADAPTER_INFORMATION_PROTOCOL {
+struct EFI_ADAPTER_INFORMATION_PROTOCOL
+{
     EFI_ADAPTER_INFO_GET_INFO GetInformation;
     EFI_ADAPTER_INFO_SET_INFO SetInformation;
     EFI_ADAPTER_INFO_GET_SUPPORTED_TYPES GetSupportedTypes;

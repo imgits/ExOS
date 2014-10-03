@@ -20,7 +20,8 @@
 
 #include "lib/immut_array_ref.h"
 
-enum class Error : std::uint8_t {
+enum class Error : std::uint8_t
+{
     SUCCESS,
     INVALID,
     NOT_FOUND

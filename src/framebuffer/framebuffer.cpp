@@ -25,7 +25,8 @@
 
 #include "lib/util.h"
 
-namespace {
+namespace
+{
 
 // Framebuffer start address
 std::uint32_t *g_framebuffer;
@@ -78,17 +79,21 @@ void newline()
 
 void put_glyph(Font::Glyph glyph)
 {
-    for (unsigned int i = 0; i < Font::Glyph::HEIGHT; ++i) {
+    for (unsigned int i = 0; i < Font::Glyph::HEIGHT; ++i)
+    {
         unsigned int const height = g_current_height + i;
 
-        for (unsigned int j = 0; j < Font::Glyph::WIDTH; ++j) {
+        for (unsigned int j = 0; j < Font::Glyph::WIDTH; ++j)
+        {
             unsigned int const width = g_current_width + j;
             std::size_t const idx = height * g_pixels_per_scan_line + width;
 
             if (glyph.data[i] & (0x80 >> j))
-                g_framebuffer[idx] = g_color_array[to_underlying_type(g_current_fg_color)];
+                g_framebuffer[idx] =
+                    g_color_array[to_underlying_type(g_current_fg_color)];
             else
-                g_framebuffer[idx] = g_color_array[to_underlying_type(g_current_bg_color)];
+                g_framebuffer[idx] =
+                    g_color_array[to_underlying_type(g_current_bg_color)];
         }
     }
 }
@@ -107,7 +112,8 @@ Error Framebuffer::init(EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE const &gop_mode)
     g_font_line_size = Font::Glyph::HEIGHT * g_pixels_per_scan_line;
     g_last_font_column = g_max_height - Font::Glyph::HEIGHT;
 
-    switch (gop_mode.Info->PixelFormat) {
+    switch (gop_mode.Info->PixelFormat)
+    {
     case PixelRedGreenBlueReserved8BitPerColor:
         g_color_array[to_underlying_type(Color::BLACK)] = 0x00000000;
         g_color_array[to_underlying_type(Color::WHITE)] = 0x00ffffff;
@@ -158,7 +164,8 @@ Error Framebuffer::init(EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE const &gop_mode)
 
 void Framebuffer::put_char(char c)
 {
-    if (c == '\n') {
+    if (c == '\n')
+    {
         newline();
         return;
     }
@@ -179,7 +186,9 @@ void Framebuffer::put_string(StringRef x)
 
 void Framebuffer::clear_screen()
 {
-    set_array(g_framebuffer, g_color_array[to_underlying_type(g_current_bg_color)], g_framebuffer_size);
+    set_array(g_framebuffer,
+              g_color_array[to_underlying_type(g_current_bg_color)],
+              g_framebuffer_size);
     g_current_height = g_current_width = 0;
 }
 

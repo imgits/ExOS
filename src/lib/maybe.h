@@ -22,26 +22,26 @@
 
 // Generalized concept of optional values.
 
-enum class Unit : std::uint8_t {
+enum class Unit : std::uint8_t
+{
     NONE
 };
 
 template <class T>
-class Maybe {
+class Maybe
+{
 private:
     Either<T, Unit> m_data;
 
 public:
-    constexpr Maybe(T x) :
-    m_data(x)
+    constexpr Maybe(T x)
+    : m_data(x)
     {
-
     }
 
-    constexpr Maybe(Unit x) :
-    m_data(x)
+    constexpr Maybe(Unit x)
+    : m_data(x)
     {
-
     }
 
     constexpr T get() const

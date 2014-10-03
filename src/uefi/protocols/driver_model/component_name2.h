@@ -18,24 +18,23 @@
 
 #include "uefi/types.h"
 
-constexpr EFI_GUID EFI_COMPONENT_NAME2_PROTOCOL_GUID =
-{ 0x6a7a5cff, 0xe8d9, 0x4f70, 0xba, 0xda, 0x75, 0xab, 0x30, 0x25, 0xce, 0x14 };
+constexpr EFI_GUID EFI_COMPONENT_NAME2_PROTOCOL_GUID = {
+    0x6a7a5cff, 0xe8d9, 0x4f70, 0xba, 0xda, 0x75, 0xab, 0x30, 0x25, 0xce, 0x14
+};
 
 struct EFI_COMPONENT_NAME2_PROTOCOL;
 
-using EFI_COMPONENT_NAME_GET_DRIVER_NAME = EFIAPI EFI_STATUS (*)
-(EFI_COMPONENT_NAME2_PROTOCOL *This,
- CHAR8 *Language,
- CHAR16 **DriverName);
+using EFI_COMPONENT_NAME_GET_DRIVER_NAME = EFIAPI
+EFI_STATUS (*)(EFI_COMPONENT_NAME2_PROTOCOL *This, CHAR8 *Language,
+               CHAR16 **DriverName);
 
-using EFI_COMPONENT_NAME_GET_CONTROLLER_NAME = EFIAPI EFI_STATUS (*)
-(EFI_COMPONENT_NAME2_PROTOCOL *This,
- EFI_HANDLE ControllerHandle,
- EFI_HANDLE ChildHandle,
- CHAR8 *Language,
- CHAR16 **ControllerName);
+using EFI_COMPONENT_NAME_GET_CONTROLLER_NAME = EFIAPI
+EFI_STATUS (*)(EFI_COMPONENT_NAME2_PROTOCOL *This, EFI_HANDLE ControllerHandle,
+               EFI_HANDLE ChildHandle, CHAR8 *Language,
+               CHAR16 **ControllerName);
 
-struct EFI_COMPONENT_NAME2_PROTOCOL {
+struct EFI_COMPONENT_NAME2_PROTOCOL
+{
     EFI_COMPONENT_NAME_GET_DRIVER_NAME GetDriverName;
     EFI_COMPONENT_NAME_GET_CONTROLLER_NAME GetControllerName;
     CHAR8 *SupportedLanguages;

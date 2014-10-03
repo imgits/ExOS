@@ -18,8 +18,6 @@
 #include "framebuffer/framebuffer.h"
 #include "lib/printf.h"
 #include "cpuid/cpuid.h"
-#include "lib/assert.h"
-#include "lib/ctstring.h"
 
 extern "C" EFI_STATUS kmain(EFI_HANDLE handle, EFI_SYSTEM_TABLE *systab) EFIAPI;
 
@@ -32,8 +30,9 @@ EFI_STATUS kmain(EFI_HANDLE handle, EFI_SYSTEM_TABLE *systab)
     EFI_STATUS status = Uefi::get_gop(handle, bs, gop);
     if (Uefi::status_is_error(status))
         Uefi::die(conout, status, u"Trying to get GOP"_s);
-    if (gop == NULL) {
-        __asm__ ("hlt");
+    if (gop == NULL)
+    {
+        __asm__("hlt");
         __builtin_unreachable();
     }
 
@@ -54,6 +53,6 @@ EFI_STATUS kmain(EFI_HANDLE handle, EFI_SYSTEM_TABLE *systab)
 
     printf("Welcome! [CPU: ()]\n"_cts, Cpuid::get_vendor_string());
 
-    __asm__ ("hlt");
+    __asm__("hlt");
     __builtin_unreachable();
 }

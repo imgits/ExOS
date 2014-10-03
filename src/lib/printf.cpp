@@ -18,16 +18,22 @@
 
 #include "lib/util.h"
 
-namespace {
+namespace
+{
 
 char digit_to_ascii(unsigned char c, Case letter_case)
 {
-    static constexpr char lowercase_letters[] = "0123456789abcdefghijklmnopqrstuvwxyz";
-    static constexpr char uppercase_letters[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    static constexpr char lowercase_letters[] =
+        "0123456789abcdefghijklmnopqrstuvwxyz";
+    static constexpr char uppercase_letters[] =
+        "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-    switch (letter_case) {
-    case Case::LOWER: return lowercase_letters[c];
-    case Case::UPPER: return uppercase_letters[c];
+    switch (letter_case)
+    {
+    case Case::LOWER:
+        return lowercase_letters[c];
+    case Case::UPPER:
+        return uppercase_letters[c];
     }
 }
 
@@ -68,16 +74,19 @@ std::size_t to_string(MutStringRef &buf, ConvFlags, const void *arg)
     return to_string(buf, flags, reinterpret_cast<uintptr_t>(arg));
 }
 
-std::size_t to_string(MutStringRef &buf, ConvFlags flags, unsigned long long arg)
+std::size_t
+to_string(MutStringRef &buf, ConvFlags flags, unsigned long long arg)
 {
     std::size_t cnt = 0;
 
     std::size_t const start = buf.curr_idx();
 
-    do {
+    do
+    {
         ++cnt;
 
-        if (buf.is_space_left()) {
+        if (buf.is_space_left())
+        {
             auto x = static_cast<unsigned char const>(arg % flags.base);
             buf.push_back(digit_to_ascii(x, flags.letter_case));
         }
@@ -86,7 +95,7 @@ std::size_t to_string(MutStringRef &buf, ConvFlags flags, unsigned long long arg
     } while (arg != 0);
 
     buf.reverse_inplace(start, buf.curr_idx() - start);
-    
+
     return cnt;
 }
 
@@ -94,7 +103,8 @@ std::size_t to_string(MutStringRef &buf, ConvFlags flags, long long arg)
 {
     std::size_t cnt = 0;
 
-    if (arg < 0) {
+    if (arg < 0)
+    {
         ++cnt;
 
         if (buf.is_space_left())
@@ -108,7 +118,8 @@ std::size_t format(MutStringRef &buf, StringRef fmt)
 {
     std::size_t cnt = 0;
 
-    for (std::size_t i = 0; i < fmt.length(); ++i) {
+    for (std::size_t i = 0; i < fmt.length(); ++i)
+    {
         if (fmt[i] == '(' && fmt[i + 1] == '(')
             ++i;
 
@@ -117,6 +128,6 @@ std::size_t format(MutStringRef &buf, StringRef fmt)
         if (buf.is_space_left())
             buf.push_back(fmt[i]);
     }
-    
+
     return cnt;
 }

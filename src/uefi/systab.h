@@ -24,18 +24,19 @@
 
 constexpr UINT64 EFI_SYSTEM_TABLE_SIGNATURE = 0x5453595320494249;
 
-constexpr UINT32 EFI_2_40_SYSTEM_TABLE_REVISION = ((2<<16) | (40));
-constexpr UINT32 EFI_2_31_SYSTEM_TABLE_REVISION = ((2<<16) | (31));
-constexpr UINT32 EFI_2_30_SYSTEM_TABLE_REVISION = ((2<<16) | (30));
-constexpr UINT32 EFI_2_20_SYSTEM_TABLE_REVISION = ((2<<16) | (20));
-constexpr UINT32 EFI_2_10_SYSTEM_TABLE_REVISION = ((2<<16) | (10));
-constexpr UINT32 EFI_2_00_SYSTEM_TABLE_REVISION = ((2<<16) | (00));
-constexpr UINT32 EFI_1_10_SYSTEM_TABLE_REVISION = ((1<<16) | (10));
-constexpr UINT32 EFI_1_02_SYSTEM_TABLE_REVISION = ((1<<16) | (02));
+constexpr UINT32 EFI_2_40_SYSTEM_TABLE_REVISION = ((2 << 16) | (40));
+constexpr UINT32 EFI_2_31_SYSTEM_TABLE_REVISION = ((2 << 16) | (31));
+constexpr UINT32 EFI_2_30_SYSTEM_TABLE_REVISION = ((2 << 16) | (30));
+constexpr UINT32 EFI_2_20_SYSTEM_TABLE_REVISION = ((2 << 16) | (20));
+constexpr UINT32 EFI_2_10_SYSTEM_TABLE_REVISION = ((2 << 16) | (10));
+constexpr UINT32 EFI_2_00_SYSTEM_TABLE_REVISION = ((2 << 16) | (00));
+constexpr UINT32 EFI_1_10_SYSTEM_TABLE_REVISION = ((1 << 16) | (10));
+constexpr UINT32 EFI_1_02_SYSTEM_TABLE_REVISION = ((1 << 16) | (02));
 constexpr UINT32 EFI_SYSTEM_TABLE_REVISION = EFI_2_40_SYSTEM_TABLE_REVISION;
 constexpr UINT32 EFI_SPECIFICATION_VERSION = EFI_SYSTEM_TABLE_REVISION;
 
-struct EFI_TABLE_HEADER {
+struct EFI_TABLE_HEADER
+{
     UINT64 Signature;
     UINT32 Revision;
     UINT32 HeaderSize;
@@ -47,7 +48,8 @@ constexpr UINT64 EFI_BOOT_SERVICES_SIGNATURE = 0x56524553544f4f42;
 
 constexpr UINT32 EFI_BOOT_SERVICES_REVISION = EFI_SPECIFICATION_VERSION;
 
-struct EFI_BOOT_SERVICES {
+struct EFI_BOOT_SERVICES
+{
     EFI_TABLE_HEADER Hdr;
 
     EFI_RAISE_TPL RaiseTPL;
@@ -97,7 +99,8 @@ struct EFI_BOOT_SERVICES {
     EFI_LOCATE_HANDLE_BUFFER LocateHandleBuffer;
     EFI_LOCATE_PROTOCOL LocateProtocol;
     EFI_INSTALL_MULTIPLE_PROTOCOL_INTERFACES InstallMultipleProtocolInterfaces;
-    EFI_UNINSTALL_MULTIPLE_PROTOCOL_INTERFACES UninstallMultipleProtocolInterfaces;
+    EFI_UNINSTALL_MULTIPLE_PROTOCOL_INTERFACES
+    UninstallMultipleProtocolInterfaces;
 
     EFI_CALCULATE_CRC32 CalculateCrc32;
 
@@ -110,7 +113,8 @@ constexpr UINT64 EFI_RUNTIME_SERVICES_SIGNATURE = 0x56524553544e5552;
 
 constexpr UINT32 EFI_RUNTIME_SERVICES_REVISION = EFI_SPECIFICATION_VERSION;
 
-struct EFI_RUNTIME_SERVICES {
+struct EFI_RUNTIME_SERVICES
+{
     EFI_TABLE_HEADER Hdr;
 
     EFI_GET_TIME GetTime;
@@ -134,33 +138,42 @@ struct EFI_RUNTIME_SERVICES {
     EFI_QUERY_VARIABLE_INFO QueryVariableInfo;
 };
 
-struct EFI_CONFIGURATION_TABLE {
+struct EFI_CONFIGURATION_TABLE
+{
     EFI_GUID VendorGuid;
     VOID *VendorTable;
 };
 
-constexpr EFI_GUID EFI_ACPI_20_TABLE_GUID =
-{ 0x8868e871, 0xe4f1, 0x11d3, 0xbc, 0x22, 0x0, 0x80, 0xc7, 0x3c, 0x88, 0x81 };
-constexpr EFI_GUID ACPI_TABLE_GUID =
-{ 0xeb9d2d30, 0x2d88, 0x11d3, 0x9a, 0x16, 0x0, 0x90, 0x27, 0x3f, 0xc1, 0x4d };
-constexpr EFI_GUID SAL_SYSTEM_TABLE_GUID =
-{ 0xeb9d2d32, 0x2d88, 0x11d3, 0x9a, 0x16, 0x0, 0x90, 0x27, 0x3f, 0xc1, 0x4d };
-constexpr EFI_GUID SMBIOS_TABLE_GUID =
-{ 0xeb9d2d31, 0x2d88, 0x11d3, 0x9a, 0x16, 0x0, 0x90, 0x27, 0x3f, 0xc1, 0x4d };
-constexpr EFI_GUID MPS_TABLE_GUID =
-{ 0xeb9d2d2f, 0x2d88, 0x11d3, 0x9a, 0x16, 0x0, 0x90, 0x27, 0x3f, 0xc1, 0x4d };
+constexpr EFI_GUID EFI_ACPI_20_TABLE_GUID = { 0x8868e871, 0xe4f1, 0x11d3, 0xbc,
+                                              0x22,       0x0,    0x80,   0xc7,
+                                              0x3c,       0x88,   0x81 };
+constexpr EFI_GUID ACPI_TABLE_GUID = { 0xeb9d2d30, 0x2d88, 0x11d3, 0x9a,
+                                       0x16,       0x0,    0x90,   0x27,
+                                       0x3f,       0xc1,   0x4d };
+constexpr EFI_GUID SAL_SYSTEM_TABLE_GUID = { 0xeb9d2d32, 0x2d88, 0x11d3, 0x9a,
+                                             0x16,       0x0,    0x90,   0x27,
+                                             0x3f,       0xc1,   0x4d };
+constexpr EFI_GUID SMBIOS_TABLE_GUID = { 0xeb9d2d31, 0x2d88, 0x11d3, 0x9a,
+                                         0x16,       0x0,    0x90,   0x27,
+                                         0x3f,       0xc1,   0x4d };
+constexpr EFI_GUID MPS_TABLE_GUID = { 0xeb9d2d2f, 0x2d88, 0x11d3, 0x9a,
+                                      0x16,       0x0,    0x90,   0x27,
+                                      0x3f,       0xc1,   0x4d };
 
 // ACPI 2.0 or newer tables should use EFI_ACPI_TABLE_GUID
 
-constexpr EFI_GUID EFI_ACPI_TABLE_GUID =
-{ 0x8868e871, 0xe4f1, 0x11d3, 0xbc, 0x22, 0x0, 0x80, 0xc7, 0x3c, 0x88, 0x81 };
-constexpr EFI_GUID ACPI_10_TABLE_GUID =
-{ 0xeb9d2d30, 0x2d88, 0x11d3, 0x9a, 0x16, 0x0, 0x90, 0x27, 0x3f, 0xc1, 0x4d };
+constexpr EFI_GUID EFI_ACPI_TABLE_GUID = { 0x8868e871, 0xe4f1, 0x11d3, 0xbc,
+                                           0x22,       0x0,    0x80,   0xc7,
+                                           0x3c,       0x88,   0x81 };
+constexpr EFI_GUID ACPI_10_TABLE_GUID = { 0xeb9d2d30, 0x2d88, 0x11d3, 0x9a,
+                                          0x16,       0x0,    0x90,   0x27,
+                                          0x3f,       0xc1,   0x4d };
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wpadded"
 
-struct EFI_SYSTEM_TABLE {
+struct EFI_SYSTEM_TABLE
+{
     EFI_TABLE_HEADER Hdr;
     CHAR16 *FirmwareVendor;
     UINT32 FirmwareRevision;

@@ -20,14 +20,11 @@
 
 struct EFI_MEMORY_DESCRIPTOR;
 
-using EFI_SET_VIRTUAL_ADDRESS_MAP = EFIAPI EFI_STATUS (*)
-(UINTN MemoryMapSize,
- UINTN DescriptorSize,
- UINT32 DescriptorVersion,
- EFI_MEMORY_DESCRIPTOR *VirtualMap);
+using EFI_SET_VIRTUAL_ADDRESS_MAP = EFIAPI
+EFI_STATUS (*)(UINTN MemoryMapSize, UINTN DescriptorSize,
+               UINT32 DescriptorVersion, EFI_MEMORY_DESCRIPTOR *VirtualMap);
 
-using EFI_CONVERT_POINTER = EFIAPI EFI_STATUS (*)
-(UINTN DebugDisposition,
- VOID **Address);
+using EFI_CONVERT_POINTER = EFIAPI
+EFI_STATUS (*)(UINTN DebugDisposition, VOID **Address);
 
 constexpr UINTN EFI_OPTIONAL_PTR = 0x00000001;

@@ -18,12 +18,15 @@
 
 #include "uefi/types.h"
 
-constexpr EFI_GUID EFI_SERIAL_IO_PROTOCOL_GUID =
-{ 0xBB25CF6F, 0xF1D4, 0x11D2, 0x9A, 0x0C, 0x00, 0x90, 0x27, 0x3F, 0xC1, 0xFD };
+constexpr EFI_GUID EFI_SERIAL_IO_PROTOCOL_GUID = { 0xBB25CF6F, 0xF1D4, 0x11D2,
+                                                   0x9A,       0x0C,   0x00,
+                                                   0x90,       0x27,   0x3F,
+                                                   0xC1,       0xFD };
 
 constexpr UINT32 EFI_SERIAL_IO_PROTOCOL_REVISION = 0x00010000;
 
-enum EFI_PARITY_TYPE {
+enum EFI_PARITY_TYPE
+{
     DefaultParity,
     NoParity,
     EvenParity,
@@ -32,14 +35,16 @@ enum EFI_PARITY_TYPE {
     SpaceParity
 };
 
-enum EFI_STOP_BITS_TYPE {
+enum EFI_STOP_BITS_TYPE
+{
     DefaultStopBits,
-    OneStopBit, // 1 stop bit
+    OneStopBit,      // 1 stop bit
     OneFiveStopBits, // 1.5 stop bits
-    TwoStopBits // 2 stop bits
+    TwoStopBits      // 2 stop bits
 };
 
-struct SERIAL_IO_MODE {
+struct SERIAL_IO_MODE
+{
     UINT32 ControlMask;
     // current Attributes
     UINT32 Timeout;
@@ -52,21 +57,15 @@ struct SERIAL_IO_MODE {
 
 struct EFI_SERIAL_IO_PROTOCOL;
 
-using EFI_SERIAL_RESET = EFIAPI EFI_STATUS (*)
-(EFI_SERIAL_IO_PROTOCOL *This);
+using EFI_SERIAL_RESET = EFIAPI EFI_STATUS (*)(EFI_SERIAL_IO_PROTOCOL *This);
 
-using EFI_SERIAL_SET_ATTRIBUTES = EFIAPI EFI_STATUS (*)
-(EFI_SERIAL_IO_PROTOCOL *This,
- UINT64 BaudRate,
- UINT32 ReceiveFifoDepth,
- UINT32 Timeout,
- EFI_PARITY_TYPE Parity,
- UINT8 DataBits,
- EFI_STOP_BITS_TYPE StopBits);
+using EFI_SERIAL_SET_ATTRIBUTES = EFIAPI
+EFI_STATUS (*)(EFI_SERIAL_IO_PROTOCOL *This, UINT64 BaudRate,
+               UINT32 ReceiveFifoDepth, UINT32 Timeout, EFI_PARITY_TYPE Parity,
+               UINT8 DataBits, EFI_STOP_BITS_TYPE StopBits);
 
-using EFI_SERIAL_SET_CONTROL_BITS = EFIAPI EFI_STATUS (*)
-(EFI_SERIAL_IO_PROTOCOL *This,
- UINT32 Control);
+using EFI_SERIAL_SET_CONTROL_BITS = EFIAPI
+EFI_STATUS (*)(EFI_SERIAL_IO_PROTOCOL *This, UINT32 Control);
 
 constexpr UINT32 EFI_SERIAL_CLEAR_TO_SEND = 0x0010;
 constexpr UINT32 EFI_SERIAL_DATA_SET_READY = 0x0020;
@@ -80,21 +79,17 @@ constexpr UINT32 EFI_SERIAL_HARDWARE_LOOPBACK_ENABLE = 0x1000;
 constexpr UINT32 EFI_SERIAL_SOFTWARE_LOOPBACK_ENABLE = 0x2000;
 constexpr UINT32 EFI_SERIAL_HARDWARE_FLOW_CONTROL_ENABLE = 0x4000;
 
-using EFI_SERIAL_GET_CONTROL_BITS = EFIAPI EFI_STATUS (*)
-(EFI_SERIAL_IO_PROTOCOL *This,
- UINT32 *Control);
+using EFI_SERIAL_GET_CONTROL_BITS = EFIAPI
+EFI_STATUS (*)(EFI_SERIAL_IO_PROTOCOL *This, UINT32 *Control);
 
-using EFI_SERIAL_WRITE = EFIAPI EFI_STATUS (*)
-(EFI_SERIAL_IO_PROTOCOL *This,
- UINTN *BufferSize,
- VOID *Buffer);
+using EFI_SERIAL_WRITE = EFIAPI
+EFI_STATUS (*)(EFI_SERIAL_IO_PROTOCOL *This, UINTN *BufferSize, VOID *Buffer);
 
-using EFI_SERIAL_READ = EFIAPI EFI_STATUS (*)
-(EFI_SERIAL_IO_PROTOCOL *This,
- UINTN *BufferSize,
- VOID *Buffer);
+using EFI_SERIAL_READ = EFIAPI
+EFI_STATUS (*)(EFI_SERIAL_IO_PROTOCOL *This, UINTN *BufferSize, VOID *Buffer);
 
-struct EFI_SERIAL_IO_PROTOCOL {
+struct EFI_SERIAL_IO_PROTOCOL
+{
     UINT32 Revision;
     EFI_SERIAL_RESET Reset;
     EFI_SERIAL_SET_ATTRIBUTES SetAttributes;

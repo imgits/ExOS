@@ -18,12 +18,14 @@
 
 #include "uefi/types.h"
 
-constexpr EFI_GUID EFI_DRIVER_HEALTH_PROTOCOL_GUID =
-{ 0x2a534210, 0x9280, 0x41d8, 0xae, 0x79, 0xca, 0xda, 0x1, 0xa2, 0xb1, 0x27 };
+constexpr EFI_GUID EFI_DRIVER_HEALTH_PROTOCOL_GUID = {
+    0x2a534210, 0x9280, 0x41d8, 0xae, 0x79, 0xca, 0xda, 0x1, 0xa2, 0xb1, 0x27
+};
 
 struct EFI_DRIVER_HEALTH_PROTOCOL;
 
-enum EFI_DRIVER_HEALTH_STATUS {
+enum EFI_DRIVER_HEALTH_STATUS
+{
     EfiDriverHealthStatusHealthy,
     EfiDriverHealthStatusRepairRequired,
     EfiDriverHealthStatusConfigurationRequired,
@@ -32,31 +34,29 @@ enum EFI_DRIVER_HEALTH_STATUS {
     EfiDriverHealthStatusRebootRequired
 };
 
-struct EFI_DRIVER_HEALTH_HII_MESSAGE {
+struct EFI_DRIVER_HEALTH_HII_MESSAGE
+{
     EFI_HII_HANDLE HiiHandle;
     EFI_STRING_ID StringId;
     UINT64 MessageCode;
 };
 
-using EFI_DRIVER_HEALTH_GET_HEALTH_STATUS = EFIAPI EFI_STATUS (*)
-(EFI_DRIVER_HEALTH_PROTOCOL *This,
- EFI_HANDLE ControllerHandle,
- EFI_HANDLE ChildHandle,
- EFI_DRIVER_HEALTH_STATUS *HealthStatus,
- EFI_DRIVER_HEALTH_HII_MESSAGE **MessageList,
- EFI_HII_HANDLE *FormHiiHandle);
+using EFI_DRIVER_HEALTH_GET_HEALTH_STATUS = EFIAPI
+EFI_STATUS (*)(EFI_DRIVER_HEALTH_PROTOCOL *This, EFI_HANDLE ControllerHandle,
+               EFI_HANDLE ChildHandle, EFI_DRIVER_HEALTH_STATUS *HealthStatus,
+               EFI_DRIVER_HEALTH_HII_MESSAGE **MessageList,
+               EFI_HII_HANDLE *FormHiiHandle);
 
-using EFI_DRIVER_HEALTH_REPAIR_NOTIFY = EFIAPI EFI_STATUS (*)
-(UINTN Value,
- UINTN Limit);
+using EFI_DRIVER_HEALTH_REPAIR_NOTIFY = EFIAPI
+EFI_STATUS (*)(UINTN Value, UINTN Limit);
 
-using EFI_DRIVER_HEALTH_REPAIR = EFIAPI EFI_STATUS (*)
-(EFI_DRIVER_HEALTH_PROTOCOL *This,
- EFI_HANDLE ControllerHandle,
- EFI_HANDLE ChildHandle,
- EFI_DRIVER_HEALTH_REPAIR_NOTIFY RepairNotify);
+using EFI_DRIVER_HEALTH_REPAIR = EFIAPI
+EFI_STATUS (*)(EFI_DRIVER_HEALTH_PROTOCOL *This, EFI_HANDLE ControllerHandle,
+               EFI_HANDLE ChildHandle,
+               EFI_DRIVER_HEALTH_REPAIR_NOTIFY RepairNotify);
 
-struct EFI_DRIVER_HEALTH_PROTOCOL {
+struct EFI_DRIVER_HEALTH_PROTOCOL
+{
     EFI_DRIVER_HEALTH_GET_HEALTH_STATUS GetHealthStatus;
     EFI_DRIVER_HEALTH_REPAIR Repeair;
 };

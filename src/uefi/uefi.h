@@ -21,11 +21,13 @@
 
 #include "lib/immut_array_ref.h"
 
-namespace Acpi {
+namespace Acpi
+{
 struct rsdp;
 }
 
-namespace Uefi {
+namespace Uefi
+{
 
 // Prints the string @s using @conout.
 EFI_STATUS print(EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL &conout, StringRefUefi s);
@@ -33,7 +35,8 @@ EFI_STATUS print(EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL &conout, StringRefUefi s);
 // Returns true if x is an error status.
 bool status_is_error(EFI_STATUS x);
 
-struct MemoryMap {
+struct MemoryMap
+{
     UINTN memory_map_size;
     EFI_MEMORY_DESCRIPTOR *memory_map;
     UINTN map_key;
@@ -52,12 +55,14 @@ Acpi::rsdp *get_acpi_rsdp(EFI_SYSTEM_TABLE const &systab);
 // If no suitable GOP was found, gop will be NULL, and either EFI_SUCCESS or
 // an error code will be returned, depending on whether the failure to retrieve
 // a GOP was due to an UEFI function or not.
-EFI_STATUS get_gop(EFI_HANDLE handle, EFI_BOOT_SERVICES const &bs, EFI_GRAPHICS_OUTPUT_PROTOCOL *&gop);
+EFI_STATUS get_gop(EFI_HANDLE handle, EFI_BOOT_SERVICES const &bs,
+                   EFI_GRAPHICS_OUTPUT_PROTOCOL *&gop);
 
 // Translates @status into a string representation residing in static memory.
 StringRefUefi status_to_string(EFI_STATUS status);
 
 // Prints "@s: 'status translated to string'\n" and then halts.
-[[noreturn]] void die(EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL &conout, EFI_STATUS status, StringRefUefi s);
+[[noreturn]] void die(EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL &conout,
+                      EFI_STATUS status, StringRefUefi s);
 
 } // namespace Uefi end

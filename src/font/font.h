@@ -20,11 +20,13 @@
 
 #include "lib/array.h"
 
-namespace Font {
+namespace Font
+{
 
 // A glyph is represented as an array of 16 bytes, where each bit set indicates
 // a foreground pixel, and if not set, a background pixel.
-struct Glyph {
+struct Glyph
+{
     Array<uint8_t, 16> data;
 
     static constexpr auto HEIGHT = 16;

@@ -27,7 +27,8 @@
 // it as a const reference, consider using the method "to_immut_ref()".
 
 template <class T>
-class MutArrayRef {
+class MutArrayRef
+{
 private:
     T *m_ptr;
     std::size_t m_capacity;
@@ -35,12 +36,11 @@ private:
 
 public:
     template <std::size_t N>
-    explicit constexpr MutArrayRef(T (&ptr)[N]) :
-    m_ptr(ptr),
-    m_capacity(N),
-    m_curr_idx(0)
+    explicit constexpr MutArrayRef(T(&ptr)[N])
+    : m_ptr(ptr)
+    , m_capacity(N)
+    , m_curr_idx(0)
     {
-
     }
 
     constexpr void push_back(T const &x)

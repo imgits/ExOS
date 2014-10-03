@@ -18,21 +18,20 @@
 
 #include "uefi/types.h"
 
-constexpr EFI_GUID EFI_PLATFORM_TO_DRIVER_CONFIGURATION_PROTOCOL_GUID =
-{ 0x642cd590, 0x8059, 0x4c0a, 0xa9, 0x58, 0xc5, 0xec, 0x7, 0xd2, 0x3c, 0x4b };
+constexpr EFI_GUID EFI_PLATFORM_TO_DRIVER_CONFIGURATION_PROTOCOL_GUID = {
+    0x642cd590, 0x8059, 0x4c0a, 0xa9, 0x58, 0xc5, 0xec, 0x7, 0xd2, 0x3c, 0x4b
+};
 
 struct EFI_PLATFORM_TO_DRIVER_CONFIGURATION_PROTOCOL;
 
-using EFI_PLATFORM_TO_DRIVER_CONFIGURATION_QUERY = EFIAPI EFI_STATUS (*)
-(EFI_PLATFORM_TO_DRIVER_CONFIGURATION_PROTOCOL *This,
- EFI_HANDLE ControllerHandle,
- EFI_HANDLE ChildHandle,
- UINTN *Instance,
- EFI_GUID **ParameterTypeGuid,
- VOID **ParameterBlock,
- UINTN *ParameterBlockSize);
+using EFI_PLATFORM_TO_DRIVER_CONFIGURATION_QUERY = EFIAPI
+EFI_STATUS (*)(EFI_PLATFORM_TO_DRIVER_CONFIGURATION_PROTOCOL *This,
+               EFI_HANDLE ControllerHandle, EFI_HANDLE ChildHandle,
+               UINTN *Instance, EFI_GUID **ParameterTypeGuid,
+               VOID **ParameterBlock, UINTN *ParameterBlockSize);
 
-enum EFI_PLATFORM_CONFIGURATION_ACTION {
+enum EFI_PLATFORM_CONFIGURATION_ACTION
+{
     EfiPlatformConfigurationActionNone,
     EfiPlatformConfigurationActionStopController,
     EfiPlatformConfigurationActionRestartController,
@@ -41,25 +40,25 @@ enum EFI_PLATFORM_CONFIGURATION_ACTION {
     EfiPlatformConfigurationActionMaximum
 };
 
-using EFI_PLATFORM_TO_DRIVER_CONFIGURATION_RESPONSE = EFIAPI EFI_STATUS (*)
-(EFI_PLATFORM_TO_DRIVER_CONFIGURATION_PROTOCOL *This,
- EFI_HANDLE ControllerHandle,
- EFI_HANDLE ChildHandle,
- UINTN *Instance,
- EFI_GUID *ParameterTypeGuid,
- VOID *ParameterBlock,
- UINTN ParameterBlockSize,
- EFI_PLATFORM_CONFIGURATION_ACTION ConfigurationAction);
+using EFI_PLATFORM_TO_DRIVER_CONFIGURATION_RESPONSE = EFIAPI
+EFI_STATUS (*)(EFI_PLATFORM_TO_DRIVER_CONFIGURATION_PROTOCOL *This,
+               EFI_HANDLE ControllerHandle, EFI_HANDLE ChildHandle,
+               UINTN *Instance, EFI_GUID *ParameterTypeGuid,
+               VOID *ParameterBlock, UINTN ParameterBlockSize,
+               EFI_PLATFORM_CONFIGURATION_ACTION ConfigurationAction);
 
-struct EFI_PLATFORM_TO_DRIVER_CONFIGURATION_PROTOCOL {
+struct EFI_PLATFORM_TO_DRIVER_CONFIGURATION_PROTOCOL
+{
     EFI_PLATFORM_TO_DRIVER_CONFIGURATION_QUERY Query;
     EFI_PLATFORM_TO_DRIVER_CONFIGURATION_RESPONSE Response;
 };
 
-constexpr EFI_GUID EFI_PLATFORM_TO_DRIVER_CONFIGURATION_CLP_GUID =
-{ 0x345ecc0e, 0xcb6, 0x4b75, 0xbb, 0x57, 0x1b, 0x12, 0x9c, 0x47, 0x33,0x3e };
+constexpr EFI_GUID EFI_PLATFORM_TO_DRIVER_CONFIGURATION_CLP_GUID = {
+    0x345ecc0e, 0xcb6, 0x4b75, 0xbb, 0x57, 0x1b, 0x12, 0x9c, 0x47, 0x33, 0x3e
+};
 
-struct EFI_CONFIGURE_CLP_PARAMTER_BLK {
+struct EFI_CONFIGURE_CLP_PARAMTER_BLK
+{
     CHAR8 *CLPCommand;
     UINT32 CLPCommandLength;
     CHAR8 *CLPReturnString;

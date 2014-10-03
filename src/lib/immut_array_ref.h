@@ -23,17 +23,17 @@
 // Reference to an immutable(const) array. Small enough to be passed by-value.
 
 template <class T>
-class ImmutArrayRef {
+class ImmutArrayRef
+{
 private:
     T const *m_ptr;
     std::size_t m_size;
 
 public:
-    explicit constexpr ImmutArrayRef(T const *s, std::size_t l) :
-    m_ptr(s),
-    m_size(l)
+    explicit constexpr ImmutArrayRef(T const *s, std::size_t l)
+    : m_ptr(s)
+    , m_size(l)
     {
-
     }
 
     constexpr T const *data() const
@@ -58,7 +58,8 @@ public:
         return ImmutArrayRef<T>(m_ptr + begin, m_size - begin);
     }
 
-    constexpr ImmutArrayRef<T> slice_from_until(std::size_t begin, std::size_t end) const
+    constexpr ImmutArrayRef<T>
+    slice_from_until(std::size_t begin, std::size_t end) const
     {
         assert(begin < m_size);
         assert(end < m_size);

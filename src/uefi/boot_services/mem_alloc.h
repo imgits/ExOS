@@ -18,21 +18,19 @@
 
 #include "uefi/types.h"
 
-enum EFI_ALLOCATE_TYPE {
+enum EFI_ALLOCATE_TYPE
+{
     AllocateAnyPages,
     AllocateMaxAddress,
     MaxAllocateType
 };
 
-using EFI_ALLOCATE_PAGES = EFIAPI EFI_STATUS (*)
-(EFI_ALLOCATE_TYPE Type,
- EFI_MEMORY_TYPE MemoryType,
- UINTN Pages,
- EFI_PHYSICAL_ADDRESS *Memory);
+using EFI_ALLOCATE_PAGES = EFIAPI
+EFI_STATUS (*)(EFI_ALLOCATE_TYPE Type, EFI_MEMORY_TYPE MemoryType, UINTN Pages,
+               EFI_PHYSICAL_ADDRESS *Memory);
 
-using EFI_FREE_PAGES = EFIAPI EFI_STATUS (*)
-(EFI_PHYSICAL_ADDRESS Memory,
- UINTN Pages);
+using EFI_FREE_PAGES = EFIAPI
+EFI_STATUS (*)(EFI_PHYSICAL_ADDRESS Memory, UINTN Pages);
 
 constexpr UINT64 EFI_MEMORY_UC = 0x0000000000000001;
 constexpr UINT64 EFI_MEMORY_WC = 0x0000000000000002;
@@ -49,7 +47,8 @@ constexpr UINT32 EFI_MEMORY_DESCRIPTOR_VERSION = 1;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wpadded"
 
-struct EFI_MEMORY_DESCRIPTOR {
+struct EFI_MEMORY_DESCRIPTOR
+{
     UINT32 Type;
     EFI_PHYSICAL_ADDRESS PhysicalStart;
     EFI_VIRTUAL_ADDRESS VirtualStart;
@@ -59,17 +58,11 @@ struct EFI_MEMORY_DESCRIPTOR {
 
 #pragma clang diagnostic pop
 
-using EFI_GET_MEMORY_MAP = EFIAPI EFI_STATUS (*)
-(UINTN *MemoryMapSize,
- EFI_MEMORY_DESCRIPTOR *MemoryMap,
- UINTN *MapKey,
- UINTN *DescriptorSize,
- UINT32 *DescriptorVersion);
+using EFI_GET_MEMORY_MAP = EFIAPI
+EFI_STATUS (*)(UINTN *MemoryMapSize, EFI_MEMORY_DESCRIPTOR *MemoryMap,
+               UINTN *MapKey, UINTN *DescriptorSize, UINT32 *DescriptorVersion);
 
-using EFI_ALLOCATE_POOL = EFIAPI EFI_STATUS (*)
-(EFI_MEMORY_TYPE PoolType,
- UINTN Size,
- VOID **Buffer);
+using EFI_ALLOCATE_POOL = EFIAPI
+EFI_STATUS (*)(EFI_MEMORY_TYPE PoolType, UINTN Size, VOID **Buffer);
 
-using EFI_FREE_POOL = EFIAPI EFI_STATUS (*)
-(VOID *Buffer);
+using EFI_FREE_POOL = EFIAPI EFI_STATUS (*)(VOID *Buffer);

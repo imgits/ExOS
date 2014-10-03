@@ -18,33 +18,21 @@
 
 #include "uefi/types.h"
 
-using EFI_SET_WATCHDOG_TIMER = EFIAPI EFI_STATUS (*)
-(UINTN Timeout,
- UINT64 WatchdogCode,
- UINTN DataSize,
- CHAR16 *WatchdogData);
+using EFI_SET_WATCHDOG_TIMER = EFIAPI
+EFI_STATUS (*)(UINTN Timeout, UINT64 WatchdogCode, UINTN DataSize,
+               CHAR16 *WatchdogData);
 
-using EFI_STALL = EFIAPI EFI_STATUS (*)
-(UINTN Microseconds);
+using EFI_STALL = EFIAPI EFI_STATUS (*)(UINTN Microseconds);
 
-using EFI_COPY_MEM = EFIAPI VOID (*)
-(VOID *Destination,
- VOID *Source,
- UINTN Length);
+using EFI_COPY_MEM = EFIAPI
+VOID (*)(VOID *Destination, VOID *Source, UINTN Length);
 
-using EFI_SET_MEM = EFIAPI VOID (*)
-(VOID *Buffer,
- UINTN Size,
- UINT8 Value);
+using EFI_SET_MEM = EFIAPI VOID (*)(VOID *Buffer, UINTN Size, UINT8 Value);
 
-using EFI_GET_NEXT_MONOTONIC_COUNT = EFIAPI EFI_STATUS (*)
-(UINT64 *Count);
+using EFI_GET_NEXT_MONOTONIC_COUNT = EFIAPI EFI_STATUS (*)(UINT64 *Count);
 
-using EFI_INSTALL_CONFIGURATION_TABLE = EFIAPI EFI_STATUS (*)
-(EFI_GUID *Guid,
- VOID *Table);
+using EFI_INSTALL_CONFIGURATION_TABLE = EFIAPI
+EFI_STATUS (*)(EFI_GUID *Guid, VOID *Table);
 
-using EFI_CALCULATE_CRC32 = EFIAPI EFI_STATUS (*)
-(VOID *Data,
- UINTN DataSize,
- UINT32 *Crc32);
+using EFI_CALCULATE_CRC32 = EFIAPI
+EFI_STATUS (*)(VOID *Data, UINTN DataSize, UINT32 *Crc32);

@@ -29,12 +29,14 @@
 // at compile time. They either return the number of characters written or
 // an error.
 
-enum class Case : std::uint8_t {
+enum class Case : std::uint8_t
+{
     LOWER,
     UPPER
 };
 
-struct ConvFlags {
+struct ConvFlags
+{
     Case letter_case;
     std::uint8_t base;
 };
@@ -46,10 +48,12 @@ std::size_t to_string(MutStringRef &buf, ConvFlags flags, unsigned int arg);
 std::size_t to_string(MutStringRef &buf, ConvFlags flags, long arg);
 std::size_t to_string(MutStringRef &buf, ConvFlags flags, unsigned long arg);
 std::size_t to_string(MutStringRef &buf, ConvFlags flags, long long arg);
-std::size_t to_string(MutStringRef &buf, ConvFlags flags, unsigned long long arg);
+std::size_t
+to_string(MutStringRef &buf, ConvFlags flags, unsigned long long arg);
 
 template <size_t N>
-constexpr std::size_t to_string(MutStringRef &buf, ConvFlags, String<N> const &str)
+constexpr std::size_t
+to_string(MutStringRef &buf, ConvFlags, String<N> const &str)
 {
     for (char const c : str)
         if (buf.is_space_left())
@@ -60,13 +64,16 @@ constexpr std::size_t to_string(MutStringRef &buf, ConvFlags, String<N> const &s
 
 std::size_t format(MutStringRef &buf, StringRef fmt);
 
-template <class Arg, class ...Args>
-constexpr std::size_t format(MutStringRef &buf, StringRef fmt, Arg arg, Args ...args)
+template <class Arg, class... Args>
+constexpr std::size_t
+format(MutStringRef &buf, StringRef fmt, Arg arg, Args... args)
 {
     std::size_t cnt = 0;
 
-    for (std::size_t i = 0;; ++i) {
-        if (fmt[i] != '(') {
+    for (std::size_t i = 0;; ++i)
+    {
+        if (fmt[i] != '(')
+        {
             ++cnt;
 
             if (buf.is_space_left())
@@ -75,7 +82,8 @@ constexpr std::size_t format(MutStringRef &buf, StringRef fmt, Arg arg, Args ...
             continue;
         }
 
-        if (fmt[i + 1] == '(') {
+        if (fmt[i + 1] == '(')
+        {
             ++cnt;
             ++i;
 
@@ -87,13 +95,12 @@ constexpr std::size_t format(MutStringRef &buf, StringRef fmt, Arg arg, Args ...
 
         ++i;
 
-        ConvFlags flags {
-            .base = 10,
-            .letter_case = Case::LOWER
-        };
+        ConvFlags flags = { .base = 10, .letter_case = Case::LOWER };
 
-        for (; fmt[i] != ')'; ++i) {
-            switch (fmt[i]) {
+        for (; fmt[i] != ')'; ++i)
+        {
+            switch (fmt[i])
+            {
             case 'x':
                 flags.base = 16;
                 flags.letter_case = Case::LOWER;
@@ -116,17 +123,17 @@ constexpr std::size_t format(MutStringRef &buf, StringRef fmt, Arg arg, Args ...
         ++i;
 
         cnt += to_string(buf, flags, arg);
-        
+
         return cnt + format(buf, fmt.slice_from(i), args...);
     }
-    
+
     return cnt;
 }
 
 constexpr bool is_valid(StringRef fmt)
 {
     for (std::size_t i = 0; i < fmt.length(); ++i)
-        if (fmt[i] == '(' && (i+1 == fmt.length() || fmt[i++ + 1] != '('))
+        if (fmt[i] == '(' && (i + 1 == fmt.length() || fmt[i++ + 1] != '('))
             return false;
 
     return true;
@@ -213,14 +220,16 @@ constexpr bool flags_valid(StringRef fmt, unsigned long long const &)
     return true;
 }
 
-template <class Arg, class ...Args>
-constexpr bool is_valid(StringRef fmt, Arg const &arg, Args const &...args)
+template <class Arg, class... Args>
+constexpr bool is_valid(StringRef fmt, Arg const &arg, Args const &... args)
 {
-    for (std::size_t i = 0; i < fmt.length(); ++i) {
+    for (std::size_t i = 0; i < fmt.length(); ++i)
+    {
         if (fmt[i] != '(')
             continue;
 
-        if (i+1 != fmt.length() && fmt[i+1] == '(') {
+        if (i + 1 != fmt.length() && fmt[i + 1] == '(')
+        {
             ++i;
             continue;
         }
@@ -230,8 +239,10 @@ constexpr bool is_valid(StringRef fmt, Arg const &arg, Args const &...args)
         std::size_t begin_flags = i;
 
         bool found = false;
-        for (; i < fmt.length(); ++i) {
-            if (fmt[i] == ')') {
+        for (; i < fmt.length(); ++i)
+        {
+            if (fmt[i] == ')')
+            {
                 found = true;
                 break;
             }
@@ -252,8 +263,9 @@ constexpr bool is_valid(StringRef fmt, Arg const &arg, Args const &...args)
     return false;
 }
 
-template <char ...Fmt, class ...Args>
-constexpr std::size_t snprintf(MutStringRef &buf, CTString<Fmt...>, Args ...args)
+template <char... Fmt, class... Args>
+constexpr std::size_t
+snprintf(MutStringRef &buf, CTString<Fmt...>, Args... args)
 {
     constexpr String<sizeof...(Fmt)> fmt = { { Fmt... } };
 
@@ -264,8 +276,8 @@ constexpr std::size_t snprintf(MutStringRef &buf, CTString<Fmt...>, Args ...args
 
 static Error (*print_func)(StringRef s);
 
-template <char ...Fmt, class ...Args>
-constexpr ValueOrError<std::size_t> printf(CTString<Fmt...> fmt, Args ...args)
+template <char... Fmt, class... Args>
+constexpr ValueOrError<std::size_t> printf(CTString<Fmt...> fmt, Args... args)
 {
     String<2048> buf;
     MutStringRef mut_ref = buf.mut_ref();

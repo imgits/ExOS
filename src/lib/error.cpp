@@ -18,9 +18,13 @@
 
 StringRef error_to_string(Error err)
 {
-    switch (err) {
-    case Error::SUCCESS:    return "Success"_s;
-    case Error::INVALID:    return "Invalid"_s;
-    case Error::NOT_FOUND:  return "Not found"_s;
+    switch (err)
+    {
+    case Error::SUCCESS:
+        return "Success"_s;
+    case Error::INVALID:
+        return "Invalid"_s;
+    case Error::NOT_FOUND:
+        return "Not found"_s;
     }
 }

@@ -21,7 +21,8 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wpadded"
 
-struct EFI_TIME_CAPABILITIES {
+struct EFI_TIME_CAPABILITIES
+{
     UINT32 Resolution;
     UINT32 Accuracy;
     BOOLEAN SetsToZero;
@@ -29,23 +30,18 @@ struct EFI_TIME_CAPABILITIES {
 
 #pragma clang diagnostic pop
 
-using EFI_GET_TIME = EFIAPI EFI_STATUS (*)
-(EFI_TIME *Time,
- EFI_TIME_CAPABILITIES *Capabilities);
+using EFI_GET_TIME = EFIAPI
+EFI_STATUS (*)(EFI_TIME *Time, EFI_TIME_CAPABILITIES *Capabilities);
 
 constexpr UINT8 EFI_TIME_ADJUST_DAYLIGHT = 0x01;
 constexpr UINT8 EFI_TIME_IN_DAYLIGHT = 0x02;
 
 constexpr INT16 EFI_UNSPECIFIED_TIMEZONE = 0x07FF;
 
-using EFI_SET_TIME = EFIAPI EFI_STATUS (*)
-(EFI_TIME *Time);
+using EFI_SET_TIME = EFIAPI EFI_STATUS (*)(EFI_TIME *Time);
 
-using EFI_GET_WAKEUP_TIME = EFIAPI EFI_STATUS (*)
-(BOOLEAN *Enabled,
- BOOLEAN *Pending,
- EFI_TIME *Time);
+using EFI_GET_WAKEUP_TIME = EFIAPI
+EFI_STATUS (*)(BOOLEAN *Enabled, BOOLEAN *Pending, EFI_TIME *Time);
 
-using EFI_SET_WAKEUP_TIME = EFIAPI EFI_STATUS (*)
-(BOOLEAN Enable,
- EFI_TIME *Time);
+using EFI_SET_WAKEUP_TIME = EFIAPI
+EFI_STATUS (*)(BOOLEAN Enable, EFI_TIME *Time);
