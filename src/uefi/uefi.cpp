@@ -17,6 +17,7 @@
 #include "uefi/uefi.h"
 
 #include "lib/util.h"
+#include "asm/asm.h"
 
 EFI_STATUS Uefi::print(EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL &conout, StringRefUefi s)
 {
@@ -36,7 +37,9 @@ Uefi::get_memory_map(EFI_BOOT_SERVICES const &bs, Uefi::MemoryMap &map)
         bs.GetMemoryMap(&map.memory_map_size, map.memory_map, &map.map_key,
                         &map.descriptor_size, &map.descriptor_version);
     if (status_is_error(status) && status != EFI_BUFFER_TOO_SMALL)
+    {
         return status;
+    }
 
     do
     {
@@ -44,13 +47,17 @@ Uefi::get_memory_map(EFI_BOOT_SERVICES const &bs, Uefi::MemoryMap &map)
         status = bs.AllocatePool(EfiLoaderData, map.memory_map_size,
                                  reinterpret_cast<VOID **>(&map.memory_map));
         if (status_is_error(status))
+        {
             return status;
+        }
 
         status =
             bs.GetMemoryMap(&map.memory_map_size, map.memory_map, &map.map_key,
                             &map.descriptor_size, &map.descriptor_version);
         if (status_is_error(status) && status != EFI_BUFFER_TOO_SMALL)
+        {
             return status;
+        }
     } while (status == EFI_BUFFER_TOO_SMALL);
 
     return EFI_SUCCESS;
@@ -58,12 +65,16 @@ Uefi::get_memory_map(EFI_BOOT_SERVICES const &bs, Uefi::MemoryMap &map)
 
 Acpi::rsdp *Uefi::get_acpi_rsdp(EFI_SYSTEM_TABLE const &systab)
 {
-    const EFI_GUID acpi = EFI_ACPI_TABLE_GUID;
+    EFI_GUID const acpi = EFI_ACPI_TABLE_GUID;
 
     for (UINTN i = 0; i < systab.NumberOfTableEntries; ++i)
+    {
         if (are_memory_equal(systab.ConfigurationTable[i].VendorGuid, acpi))
+        {
             return static_cast<Acpi::rsdp *>(
                 systab.ConfigurationTable[i].VendorTable);
+        }
+    }
 
     return nullptr;
 }
@@ -81,7 +92,9 @@ EFI_STATUS Uefi::get_gop(EFI_HANDLE handle, EFI_BOOT_SERVICES const &bs,
     EFI_STATUS status =
         bs.LocateHandleBuffer(ByProtocol, &gop_guid, nullptr, &num, &handles);
     if (status_is_error(status))
+    {
         return status;
+    }
 
     for (UINTN i = 0; i < num; ++i)
     {
@@ -89,7 +102,9 @@ EFI_STATUS Uefi::get_gop(EFI_HANDLE handle, EFI_BOOT_SERVICES const &bs,
                                  reinterpret_cast<VOID **>(&gop), handle,
                                  nullptr, EFI_OPEN_PROTOCOL_BY_HANDLE_PROTOCOL);
         if (status_is_error(status))
+        {
             return status;
+        }
 
         switch (gop->Mode->Info->PixelFormat)
         {
@@ -196,6 +211,5 @@ void Uefi::die(EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL &conout, EFI_STATUS status,
     print(conout, u": "_s);
     print(conout, status_to_string(status));
     print(conout, u"\n"_s);
-    __asm__("hlt");
-    __builtin_unreachable();
+    Asm::hlt();
 }

@@ -16,13 +16,22 @@
 
 #include "cpuid/cpuid.h"
 
-void Cpuid::cpuid(std::uint32_t eax_in, std::uint32_t ebx_in,
+void Cpuid::cpuid(std::uint32_t eax_in, std::uint32_t ecx_in,
                   std::uint32_t &eax_out, std::uint32_t &ebx_out,
                   std::uint32_t &ecx_out, std::uint32_t &edx_out)
 {
     __asm__("cpuid"
             : "=a"(eax_out), "=b"(ebx_out), "=c"(ecx_out), "=d"(edx_out)
-            : "a"(eax_in), "b"(ebx_in));
+            : "a"(eax_in), "c"(ecx_in));
+}
+
+std::uint32_t Cpuid::get_largest_standard_function()
+{
+    uint32_t eax, ebx, ecx, edx;
+
+    cpuid(0, 0, eax, ebx, ecx, edx);
+
+    return eax;
 }
 
 String<12> Cpuid::get_vendor_string()
@@ -39,11 +48,11 @@ String<12> Cpuid::get_vendor_string()
     return u.x;
 }
 
-Cpuid::VersionInfo Cpuid::get_version_info()
+Cpuid::IdentInfo Cpuid::get_version_info()
 {
     union
     {
-        VersionInfo x;
+        IdentInfo x;
         std::uint32_t eax;
     } u;
     std::uint32_t ebx, ecx, edx;
@@ -53,11 +62,11 @@ Cpuid::VersionInfo Cpuid::get_version_info()
     return u.x;
 }
 
-Cpuid::AuxInfo Cpuid::get_aux_info()
+Cpuid::MiscInfo Cpuid::get_misc_info()
 {
     union
     {
-        AuxInfo x;
+        MiscInfo x;
         std::uint32_t ebx;
     } u;
     std::uint32_t eax, ecx, edx;

@@ -18,22 +18,26 @@
 #include "framebuffer/framebuffer.h"
 #include "lib/printf.h"
 #include "cpuid/cpuid.h"
+#include "asm/asm.h"
+#include "segmentation/gdt.h"
 
 extern "C" EFI_STATUS kmain(EFI_HANDLE handle, EFI_SYSTEM_TABLE *systab) EFIAPI;
 
 EFI_STATUS kmain(EFI_HANDLE handle, EFI_SYSTEM_TABLE *systab)
 {
     EFI_BOOT_SERVICES const &bs = *systab->BootServices;
+    EFI_RUNTIME_SERVICES const &rs = *systab->RuntimeServices;
     EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL &conout = *systab->ConOut;
 
     EFI_GRAPHICS_OUTPUT_PROTOCOL *gop;
     EFI_STATUS status = Uefi::get_gop(handle, bs, gop);
     if (Uefi::status_is_error(status))
-        Uefi::die(conout, status, u"Trying to get GOP"_s);
-    if (gop == NULL)
     {
-        __asm__("hlt");
-        __builtin_unreachable();
+        Uefi::die(conout, status, u"Trying to get GOP"_s);
+    }
+    if (gop == nullptr)
+    {
+        rs.ResetSystem(EfiResetShutdown, EFI_SUCCESS, 0, nullptr);
     }
 
     Framebuffer::init(*gop->Mode);
@@ -45,14 +49,19 @@ EFI_STATUS kmain(EFI_HANDLE handle, EFI_SYSTEM_TABLE *systab)
     Uefi::MemoryMap memory_map;
     status = Uefi::get_memory_map(bs, memory_map);
     if (Uefi::status_is_error(status))
+    {
         Uefi::die(conout, status, u"Trying to get the memory map"_s);
+    }
 
     status = bs.ExitBootServices(handle, memory_map.map_key);
     if (Uefi::status_is_error(status))
+    {
         Uefi::die(conout, status, u"ExitBootServices()"_s);
+    }
+
+    Segmentation::setup_gdt();
 
     printf("Welcome! [CPU: ()]\n"_cts, Cpuid::get_vendor_string());
 
-    __asm__("hlt");
-    __builtin_unreachable();
+    Asm::hlt();
 }

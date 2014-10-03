@@ -50,10 +50,9 @@ constexpr EFI_GUID EFI_EVENT_GROUP_MEMORY_MAP_CHANGE = {
     0x78bee926, 0x692f, 0x48fd, 0x9e, 0xdb, 0x1, 0x42, 0x2e, 0xf0, 0xd7, 0xab
 };
 
-constexpr EFI_GUID EFI_EVENT_GROUP_READY_TO_BOOT = { 0x7ce88fb3, 0x4bd7, 0x4679,
-                                                     0x87,       0xa8,   0xa8,
-                                                     0xd8,       0xde,   0xe5,
-                                                     0xd,        0x2b };
+constexpr EFI_GUID EFI_EVENT_GROUP_READY_TO_BOOT = {
+    0x7ce88fb3, 0x4bd7, 0x4679, 0x87, 0xa8, 0xa8, 0xd8, 0xde, 0xe5, 0xd, 0x2b
+};
 
 using EFI_CLOSE_EVENT = EFIAPI EFI_STATUS (*)(EFI_EVENT Event);
 

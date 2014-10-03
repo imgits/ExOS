@@ -61,10 +61,14 @@ void scroll()
     std::size_t const limit = g_current_height * g_pixels_per_scan_line;
 
     for (std::size_t i = 0; i < limit; ++i)
+    {
         g_framebuffer[i] = g_framebuffer[i + g_font_line_size];
+    }
 
     for (std::size_t i = 0; i < g_font_line_size; ++i)
+    {
         g_framebuffer[limit + i] = 0;
+    }
 }
 
 void newline()
@@ -72,9 +76,13 @@ void newline()
     g_current_width = 0;
 
     if (g_current_height + Font::Glyph::HEIGHT > g_last_font_column)
+    {
         scroll();
+    }
     else
+    {
         g_current_height += Font::Glyph::HEIGHT;
+    }
 }
 
 void put_glyph(Font::Glyph glyph)
@@ -89,11 +97,15 @@ void put_glyph(Font::Glyph glyph)
             std::size_t const idx = height * g_pixels_per_scan_line + width;
 
             if (glyph.data[i] & (0x80 >> j))
+            {
                 g_framebuffer[idx] =
                     g_color_array[to_underlying_type(g_current_fg_color)];
+            }
             else
+            {
                 g_framebuffer[idx] =
                     g_color_array[to_underlying_type(g_current_bg_color)];
+            }
         }
     }
 }
@@ -171,7 +183,9 @@ void Framebuffer::put_char(char c)
     }
 
     if (g_current_width + Font::Glyph::HEIGHT > g_max_width)
+    {
         newline();
+    }
 
     put_glyph(Font::get_glyph(c));
 
@@ -181,7 +195,9 @@ void Framebuffer::put_char(char c)
 void Framebuffer::put_string(StringRef x)
 {
     for (char const c : x)
+    {
         put_char(c);
+    }
 }
 
 void Framebuffer::clear_screen()

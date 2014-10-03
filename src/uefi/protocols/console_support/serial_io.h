@@ -18,10 +18,9 @@
 
 #include "uefi/types.h"
 
-constexpr EFI_GUID EFI_SERIAL_IO_PROTOCOL_GUID = { 0xBB25CF6F, 0xF1D4, 0x11D2,
-                                                   0x9A,       0x0C,   0x00,
-                                                   0x90,       0x27,   0x3F,
-                                                   0xC1,       0xFD };
+constexpr EFI_GUID EFI_SERIAL_IO_PROTOCOL_GUID = {
+    0xBB25CF6F, 0xF1D4, 0x11D2, 0x9A, 0x0C, 0x00, 0x90, 0x27, 0x3F, 0xC1, 0xFD
+};
 
 constexpr UINT32 EFI_SERIAL_IO_PROTOCOL_REVISION = 0x00010000;
 

@@ -25,38 +25,119 @@ namespace Cpuid
 
 // Executes the cpuid instruction with the given register values.
 void
-cpuid(std::uint32_t eax_in, std::uint32_t ebx_in, std::uint32_t &eax_out,
+cpuid(std::uint32_t eax_in, std::uint32_t ecx_in, std::uint32_t &eax_out,
       std::uint32_t &ebx_out, std::uint32_t &ecx_out, std::uint32_t &edx_out);
+
+std::uint32_t get_largest_standard_function();
 
 // Returns the CPU vendor string (GenuineIntel, AuthenticAMD, etc...).
 String<12> get_vendor_string();
 
-struct VersionInfo
+struct IdentInfoAmd
+{
+    std::uint32_t stepping : 4;
+    std::uint32_t base_model : 4;
+    std::uint32_t base_family : 4;
+    std::uint32_t reserved : 4;
+    std::uint32_t ext_model : 4;
+    std::uint32_t ext_family : 8;
+    std::uint32_t reserved2 : 4;
+};
+
+struct IdentInfoIntel
 {
     std::uint32_t stepping_id : 4;
     std::uint32_t model : 4;
     std::uint32_t family_id : 4;
-    std::uint32_t proc_type : 2;
-    std::uint32_t res : 2;
-    std::uint32_t ext_model_id : 4;
-    std::uint32_t ext_family_id : 8;
-    std::uint32_t res2 : 4;
+    std::uint32_t processor_type : 2;
+    std::uint32_t reserved : 2;
+    std::uint32_t extended_model_id : 4;
+    std::uint32_t family_extended_id : 8;
+    std::uint32_t reserved2 : 4;
 };
 
-VersionInfo get_version_info();
-
-struct AuxInfo
+union IdentInfo
 {
-    std::uint32_t brand_index : 8;
-    std::uint32_t clflush_line_size : 8;
-    std::uint32_t max_num_cpus : 8;
-    std::uint32_t initial_apic_id : 8;
+    IdentInfoAmd amd;
+    IdentInfoIntel intel;
 };
 
-AuxInfo get_aux_info();
+IdentInfo get_version_info();
 
-struct FeatureInfo
+struct MiscInfo
 {
+    std::uint32_t brand_id : 8;
+    std::uint32_t clflush : 8;
+    std::uint32_t logical_processor_count : 8;
+    std::uint32_t local_apic_id : 8;
+};
+
+MiscInfo get_misc_info();
+
+struct FeatureInfoAmd
+{
+    // ECX
+
+    std::uint32_t sse3 : 1;
+    std::uint32_t pclmulqdq : 1;
+    std::uint32_t reserved : 1;
+    std::uint32_t monitor : 1;
+    std::uint32_t reserved2 : 5;
+    std::uint32_t ssse3 : 1;
+    std::uint32_t reserved3 : 2;
+    std::uint32_t fma : 1;
+    std::uint32_t cmpxchg16b : 1;
+    std::uint32_t reserved4 : 5;
+    std::uint32_t sse41 : 1;
+    std::uint32_t sse42 : 1;
+    std::uint32_t reserved5 : 1;
+    std::uint32_t movbe : 1;
+    std::uint32_t popcnt : 1;
+    std::uint32_t reserved6 : 1;
+    std::uint32_t aes : 1;
+    std::uint32_t xsave : 1;
+    std::uint32_t osxsave : 1;
+    std::uint32_t avx : 1;
+    std::uint32_t f16c : 1;
+    std::uint32_t reserved7 : 1;
+    std::uint32_t raz : 1;
+
+    // EDX
+
+    std::uint32_t fpu : 1;
+    std::uint32_t vme : 1;
+    std::uint32_t de : 1;
+    std::uint32_t pse : 1;
+    std::uint32_t tsc : 1;
+    std::uint32_t msr : 1;
+    std::uint32_t pae : 1;
+    std::uint32_t mce : 1;
+    std::uint32_t cmpxchg8b : 1;
+    std::uint32_t apic : 1;
+    std::uint32_t reserved8 : 1;
+    std::uint32_t sysenter_sysexit : 1;
+    std::uint32_t mtrr : 1;
+    std::uint32_t pge : 1;
+    std::uint32_t mca : 1;
+    std::uint32_t cmov : 1;
+    std::uint32_t pat : 1;
+    std::uint32_t pse36 : 1;
+    std::uint32_t reserved9 : 1;
+    std::uint32_t clfsh : 1;
+    std::uint32_t reserved10 : 3;
+    std::uint32_t mmx : 1;
+    std::uint32_t fxsr : 1;
+    std::uint32_t sse : 1;
+    std::uint32_t sse2 : 1;
+    std::uint32_t reserved11 : 1;
+    std::uint32_t htt : 1;
+    std::uint32_t reserved12 : 3;
+};
+
+struct FeatureInfoIntel
+{
+    // ECX
+
     std::uint32_t sse3 : 1;      // SSE3 extensions
     std::uint32_t pclmulqdq : 1; // Carryless Multiplication
     std::uint32_t dtes64 : 1;    // 64-bit DS Area
@@ -90,6 +171,8 @@ struct FeatureInfo
     std::uint32_t rdrand : 1;
     std::uint32_t zero : 1;
 
+    // EDX
+
     std::uint32_t fpu : 1;  // x87 FPU on Chip
     std::uint32_t vme : 1;  // Virtual-8086 Mode Enhancement
     std::uint32_t de : 1;   // Debugging Extensions
@@ -122,6 +205,12 @@ struct FeatureInfo
     std::uint32_t tm : 1;   // Therm. Monitor
     std::uint32_t res5 : 1;
     std::uint32_t pbe : 1; // Pend. Brk. EN.
+};
+
+union FeatureInfo
+{
+    FeatureInfoIntel amd;
+    FeatureInfoIntel intel;
 };
 
 FeatureInfo get_feature_info();

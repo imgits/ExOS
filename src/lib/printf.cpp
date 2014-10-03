@@ -23,10 +23,10 @@ namespace
 
 char digit_to_ascii(unsigned char c, Case letter_case)
 {
-    static constexpr char lowercase_letters[] =
-        "0123456789abcdefghijklmnopqrstuvwxyz";
-    static constexpr char uppercase_letters[] =
-        "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    static constexpr char lowercase_letters[] = "0123456789abcdefghijklmnopqrst"
+                                                "uvwxyz";
+    static constexpr char uppercase_letters[] = "0123456789ABCDEFGHIJKLMNOPQRST"
+                                                "UVWXYZ";
 
     switch (letter_case)
     {
@@ -42,8 +42,12 @@ char digit_to_ascii(unsigned char c, Case letter_case)
 std::size_t to_string(MutStringRef &buf, ConvFlags, StringRef arg)
 {
     for (char const c : arg)
+    {
         if (buf.is_space_left())
+        {
             buf.push_back(c);
+        }
+    }
 
     return arg.length();
 }
@@ -108,7 +112,9 @@ std::size_t to_string(MutStringRef &buf, ConvFlags flags, long long arg)
         ++cnt;
 
         if (buf.is_space_left())
+        {
             buf.push_back('-');
+        }
     }
 
     return cnt + to_string(buf, flags, unsigned_abs(arg));
@@ -121,12 +127,16 @@ std::size_t format(MutStringRef &buf, StringRef fmt)
     for (std::size_t i = 0; i < fmt.length(); ++i)
     {
         if (fmt[i] == '(' && fmt[i + 1] == '(')
+        {
             ++i;
+        }
 
         ++cnt;
 
         if (buf.is_space_left())
+        {
             buf.push_back(fmt[i]);
+        }
     }
 
     return cnt;

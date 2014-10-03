@@ -70,9 +70,9 @@ constexpr UINT64 EFI_OS_INDICATIONS_FMP_CAPSULE_SUPPORTED = 0x0000000000000008;
 constexpr UINT64 EFI_OS_INDICATIONS_CAPSULE_RESULT_VAR_SUPPORTED =
     0x0000000000000010;
 
-constexpr EFI_GUID EFI_CAPSULE_REPORT_GUID = { 0x39b68c46, 0xf7fb, 0x441b, 0xb6,
-                                               0xec,       0x16,   0xb0,   0xf6,
-                                               0x98,       0x21,   0xf3 };
+constexpr EFI_GUID EFI_CAPSULE_REPORT_GUID = {
+    0x39b68c46, 0xf7fb, 0x441b, 0xb6, 0xec, 0x16, 0xb0, 0xf6, 0x98, 0x21, 0xf3
+};
 
 struct EFI_CAPSULE_RESULT_VARIABLE_HEADER
 {

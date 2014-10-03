@@ -15,11 +15,10 @@
  */
 
 #include "lib/assert.h"
+#include "asm/asm.h"
 
 void abort(const char *, std::size_t, const char *, std::size_t, const char *,
            std::size_t, int)
 {
-    __asm__ volatile("cli; hlt");
-
-    __builtin_unreachable();
+    Asm::hlt();
 }

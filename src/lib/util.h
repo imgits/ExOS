@@ -32,7 +32,9 @@ template <class T>
 constexpr void set_array(T *ptr, T c, std::size_t size)
 {
     for (std::size_t i = 0; i < size; ++i)
+    {
         ptr[i] = c;
+    }
 }
 
 template <class T>
@@ -53,8 +55,12 @@ constexpr bool are_memory_equal(T const &x, T const &y)
     auto b = reinterpret_cast<std::uint8_t const *>(&y);
 
     for (std::size_t i = 0; i < sizeof(T); ++i)
+    {
         if (a[i] != b[i])
+        {
             return false;
+        }
+    }
 
     return true;
 }

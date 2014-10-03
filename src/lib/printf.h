@@ -56,8 +56,12 @@ constexpr std::size_t
 to_string(MutStringRef &buf, ConvFlags, String<N> const &str)
 {
     for (char const c : str)
+    {
         if (buf.is_space_left())
+        {
             buf.push_back(c);
+        }
+    }
 
     return N;
 }
@@ -77,7 +81,9 @@ format(MutStringRef &buf, StringRef fmt, Arg arg, Args... args)
             ++cnt;
 
             if (buf.is_space_left())
+            {
                 buf.push_back(fmt[i]);
+            }
 
             continue;
         }
@@ -88,7 +94,9 @@ format(MutStringRef &buf, StringRef fmt, Arg arg, Args... args)
             ++i;
 
             if (buf.is_space_left())
+            {
                 buf.push_back('(');
+            }
 
             continue;
         }
@@ -133,8 +141,12 @@ format(MutStringRef &buf, StringRef fmt, Arg arg, Args... args)
 constexpr bool is_valid(StringRef fmt)
 {
     for (std::size_t i = 0; i < fmt.length(); ++i)
+    {
         if (fmt[i] == '(' && (i + 1 == fmt.length() || fmt[i++ + 1] != '('))
+        {
             return false;
+        }
+    }
 
     return true;
 }
@@ -142,7 +154,9 @@ constexpr bool is_valid(StringRef fmt)
 constexpr bool flags_valid(StringRef fmt, StringRef const &)
 {
     if (fmt.length() > 0)
+    {
         return false;
+    }
 
     return true;
 }
@@ -151,7 +165,9 @@ template <class T, std::size_t N>
 constexpr bool flags_valid(StringRef fmt, Array<T, N> const &)
 {
     if (fmt.length() > 0)
+    {
         return false;
+    }
 
     return true;
 }
@@ -159,64 +175,96 @@ constexpr bool flags_valid(StringRef fmt, Array<T, N> const &)
 constexpr bool flags_valid(StringRef fmt, void const *const &)
 {
     for (char const c : fmt)
+    {
         if (c != 'x' && c != 'X')
+        {
             return false;
+        }
+    }
     return true;
 }
 
 constexpr bool flags_valid(StringRef fmt, void *const &)
 {
     for (char const c : fmt)
+    {
         if (c != 'x' && c != 'X')
+        {
             return false;
+        }
+    }
     return true;
 }
 
 constexpr bool flags_valid(StringRef fmt, int const &)
 {
     for (char const c : fmt)
+    {
         if (c != 'x' && c != 'X' && c != 'o' && c != 'O')
+        {
             return false;
+        }
+    }
     return true;
 }
 
 constexpr bool flags_valid(StringRef fmt, unsigned int const &)
 {
     for (char const c : fmt)
+    {
         if (c != 'x' && c != 'X' && c != 'o' && c != 'O')
+        {
             return false;
+        }
+    }
     return true;
 }
 
 constexpr bool flags_valid(StringRef fmt, long const &)
 {
     for (char const c : fmt)
+    {
         if (c != 'x' && c != 'X' && c != 'o' && c != 'O')
+        {
             return false;
+        }
+    }
     return true;
 }
 
 constexpr bool flags_valid(StringRef fmt, unsigned long const &)
 {
     for (char const c : fmt)
+    {
         if (c != 'x' && c != 'X' && c != 'o' && c != 'O')
+        {
             return false;
+        }
+    }
     return true;
 }
 
 constexpr bool flags_valid(StringRef fmt, long long const &)
 {
     for (char const c : fmt)
+    {
         if (c != 'x' && c != 'X' && c != 'o' && c != 'O')
+        {
             return false;
+        }
+    }
     return true;
 }
 
 constexpr bool flags_valid(StringRef fmt, unsigned long long const &)
 {
     for (char const c : fmt)
+    {
         if (c != 'x' && c != 'X' && c != 'o' && c != 'O')
+        {
             return false;
+        }
+    }
     return true;
 }
 
@@ -226,7 +274,9 @@ constexpr bool is_valid(StringRef fmt, Arg const &arg, Args const &... args)
     for (std::size_t i = 0; i < fmt.length(); ++i)
     {
         if (fmt[i] != '(')
+        {
             continue;
+        }
 
         if (i + 1 != fmt.length() && fmt[i + 1] == '(')
         {
@@ -248,12 +298,16 @@ constexpr bool is_valid(StringRef fmt, Arg const &arg, Args const &... args)
             }
         }
         if (!found)
+        {
             return false;
+        }
 
         std::size_t end_flags = i;
 
         if (!flags_valid(fmt.slice_from_until(begin_flags, end_flags), arg))
+        {
             return false;
+        }
 
         ++i;
 
@@ -286,7 +340,9 @@ constexpr ValueOrError<std::size_t> printf(CTString<Fmt...> fmt, Args... args)
 
     Error err = print_func(mut_ref.to_immut_ref());
     if (err != Error::SUCCESS)
+    {
         return err;
+    }
 
     return result;
 }
