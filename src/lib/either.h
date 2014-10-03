@@ -22,7 +22,7 @@
 
 // Tagged union for 2 data members.
 
-enum class Tag : std::uint8_t
+enum class Tag : uint8_t
 {
     LEFT,
     RIGHT

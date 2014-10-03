@@ -32,39 +32,39 @@ enum class PrivilegeLevel
 
 struct SegmentSelector
 {
-    std::uint16_t requestor_privilege_level : 2;
-    std::uint16_t table_indicator : 1;
-    std::uint16_t selector_index : 13;
+    uint16_t requestor_privilege_level : 2;
+    uint16_t table_indicator : 1;
+    uint16_t selector_index : 13;
 };
 
 struct DescriptorTableRegister
 {
-    std::uint16_t limit;
-    std::uint64_t base_address __attribute__((packed));
+    uint16_t limit;
+    uint64_t base_address __attribute__((packed));
 };
 
 struct CodeSegmentDescriptor
 {
-    std::uint64_t ignored : 42;
-    std::uint64_t conforming : 1;
-    std::uint64_t one : 1;
-    std::uint64_t one2 : 1;
-    std::uint64_t descriptor_privilege_level : 2;
-    std::uint64_t present : 1;
-    std::uint64_t ignored2 : 5;
-    std::uint64_t long_attribute : 1;
-    std::uint64_t default_operand_size : 1;
-    std::uint64_t ignored3 : 9;
+    uint64_t ignored : 42;
+    uint64_t conforming : 1;
+    uint64_t one : 1;
+    uint64_t one2 : 1;
+    uint64_t descriptor_privilege_level : 2;
+    uint64_t present : 1;
+    uint64_t ignored2 : 5;
+    uint64_t long_attribute : 1;
+    uint64_t default_operand_size : 1;
+    uint64_t ignored3 : 9;
 };
 
 struct DataSegmentDescriptor
 {
-    std::uint64_t ignored : 43;
-    std::uint64_t zero : 1;
-    std::uint64_t one : 1;
-    std::uint64_t ignored2 : 2;
-    std::uint64_t present : 1;
-    std::uint64_t ignored3 : 16;
+    uint64_t ignored : 43;
+    uint64_t zero : 1;
+    uint64_t one : 1;
+    uint64_t ignored2 : 2;
+    uint64_t present : 1;
+    uint64_t ignored3 : 16;
 };
 
 enum class SystemSegmentDescriptorTypes
@@ -79,48 +79,48 @@ enum class SystemSegmentDescriptorTypes
 
 struct SystemSegmentDescriptor
 {
-    std::uint64_t segment_limit_15_0 : 16;
-    std::uint64_t base_address_23_0 : 24;
-    std::uint64_t type : 4;
-    std::uint64_t zero : 1;
-    std::uint64_t descriptor_privilege_level : 2;
-    std::uint64_t present : 1;
-    std::uint64_t sement_limit_19_16 : 4;
-    std::uint64_t avl : 1;
-    std::uint64_t ignored : 2;
-    std::uint64_t granularity : 1;
-    std::uint64_t base_address_31_24 : 8;
-    std::uint64_t base_adddress_32_63 : 32;
-    std::uint64_t ignored2 : 8;
-    std::uint64_t zero2 : 5;
-    std::uint64_t ignored3 : 19;
+    uint64_t segment_limit_15_0 : 16;
+    uint64_t base_address_23_0 : 24;
+    uint64_t type : 4;
+    uint64_t zero : 1;
+    uint64_t descriptor_privilege_level : 2;
+    uint64_t present : 1;
+    uint64_t sement_limit_19_16 : 4;
+    uint64_t avl : 1;
+    uint64_t ignored : 2;
+    uint64_t granularity : 1;
+    uint64_t base_address_31_24 : 8;
+    uint64_t base_adddress_32_63 : 32;
+    uint64_t ignored2 : 8;
+    uint64_t zero2 : 5;
+    uint64_t ignored3 : 19;
 };
 
 struct CallGateDescriptor
 {
-    std::uint64_t target_offset_15_0 : 16;
+    uint64_t target_offset_15_0 : 16;
     SegmentSelector target_selector;
-    std::uint64_t ignored : 8;
-    std::uint64_t type : 4;
-    std::uint64_t zero : 1;
-    std::uint64_t descriptor_privilege_level : 2;
-    std::uint64_t present : 1;
-    std::uint64_t target_offset_63_16 : 48;
-    std::uint64_t ignored2 : 8;
-    std::uint64_t zero2 : 5;
-    std::uint64_t ignored3 : 19;
+    uint64_t ignored : 8;
+    uint64_t type : 4;
+    uint64_t zero : 1;
+    uint64_t descriptor_privilege_level : 2;
+    uint64_t present : 1;
+    uint64_t target_offset_63_16 : 48;
+    uint64_t ignored2 : 8;
+    uint64_t zero2 : 5;
+    uint64_t ignored3 : 19;
 };
 
 struct InterruptAndTrapGateDescriptor
 {
-    std::uint64_t target_offset_15_0;
+    uint64_t target_offset_15_0;
     SegmentSelector target_selector;
-    std::uint64_t ist : 3;
-    std::uint64_t ignored : 5;
-    std::uint64_t type : 4;
-    std::uint64_t zero : 1;
-    std::uint64_t descriptor_privilege_level : 2;
-    std::uint64_t present : 1;
-    std::uint64_t target_offset_63_16 : 48;
-    std::uint64_t ignored2 : 32;
+    uint64_t ist : 3;
+    uint64_t ignored : 5;
+    uint64_t type : 4;
+    uint64_t zero : 1;
+    uint64_t descriptor_privilege_level : 2;
+    uint64_t present : 1;
+    uint64_t target_offset_63_16 : 48;
+    uint64_t ignored2 : 32;
 };

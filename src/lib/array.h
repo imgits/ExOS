@@ -24,7 +24,7 @@
 
 // Replacement for C-style arrays.
 
-template <class T, std::size_t N>
+template <class T, size_t N>
 struct Array
 {
     T m_data[N];
@@ -39,7 +39,7 @@ struct Array
         return MutArrayRef<T>(m_data);
     }
 
-    constexpr T const &operator[](std::size_t i) const
+    constexpr T const &operator[](size_t i) const
     {
         assert(i < N);
         return m_data[i];
@@ -50,23 +50,23 @@ struct Array
         return m_data;
     }
 
-    constexpr std::size_t size() const
+    constexpr size_t size() const
     {
         return N;
     }
 };
 
-template <class T, std::size_t N>
+template <class T, size_t N>
 constexpr T const *begin(Array<T, N> const &x)
 {
     return x.data();
 }
 
-template <class T, std::size_t N>
+template <class T, size_t N>
 constexpr T const *end(Array<T, N> const &x)
 {
     return x.data() + x.size();
 }
 
-template <std::size_t N>
+template <size_t N>
 using String = Array<char, N>;

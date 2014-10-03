@@ -21,11 +21,11 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wmissing-prototypes"
 
-extern "C" void *memset(void *b, int c, std::size_t len)
+extern "C" void *memset(void *b, int c, size_t len)
 {
     auto a = reinterpret_cast<unsigned char *>(b);
 
-    for (std::size_t i = 0; i < len; ++i)
+    for (size_t i = 0; i < len; ++i)
     {
         a[i] = static_cast<unsigned char>(c);
     }
@@ -33,7 +33,7 @@ extern "C" void *memset(void *b, int c, std::size_t len)
     return b;
 }
 
-extern "C" void __bzero(void *s, std::size_t n)
+extern "C" void __bzero(void *s, size_t n)
 {
     memset(s, 0, n);
 }

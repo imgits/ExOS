@@ -56,10 +56,9 @@ void Segmentation::setup_gdt()
                                .long_attribute = 1,
                                .default_operand_size = 0 };
 
-    DescriptorTableRegister const gdtr = {
-        .base_address = reinterpret_cast<std::uint64_t>(&gdt),
-        .limit = sizeof(gdt) - 1
-    };
+    DescriptorTableRegister const gdtr = { .base_address =
+                                               reinterpret_cast<uint64_t>(&gdt),
+                                           .limit = sizeof(gdt) - 1 };
 
     Asm::lgdt(gdtr);
 

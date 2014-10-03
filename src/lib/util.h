@@ -29,18 +29,18 @@ constexpr auto to_underlying_type(T x)
 }
 
 template <class T>
-constexpr void set_array(T *ptr, T c, std::size_t size)
+constexpr void set_array(T *ptr, T c, size_t size)
 {
-    for (std::size_t i = 0; i < size; ++i)
+    for (size_t i = 0; i < size; ++i)
     {
         ptr[i] = c;
     }
 }
 
 template <class T>
-constexpr void reverse_array_inplace(T *ptr, std::size_t n)
+constexpr void reverse_array_inplace(T *ptr, size_t n)
 {
-    for (std::size_t i = n - 1, j = 0; j < i; --i, ++j)
+    for (size_t i = n - 1, j = 0; j < i; --i, ++j)
     {
         T x = ptr[i];
         ptr[i] = ptr[j];
@@ -51,10 +51,10 @@ constexpr void reverse_array_inplace(T *ptr, std::size_t n)
 template <class T>
 constexpr bool are_memory_equal(T const &x, T const &y)
 {
-    auto a = reinterpret_cast<std::uint8_t const *>(&x);
-    auto b = reinterpret_cast<std::uint8_t const *>(&y);
+    auto a = reinterpret_cast<uint8_t const *>(&x);
+    auto b = reinterpret_cast<uint8_t const *>(&y);
 
-    for (std::size_t i = 0; i < sizeof(T); ++i)
+    for (size_t i = 0; i < sizeof(T); ++i)
     {
         if (a[i] != b[i])
         {

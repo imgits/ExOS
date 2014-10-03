@@ -22,7 +22,7 @@
 
 // Generalized concept of optional values.
 
-enum class Unit : std::uint8_t
+enum class Unit : uint8_t
 {
     NONE
 };
