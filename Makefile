@@ -7,11 +7,11 @@ CXXFLAGS = -Weverything -Werror \
 	   -Wno-c++98-compat -Wno-c++98-c++11-compat-pedantic \
 	   -Wno-c++98-compat-pedantic -Wno-c99-extensions \
 	   -Wno-gnu-designator -Wno-gnu-string-literal-operator-template \
-	   -ffreestanding \
+	   -ffreestanding -flto \
 	   -fno-exceptions -fno-rtti \
 	   -std=c++1y \
 	   -iquote src/ \
-	   -g \
+	   -O \
 	   -target x86_64--macho
 
 LDFLAGS = -static \

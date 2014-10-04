@@ -66,7 +66,11 @@ EFI_STATUS kmain(EFI_HANDLE handle, EFI_SYSTEM_TABLE *systab)
 
     Segmentation::setup_idt();
 
-    printf("Welcome! [CPU: ()]\n"_cts, Cpuid::get_vendor_string());
+    printf("Welcome! [CPU: ()]\n\n"_cts, Cpuid::get_vendor_string());
+
+    printf("Testing if interrupts are working ((provoking GP)...\n\n"_cts);
+
+    __asm__("int $42");
 
     Asm::hlt();
 }
