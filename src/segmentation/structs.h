@@ -113,7 +113,7 @@ struct CallGateDescriptor
 
 struct InterruptAndTrapGateDescriptor
 {
-    uint64_t target_offset_15_0;
+    uint64_t target_offset_15_0 : 16;
     SegmentSelector target_selector;
     uint64_t ist : 3;
     uint64_t ignored : 5;
@@ -121,6 +121,7 @@ struct InterruptAndTrapGateDescriptor
     uint64_t zero : 1;
     uint64_t descriptor_privilege_level : 2;
     uint64_t present : 1;
-    uint64_t target_offset_63_16 : 48;
+    uint64_t target_offset_31_16 : 16;
+    uint64_t target_offset_63_32 : 32;
     uint64_t ignored2 : 32;
 };

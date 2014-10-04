@@ -314,7 +314,7 @@ constexpr size_t snprintf(MutStringRef &buf, CTString<Fmt...>, Args... args)
     return format(buf, fmt.ref(), args...);
 }
 
-static Error (*print_func)(StringRef s);
+extern Error (*print_func)(StringRef);
 
 template <char... Fmt, class... Args>
 constexpr ValueOrError<size_t> printf(CTString<Fmt...> fmt, Args... args)

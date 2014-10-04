@@ -20,8 +20,11 @@
 #include "cpuid/cpuid.h"
 #include "asm/asm.h"
 #include "segmentation/gdt.h"
+#include "segmentation/idt.h"
 
 extern "C" EFI_STATUS kmain(EFI_HANDLE handle, EFI_SYSTEM_TABLE *systab) EFIAPI;
+
+Error (*print_func)(StringRef);
 
 EFI_STATUS kmain(EFI_HANDLE handle, EFI_SYSTEM_TABLE *systab)
 {
@@ -42,9 +45,9 @@ EFI_STATUS kmain(EFI_HANDLE handle, EFI_SYSTEM_TABLE *systab)
 
     Framebuffer::init(*gop->Mode);
 
-    Framebuffer::clear_screen();
-
     print_func = Framebuffer::print_func;
+
+    Framebuffer::clear_screen();
 
     Uefi::MemoryMap memory_map;
     status = Uefi::get_memory_map(bs, memory_map);
@@ -60,6 +63,8 @@ EFI_STATUS kmain(EFI_HANDLE handle, EFI_SYSTEM_TABLE *systab)
     }
 
     Segmentation::setup_gdt();
+
+    Segmentation::setup_idt();
 
     printf("Welcome! [CPU: ()]\n"_cts, Cpuid::get_vendor_string());
 

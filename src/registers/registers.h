@@ -106,14 +106,14 @@ struct Efer
     uint64_t system_call_extensions : 1;
     uint64_t reserved : 7;
     uint64_t long_mode_enable : 1;
-    uint64_t reserved : 1;
+    uint64_t reserved2 : 1;
     uint64_t long_mode_active : 1;
     uint64_t no_execute_enable : 1;
     uint64_t secure_virtual_machine_enable : 1;
     uint64_t long_mode_segment_limit_enable : 1;
     uint64_t fast_fxsave_fxrstor : 1;
     uint64_t translation_cache_extensions : 1;
-    uint64_t reserved2 : 48;
+    uint64_t reserved3 : 48;
 };
 
 } // end namespace Registers

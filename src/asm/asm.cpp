@@ -27,6 +27,11 @@ void Asm::lgdt(DescriptorTableRegister const &dtr)
     __asm__("lgdt %[dtr]" : : [dtr] "m"(dtr));
 }
 
+void Asm::lidt(DescriptorTableRegister const &dtr)
+{
+    __asm__("lidt %[dtr]" : : [dtr] "m"(dtr));
+}
+
 void Asm::reload_cs_register(SegmentSelector selector)
 {
     uint64_t dummy;

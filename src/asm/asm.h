@@ -25,6 +25,8 @@ namespace Asm
 
 void lgdt(DescriptorTableRegister const &dtr);
 
+void lidt(DescriptorTableRegister const &dtr);
+
 void reload_cs_register(SegmentSelector selector);
 
 } // end namespace Asm

@@ -14,16 +14,10 @@
  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#include "lib/assert.h"
+#pragma once
 
-#include "asm/asm.h"
-#include "lib/printf.h"
-
-void abort(const char *cond, size_t cond_size, const char *func,
-           size_t func_size, const char *file, size_t file_size, int line)
+namespace Segmentation
 {
-    printf("():(): (): Assertion '()' failed.\n"_cts,
-           StringRef(file, file_size), line, StringRef(func, func_size),
-           StringRef(cond, cond_size));
-    Asm::hlt();
+
+void setup_idt();
 }

@@ -1,16 +1,17 @@
-SOURCES = $(shell find src -name "*.cpp")
+SOURCES = $(shell find src -name "*.cpp" -o -name "*.s")
 
-OBJECTS = $(SOURCES:.cpp=.o)
+OBJECTS1 = $(SOURCES:.cpp=.o)
+OBJECTS = $(OBJECTS1:.s=.o)
 
 CXXFLAGS = -Weverything -Werror \
 	   -Wno-c++98-compat -Wno-c++98-c++11-compat-pedantic \
 	   -Wno-c++98-compat-pedantic -Wno-c99-extensions \
 	   -Wno-gnu-designator -Wno-gnu-string-literal-operator-template \
-	   -ffreestanding -flto \
+	   -ffreestanding \
 	   -fno-exceptions -fno-rtti \
 	   -std=c++1y \
 	   -iquote src/ \
-	   -O \
+	   -g \
 	   -target x86_64--macho
 
 LDFLAGS = -static \
@@ -29,8 +30,8 @@ QEMU_FLAGS = -pflash OVMF.fd
 
 QEMU_DEBUG_FLAGS = $(QEMU_FLAGS) -debugcon file:ovmf_debug.log \
 		   -global isa-debugcon.iobase=0x402 \
-		   -d guest_errors,cpu_reset,in_asm -S -s \
-		   -no-reboot
+		   -d guest_errors,cpu_reset,in_asm \
+		   -S -s -no-reboot
 
 all: exos.efi
 
