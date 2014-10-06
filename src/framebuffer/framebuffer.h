@@ -18,6 +18,7 @@
 
 #include "lib/error.h"
 #include "lib/immut_array_ref.h"
+#include "lib/maybe.h"
 
 struct EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE;
 
@@ -47,7 +48,7 @@ enum class Color
 
 // Initializes the framebuffer. You must call this before calling any other
 // framebuffer function.
-Error init(EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE const &gop_mode);
+Maybe<Error> init(EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE const &gop_mode);
 
 // Redraws the entire screen in the current background color.
 void clear_screen();
@@ -61,6 +62,6 @@ void put_char(char c);
 void put_string(StringRef x);
 
 // To be plugged into printf().
-Error print_func(StringRef s);
+Maybe<Error> print_func(StringRef s);
 
 } // namespace Framebuffer end

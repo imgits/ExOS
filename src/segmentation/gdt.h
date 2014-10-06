@@ -25,13 +25,15 @@ namespace Segmentation
 
 void setup_gdt();
 
-constexpr SegmentSelector CS_SELECTOR_KERNEL = {
+constexpr SegmentSelector CS_SELECTOR_KERNEL =
+{
     .requestor_privilege_level = to_underlying_type(PrivilegeLevel::KERNEL),
     .table_indicator = to_underlying_type(TableIndicator::GDT),
     .selector_index = 2
 };
 
-constexpr SegmentSelector CS_SELECTOR_USER = {
+constexpr SegmentSelector CS_SELECTOR_USER =
+{
     .requestor_privilege_level = to_underlying_type(PrivilegeLevel::USER),
     .table_indicator = to_underlying_type(TableIndicator::GDT),
     .selector_index = 4

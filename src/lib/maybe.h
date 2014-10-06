@@ -28,8 +28,7 @@ enum class Unit : uint8_t
 };
 
 template <class T>
-class Maybe
-{
+class Maybe {
 private:
     Either<T, Unit> m_data;
 

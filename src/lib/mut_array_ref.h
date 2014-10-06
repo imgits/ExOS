@@ -27,8 +27,7 @@
 // it as a const reference, consider using the method "to_immut_ref()".
 
 template <class T>
-class MutArrayRef
-{
+class MutArrayRef {
 private:
     T *m_ptr;
     size_t m_capacity;

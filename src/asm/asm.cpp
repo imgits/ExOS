@@ -16,10 +16,42 @@
 
 #include "asm/asm.h"
 
+void Asm::clgi()
+{
+    __asm__("clgi");
+}
+
+void Asm::cli()
+{
+    __asm__("cli");
+}
+
+void Asm::clts()
+{
+    __asm__("clts");
+}
+
 void Asm::hlt()
 {
     __asm__("hlt");
     __builtin_unreachable();
+}
+
+void Asm::invd()
+{
+    __asm__("invd");
+}
+
+void Asm::invlpg(uint8_t tlb_entry)
+{
+    __asm__("invlpg %[tlb_entry]" : : [tlb_entry] "mem"(tlb_entry));
+}
+
+void Asm::invlpga(uint64_t virtual_page, uint32_t asid)
+{
+    __asm__("invlpga %[virtual_page], %[asid]"
+            :
+            : [virtual_page] "a"(virtual_page), [asid] "c"(asid));
 }
 
 void Asm::lgdt(DescriptorTableRegister const &dtr)

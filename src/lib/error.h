@@ -22,7 +22,6 @@
 
 enum class Error : uint8_t
 {
-    SUCCESS,
     INVALID,
     NOT_FOUND
 };

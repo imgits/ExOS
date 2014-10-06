@@ -21,7 +21,19 @@
 namespace Asm
 {
 
+void clgi();
+
+void cli();
+
+void clts();
+
 [[noreturn]] void hlt();
+
+void invd();
+
+void invlpg(uint8_t tlb_entry);
+
+void invlpga(uint64_t virtual_page, uint32_t asid);
 
 void lgdt(DescriptorTableRegister const &dtr);
 

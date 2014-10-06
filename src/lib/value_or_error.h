@@ -24,8 +24,7 @@
 // seperate error codes and out-parameters.
 
 template <class T>
-class ValueOrError
-{
+class ValueOrError {
 private:
     Either<T, Error> m_data;
 

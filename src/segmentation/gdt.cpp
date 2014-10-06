@@ -34,31 +34,35 @@ GdtEntry gdt[4];
 
 void Segmentation::setup_gdt()
 {
-    gdt[0] = {};
+    gdt[0] = { };
 
     gdt[1].cs =
-        CodeSegmentDescriptor{ .conforming = 1,
-                               .one = 1,
-                               .one2 = 1,
-                               .descriptor_privilege_level =
-                                   to_underlying_type(PrivilegeLevel::KERNEL),
-                               .present = 1,
-                               .long_attribute = 1,
-                               .default_operand_size = 0 };
+    {
+        .conforming = 1,
+        .one = 1,
+        .one2 = 1,
+        .descriptor_privilege_level = to_underlying_type(PrivilegeLevel::KERNEL),
+        .present = 1,
+        .long_attribute = 1,
+        .default_operand_size = 0
+    };
 
     gdt[2].cs =
-        CodeSegmentDescriptor{ .conforming = 1,
-                               .one = 1,
-                               .one2 = 1,
-                               .descriptor_privilege_level =
-                                   to_underlying_type(PrivilegeLevel::USER),
-                               .present = 1,
-                               .long_attribute = 1,
-                               .default_operand_size = 0 };
+    {
+        .conforming = 1,
+        .one = 1,
+        .one2 = 1,
+        .descriptor_privilege_level = to_underlying_type(PrivilegeLevel::USER),
+        .present = 1,
+        .long_attribute = 1,
+        .default_operand_size = 0
+    };
 
-    DescriptorTableRegister const gdtr = { .base_address =
-                                               reinterpret_cast<uint64_t>(&gdt),
-                                           .limit = sizeof(gdt) - 1 };
+    DescriptorTableRegister const gdtr =
+    {
+        .base_address = reinterpret_cast<uint64_t>(&gdt),
+        .limit = sizeof(gdt) - 1
+    };
 
     Asm::lgdt(gdtr);
 

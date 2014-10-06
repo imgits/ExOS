@@ -98,13 +98,11 @@ void put_glyph(Font::Glyph glyph)
 
             if (glyph.data[i] & (0x80 >> j))
             {
-                g_framebuffer[idx] =
-                    g_color_array[to_underlying_type(g_current_fg_color)];
+                g_framebuffer[idx] =  g_color_array[to_underlying_type(g_current_fg_color)];
             }
             else
             {
-                g_framebuffer[idx] =
-                    g_color_array[to_underlying_type(g_current_bg_color)];
+                g_framebuffer[idx] = g_color_array[to_underlying_type(g_current_bg_color)];
             }
         }
     }
@@ -112,7 +110,8 @@ void put_glyph(Font::Glyph glyph)
 
 } // end anonymous namespace
 
-Error Framebuffer::init(EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE const &gop_mode)
+Maybe<Error>
+Framebuffer::init(EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE const &gop_mode)
 {
     g_framebuffer = reinterpret_cast<uint32_t *>(gop_mode.FrameBufferBase);
     g_framebuffer_size = gop_mode.FrameBufferSize;
@@ -124,8 +123,7 @@ Error Framebuffer::init(EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE const &gop_mode)
     g_font_line_size = Font::Glyph::HEIGHT * g_pixels_per_scan_line;
     g_last_font_column = g_max_height - Font::Glyph::HEIGHT;
 
-    switch (gop_mode.Info->PixelFormat)
-    {
+    switch (gop_mode.Info->PixelFormat) {
     case PixelRedGreenBlueReserved8BitPerColor:
         g_color_array[to_underlying_type(Color::BLACK)] = 0x00000000;
         g_color_array[to_underlying_type(Color::WHITE)] = 0x00ffffff;
@@ -171,7 +169,7 @@ Error Framebuffer::init(EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE const &gop_mode)
     g_current_bg_color = Color::BLACK;
     g_current_fg_color = Color::WHITE;
 
-    return Error::SUCCESS;
+    return Unit::NONE;
 }
 
 void Framebuffer::put_char(char c)
@@ -208,10 +206,10 @@ void Framebuffer::clear_screen()
     g_current_height = g_current_width = 0;
 }
 
-Error Framebuffer::print_func(StringRef s)
+Maybe<Error> Framebuffer::print_func(StringRef s)
 {
     put_string(s);
-    return Error::SUCCESS;
+    return Unit::NONE;
 }
 
 void Framebuffer::set_foreground_color(Color color)

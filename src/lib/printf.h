@@ -24,10 +24,14 @@
 #include "lib/array.h"
 #include "lib/value_or_error.h"
 #include "lib/ctstring.h"
+#include "lib/maybe.h"
 
 // printf() and snprintf()-like functions featuring format string checking
 // at compile time. They either return the number of characters written or
 // an error.
+//
+// Since the format string is validated at compile time, the runtime
+// formatting function can avoid unneeded checks for validity.
 
 enum class Case : uint8_t
 {
@@ -49,20 +53,6 @@ size_t to_string(MutStringRef &buf, ConvFlags flags, long arg);
 size_t to_string(MutStringRef &buf, ConvFlags flags, unsigned long arg);
 size_t to_string(MutStringRef &buf, ConvFlags flags, long long arg);
 size_t to_string(MutStringRef &buf, ConvFlags flags, unsigned long long arg);
-
-template <size_t N>
-constexpr size_t to_string(MutStringRef &buf, ConvFlags, String<N> const &str)
-{
-    for (char const c : str)
-    {
-        if (buf.is_space_left())
-        {
-            buf.push_back(c);
-        }
-    }
-
-    return N;
-}
 
 size_t format(MutStringRef &buf, StringRef fmt);
 
@@ -135,31 +125,36 @@ constexpr size_t format(MutStringRef &buf, StringRef fmt, Arg arg, Args... args)
     return cnt;
 }
 
-constexpr bool is_valid(StringRef fmt)
+template <class T>
+constexpr bool flags_valid(StringRef fmt);
+
+template <>
+constexpr bool flags_valid<long long>(StringRef fmt)
 {
-    for (size_t i = 0; i < fmt.length(); ++i)
+    return fmt.length() == 0;
+}
+
+template <>
+constexpr bool flags_valid<unsigned long long>(StringRef fmt)
+{
+    for (char const c : fmt)
     {
-        if (fmt[i] == '(' && (i + 1 == fmt.length() || fmt[i++ + 1] != '('))
+        if (c != 'x' && c != 'X' && c != 'o')
         {
             return false;
         }
     }
-
     return true;
 }
 
-constexpr bool flags_valid(StringRef fmt, StringRef const &)
+template <>
+constexpr bool flags_valid<StringRef>(StringRef fmt)
 {
     return fmt.length() == 0;
 }
 
-template <size_t N>
-constexpr bool flags_valid(StringRef fmt, String<N> const &)
-{
-    return fmt.length() == 0;
-}
-
-constexpr bool flags_valid(StringRef fmt, void const *const &)
+template <>
+constexpr bool flags_valid<void const *>(StringRef fmt)
 {
     for (char const c : fmt)
     {
@@ -171,92 +166,41 @@ constexpr bool flags_valid(StringRef fmt, void const *const &)
     return true;
 }
 
-constexpr bool flags_valid(StringRef fmt, void *const &)
+template <>
+constexpr bool flags_valid<void *>(StringRef fmt)
 {
-    for (char const c : fmt)
-    {
-        if (c != 'x' && c != 'X')
-        {
-            return false;
-        }
-    }
-    return true;
+    return flags_valid<void const *>(fmt);
 }
 
-constexpr bool flags_valid(StringRef fmt, int const &)
+template <>
+constexpr bool flags_valid<int>(StringRef fmt)
 {
-    for (char const c : fmt)
-    {
-        if (c != 'x' && c != 'X' && c != 'o' && c != 'O')
-        {
-            return false;
-        }
-    }
-    return true;
+    return flags_valid<long long>(fmt);
 }
 
-constexpr bool flags_valid(StringRef fmt, unsigned int const &)
+template <>
+constexpr bool flags_valid<unsigned int>(StringRef fmt)
 {
-    for (char const c : fmt)
-    {
-        if (c != 'x' && c != 'X' && c != 'o' && c != 'O')
-        {
-            return false;
-        }
-    }
-    return true;
+    return flags_valid<unsigned long long>(fmt);
 }
 
-constexpr bool flags_valid(StringRef fmt, long const &)
+template <>
+constexpr bool flags_valid<long>(StringRef fmt)
 {
-    for (char const c : fmt)
-    {
-        if (c != 'x' && c != 'X' && c != 'o' && c != 'O')
-        {
-            return false;
-        }
-    }
-    return true;
+    return flags_valid<long long>(fmt);
 }
 
-constexpr bool flags_valid(StringRef fmt, unsigned long const &)
+template <>
+constexpr bool flags_valid<unsigned long>(StringRef fmt)
 {
-    for (char const c : fmt)
-    {
-        if (c != 'x' && c != 'X' && c != 'o' && c != 'O')
-        {
-            return false;
-        }
-    }
-    return true;
+    return flags_valid<unsigned long long>(fmt);
 }
 
-constexpr bool flags_valid(StringRef fmt, long long const &)
-{
-    for (char const c : fmt)
-    {
-        if (c != 'x' && c != 'X' && c != 'o' && c != 'O')
-        {
-            return false;
-        }
-    }
-    return true;
-}
-
-constexpr bool flags_valid(StringRef fmt, unsigned long long const &)
-{
-    for (char const c : fmt)
-    {
-        if (c != 'x' && c != 'X' && c != 'o' && c != 'O')
-        {
-            return false;
-        }
-    }
-    return true;
-}
+template <class ...Ts>
+constexpr bool is_valid(StringRef fmt);
 
 template <class Arg, class... Args>
-constexpr bool is_valid(StringRef fmt, Arg const &arg, Args const &... args)
+constexpr bool is_valid_helper(StringRef fmt)
 {
     for (size_t i = 0; i < fmt.length(); ++i)
     {
@@ -273,7 +217,7 @@ constexpr bool is_valid(StringRef fmt, Arg const &arg, Args const &... args)
 
         ++i;
 
-        size_t begin_flags = i;
+        size_t const begin_flags = i;
 
         bool found = false;
         for (; i < fmt.length(); ++i)
@@ -289,45 +233,65 @@ constexpr bool is_valid(StringRef fmt, Arg const &arg, Args const &... args)
             return false;
         }
 
-        size_t end_flags = i;
+        size_t const end_flags = i;
 
-        if (!flags_valid(fmt.slice_from_until(begin_flags, end_flags), arg))
+        if (!flags_valid<Arg>(fmt.slice_from_until(begin_flags, end_flags)))
         {
             return false;
         }
 
         ++i;
 
-        return is_valid(fmt.slice_from(i), args...);
+        return is_valid<Args...>(fmt.slice_from(i));
     }
 
     return false;
 }
 
+template <class ...Ts>
+constexpr bool is_valid(StringRef fmt)
+{
+    return is_valid_helper<Ts...>(fmt);
+}
+
+template <>
+constexpr bool is_valid<>(StringRef fmt)
+{
+    for (size_t i = 0; i < fmt.length(); ++i)
+    {
+        if (fmt[i] == '(' && (i + 1 == fmt.length() || fmt[i++ + 1] != '('))
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 template <char... Fmt, class... Args>
-constexpr size_t snprintf(MutStringRef &buf, CTString<Fmt...>, Args... args)
+constexpr size_t snprintf(MutStringRef &buf, CTString<Fmt...>, Args ...args)
 {
     constexpr String<sizeof...(Fmt)> fmt = { { Fmt... } };
 
-    static_assert(is_valid(fmt.ref(), args...), "Invalid format string!");
+    static_assert(is_valid<Args...>(fmt.ref()), "Invalid format string!");
 
     return format(buf, fmt.ref(), args...);
 }
 
-extern Error (*print_func)(StringRef);
+extern Maybe<Error> (*print_func)(StringRef);
 
 template <char... Fmt, class... Args>
-constexpr ValueOrError<size_t> printf(CTString<Fmt...> fmt, Args... args)
+constexpr ValueOrError<size_t> printf(CTString<Fmt...> fmt, Args ...args)
 {
     String<2048> buf;
     MutStringRef mut_ref = buf.mut_ref();
 
-    size_t result = snprintf(mut_ref, fmt, args...);
+    size_t const result = snprintf(mut_ref, fmt, args...);
 
-    Error err = print_func(mut_ref.to_immut_ref());
-    if (err != Error::SUCCESS)
+    Maybe<Error> const err = print_func(mut_ref.to_immut_ref());
+    if (err.is_some())
     {
-        return err;
+        return err.get();
     }
 
     return result;

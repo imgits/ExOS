@@ -25,13 +25,14 @@
 namespace
 {
 
-InterruptAndTrapGateDescriptor idt[256] = {};
+InterruptAndTrapGateDescriptor idt[256];
 
 InterruptAndTrapGateDescriptor make_intr_gate(void (*func)())
 {
     auto x = reinterpret_cast<uint64_t>(func);
 
-    return InterruptAndTrapGateDescriptor{
+    return
+    {
         .target_offset_15_0 = x & 0xffff,
         .target_selector = Segmentation::CS_SELECTOR_KERNEL,
         .ist = 0,
@@ -68,9 +69,11 @@ void Segmentation::setup_idt()
     idt[18] = make_intr_gate(intr_machine_check);
     idt[19] = make_intr_gate(intr_simd_floating_point);
 
-    DescriptorTableRegister dtr = { .limit = sizeof(idt) - 1,
-                                    .base_address =
-                                        reinterpret_cast<uint64_t>(&idt) };
+    DescriptorTableRegister dtr =
+    {
+        .limit = sizeof(idt) - 1,
+        .base_address = reinterpret_cast<uint64_t>(&idt)
+    };
 
     Asm::lidt(dtr);
 }

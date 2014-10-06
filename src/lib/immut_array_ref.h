@@ -23,8 +23,7 @@
 // Reference to an immutable(const) array. Small enough to be passed by-value.
 
 template <class T>
-class ImmutArrayRef
-{
+class ImmutArrayRef {
 private:
     T const *m_ptr;
     size_t m_size;
@@ -46,7 +45,7 @@ public:
         return m_size;
     }
 
-    constexpr T operator[](size_t i) const
+    constexpr T const &operator[](size_t i) const
     {
         assert(i < m_size);
         return m_ptr[i];

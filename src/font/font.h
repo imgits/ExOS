@@ -29,8 +29,8 @@ struct Glyph
 {
     Array<uint8_t, 16> data;
 
-    static constexpr auto HEIGHT = 16;
-    static constexpr auto WIDTH = 8;
+    static constexpr unsigned int HEIGHT = 16;
+    static constexpr unsigned int WIDTH = 8;
 };
 
 Glyph get_glyph(char c);

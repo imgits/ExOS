@@ -32,8 +32,7 @@ enum class Tag : uint8_t
 #pragma clang diagnostic ignored "-Wpadded"
 
 template <class T, class U>
-class Either
-{
+class Either {
 private:
     union
     {

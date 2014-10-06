@@ -24,7 +24,7 @@
 
 extern "C" EFI_STATUS kmain(EFI_HANDLE handle, EFI_SYSTEM_TABLE *systab) EFIAPI;
 
-Error (*print_func)(StringRef);
+Maybe<Error> (*print_func)(StringRef);
 
 EFI_STATUS kmain(EFI_HANDLE handle, EFI_SYSTEM_TABLE *systab)
 {
@@ -53,7 +53,7 @@ EFI_STATUS kmain(EFI_HANDLE handle, EFI_SYSTEM_TABLE *systab)
     status = Uefi::get_memory_map(bs, memory_map);
     if (Uefi::status_is_error(status))
     {
-        Uefi::die(conout, status, u"Trying to get the memory map"_s);
+        Uefi::die(conout, status, u"Trying to get memory map"_s);
     }
 
     status = bs.ExitBootServices(handle, memory_map.map_key);
@@ -66,7 +66,7 @@ EFI_STATUS kmain(EFI_HANDLE handle, EFI_SYSTEM_TABLE *systab)
 
     Segmentation::setup_idt();
 
-    printf("Welcome! [CPU: ()]\n\n"_cts, Cpuid::get_vendor_string());
+    printf("Welcome! [CPU: ()]\n\n"_cts, Cpuid::get_vendor_string().ref());
 
     printf("Testing if interrupts are working ((provoking GP)...\n\n"_cts);
 

@@ -102,53 +102,53 @@ struct EFI_INPUT_KEY
     CHAR16 UnicodeChar;
 };
 
-constexpr UINT64 efi_high_bit = 0x8000000000000000;
+constexpr UINT64 EFI_HIGH_BIT = 0x8000000000000000;
 
 constexpr UINT64 efi_val_to_err(UINT64 x)
 {
-    return x | efi_high_bit;
+    return x | EFI_HIGH_BIT;
 }
 
 enum EFI_STATUS : UINTN
 {
-    EFI_SUCCESS = 0,
+    EFI_SUCCESS                 = 0,
 
-    EFI_LOAD_ERROR = efi_val_to_err(1),
-    EFI_INVALID_PARAMETER = efi_val_to_err(2),
-    EFI_UNSUPPORTED = efi_val_to_err(3),
-    EFI_BAD_BUFFER_SIZE = efi_val_to_err(4),
-    EFI_BUFFER_TOO_SMALL = efi_val_to_err(5),
-    EFI_NOT_READY = efi_val_to_err(6),
-    EFI_DEVICE_ERROR = efi_val_to_err(7),
-    EFI_WRITE_PROTECTED = efi_val_to_err(8),
-    EFI_OUT_OF_RESOURCES = efi_val_to_err(9),
-    EFI_VOLUME_CORRUPTED = efi_val_to_err(10),
-    EFI_VOLUME_FULL = efi_val_to_err(11),
-    EFI_NO_MEDIA = efi_val_to_err(12),
-    EFI_MEDIA_CHANGED = efi_val_to_err(13),
-    EFI_NOT_FOUND = efi_val_to_err(14),
-    EFI_ACCESS_DENIED = efi_val_to_err(15),
-    EFI_NO_RESPONSE = efi_val_to_err(16),
-    EFI_NO_MAPPING = efi_val_to_err(17),
-    EFI_TIMEOUT = efi_val_to_err(18),
-    EFI_NOT_STARTED = efi_val_to_err(19),
-    EFI_ALREADY_STARTED = efi_val_to_err(20),
-    EFI_ABORTED = efi_val_to_err(21),
-    EFI_ICMP_ERROR = efi_val_to_err(22),
-    EFI_TFTP_ERROR = efi_val_to_err(23),
-    EFI_PROTOCOL_ERROR = efi_val_to_err(24),
-    EFI_INCOMPATIBLE_VERSION = efi_val_to_err(25),
-    EFI_SECURITY_VIOLATION = efi_val_to_err(26),
-    EFI_CRC_ERROR = efi_val_to_err(27),
-    EFI_END_OF_MEDIA = efi_val_to_err(28),
-    EFI_END_OF_FILE = efi_val_to_err(31),
-    EFI_INVALID_LANGUAGE = efi_val_to_err(32),
-    EFI_COMPROMISED_DATA = efi_val_to_err(33),
-    EFI_IP_ADDRESS_CONFLICT = efi_val_to_err(34),
+    EFI_LOAD_ERROR              = efi_val_to_err(1),
+    EFI_INVALID_PARAMETER       = efi_val_to_err(2),
+    EFI_UNSUPPORTED             = efi_val_to_err(3),
+    EFI_BAD_BUFFER_SIZE         = efi_val_to_err(4),
+    EFI_BUFFER_TOO_SMALL        = efi_val_to_err(5),
+    EFI_NOT_READY               = efi_val_to_err(6),
+    EFI_DEVICE_ERROR            = efi_val_to_err(7),
+    EFI_WRITE_PROTECTED         = efi_val_to_err(8),
+    EFI_OUT_OF_RESOURCES        = efi_val_to_err(9),
+    EFI_VOLUME_CORRUPTED        = efi_val_to_err(10),
+    EFI_VOLUME_FULL             = efi_val_to_err(11),
+    EFI_NO_MEDIA                = efi_val_to_err(12),
+    EFI_MEDIA_CHANGED           = efi_val_to_err(13),
+    EFI_NOT_FOUND               = efi_val_to_err(14),
+    EFI_ACCESS_DENIED           = efi_val_to_err(15),
+    EFI_NO_RESPONSE             = efi_val_to_err(16),
+    EFI_NO_MAPPING              = efi_val_to_err(17),
+    EFI_TIMEOUT                 = efi_val_to_err(18),
+    EFI_NOT_STARTED             = efi_val_to_err(19),
+    EFI_ALREADY_STARTED         = efi_val_to_err(20),
+    EFI_ABORTED                 = efi_val_to_err(21),
+    EFI_ICMP_ERROR              = efi_val_to_err(22),
+    EFI_TFTP_ERROR              = efi_val_to_err(23),
+    EFI_PROTOCOL_ERROR          = efi_val_to_err(24),
+    EFI_INCOMPATIBLE_VERSION    = efi_val_to_err(25),
+    EFI_SECURITY_VIOLATION      = efi_val_to_err(26),
+    EFI_CRC_ERROR               = efi_val_to_err(27),
+    EFI_END_OF_MEDIA            = efi_val_to_err(28),
+    EFI_END_OF_FILE             = efi_val_to_err(31),
+    EFI_INVALID_LANGUAGE        = efi_val_to_err(32),
+    EFI_COMPROMISED_DATA        = efi_val_to_err(33),
+    EFI_IP_ADDRESS_CONFLICT     = efi_val_to_err(34),
 
-    EFI_WARN_UNKNOWN_GLYPH = 1,
-    EFI_WARN_DELETE_FAILURE = 2,
-    EFI_WARN_WRITE_FAILURE = 3,
-    EFI_WARN_BUFFER_TOO_SMALL = 4,
-    EFI_WARN_STALE_DATA = 5
+    EFI_WARN_UNKNOWN_GLYPH      = 1,
+    EFI_WARN_DELETE_FAILURE     = 2,
+    EFI_WARN_WRITE_FAILURE      = 3,
+    EFI_WARN_BUFFER_TOO_SMALL   = 4,
+    EFI_WARN_STALE_DATA         = 5
 };
