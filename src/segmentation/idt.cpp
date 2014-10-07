@@ -46,7 +46,8 @@ InterruptAndTrapGateDescriptor make_intr_gate(void (*func)())
         .target_offset_63_32 = (x >> 32) & 0xffffffff
     };
 }
-}
+
+} // end anonymous namespace
 
 void Segmentation::setup_idt()
 {

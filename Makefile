@@ -1,7 +1,9 @@
 SOURCES = $(shell find src -name "*.cpp" -o -name "*.s")
 
-OBJECTS1 = $(SOURCES:.cpp=.o)
-OBJECTS = $(OBJECTS1:.s=.o)
+_OBJECTS = $(SOURCES:.cpp=.o)
+OBJECTS = $(_OBJECTS:.s=.o)
+
+CPP_INCL_PATH = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1
 
 CXXFLAGS = -Weverything -Werror \
 	   -Wno-c++98-compat -Wno-c++98-c++11-compat-pedantic \
@@ -11,6 +13,7 @@ CXXFLAGS = -Weverything -Werror \
 	   -fno-exceptions -fno-rtti \
 	   -std=c++1y \
 	   -iquote src/ \
+	   -I $(CPP_INCL_PATH) \
 	   -O \
 	   -target x86_64--macho
 
@@ -24,7 +27,7 @@ LDFLAGS = -static \
 	  -arch x86_64
 
 HDIUTIL_FLAGS = create -srcfolder image -fs MS-DOS -fsargs "-F 32" \
-		-format UDRW -layout GPTSPUD -size 40m -volname LUMINOS -ov
+		-format UDRW -layout GPTSPUD -size 40m -volname EXOS -ov
 
 QEMU_FLAGS = -pflash OVMF.fd
 

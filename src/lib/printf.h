@@ -94,8 +94,7 @@ constexpr size_t format(MutStringRef &buf, StringRef fmt, Arg arg, Args... args)
 
         for (; fmt[i] != ')'; ++i)
         {
-            switch (fmt[i])
-            {
+            switch (fmt[i]) {
             case 'x':
                 flags.base = 16;
                 flags.letter_case = Case::LOWER;
@@ -107,10 +106,6 @@ constexpr size_t format(MutStringRef &buf, StringRef fmt, Arg arg, Args... args)
             case 'o':
                 flags.base = 8;
                 flags.letter_case = Case::LOWER;
-                break;
-            case 'O':
-                flags.base = 8;
-                flags.letter_case = Case::UPPER;
                 break;
             }
         }

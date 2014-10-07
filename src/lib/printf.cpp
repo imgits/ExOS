@@ -28,12 +28,9 @@ char digit_to_ascii(unsigned char c, Case letter_case)
     static constexpr char uppercase_letters[] = "0123456789ABCDEFGHIJKLMNOPQRST"
                                                 "UVWXYZ";
 
-    switch (letter_case)
-    {
-    case Case::LOWER:
-        return lowercase_letters[c];
-    case Case::UPPER:
-        return uppercase_letters[c];
+    switch (letter_case) {
+    case Case::LOWER: return lowercase_letters[c];
+    case Case::UPPER: return uppercase_letters[c];
     }
 }
 
