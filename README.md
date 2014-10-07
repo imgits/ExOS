@@ -14,13 +14,12 @@ of generating PE/COFF files as required by UEFI, a small utility called `mtoc` i
 Instructions on how to obtain it are here: http://tianocore.sourceforge.net/wiki/Xcode.  
 Copy the binary to the working directory.
 
-As we're building a bare bones executable but still use standard C++ headers suitable for use in a
-freestanding environment, we need to export the path to the standard C++ header files.  
-Run `export CPLUS_INCLUDE_PATH=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1`.  
-This is most likely the proper path on OS X.
+Run `make`. An executable called `exos.efi` should now be in your working directory.  
 
-Now run `make`. An executable called `exos.efi` should now be in your working directory.
-
+If the build fails with an error message akin to "'header_name' file not found", you must  
+find out the path to your C++ system headers and export them:  
+`export CPLUS_INCLUDE_PATH=YOUR_PATH_HERE`.  
+Then try again.
 
 ### Testing
 
