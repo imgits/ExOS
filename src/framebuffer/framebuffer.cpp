@@ -206,10 +206,10 @@ void Framebuffer::clear_screen()
     g_current_height = g_current_width = 0;
 }
 
-Maybe<Error> Framebuffer::print_func(StringRef s)
+ValueOrError<size_t> Framebuffer::printf_func(StringRef s)
 {
     put_string(s);
-    return Unit::NONE;
+    return s.length();
 }
 
 void Framebuffer::set_foreground_color(Color color)

@@ -18,6 +18,7 @@
 
 #include "lib/error.h"
 #include "lib/immut_array_ref.h"
+#include "lib/value_or_error.h"
 #include "lib/maybe.h"
 
 struct EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE;
@@ -62,6 +63,6 @@ void put_char(char c);
 void put_string(StringRef x);
 
 // To be plugged into printf().
-Maybe<Error> print_func(StringRef s);
+ValueOrError<size_t> printf_func(StringRef s);
 
 } // namespace Framebuffer end

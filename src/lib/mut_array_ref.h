@@ -31,31 +31,31 @@ class MutArrayRef {
 private:
     T *m_ptr;
     size_t m_capacity;
-    size_t m_curr_idx;
+    size_t m_size;
 
 public:
     template <size_t N>
     explicit constexpr MutArrayRef(T(&ptr)[N])
     : m_ptr(ptr)
     , m_capacity(N)
-    , m_curr_idx(0)
+    , m_size(0)
     {
     }
 
     constexpr void push_back(T const &x)
     {
-        assert(m_curr_idx < m_capacity);
-        m_ptr[m_curr_idx++] = x;
+        assert(m_size < m_capacity);
+        m_ptr[m_size++] = x;
     }
 
     constexpr bool is_space_left() const
     {
-        return m_curr_idx < m_capacity;
+        return m_size < m_capacity;
     }
 
     constexpr ImmutArrayRef<T> to_immut_ref() const
     {
-        return ImmutArrayRef<T>(m_ptr, m_curr_idx);
+        return ImmutArrayRef<T>(m_ptr, m_size);
     }
 
     constexpr size_t capacity() const
@@ -63,15 +63,15 @@ public:
         return m_capacity;
     }
 
-    constexpr size_t curr_idx() const
+    constexpr size_t size() const
     {
-        return m_curr_idx;
+        return m_size;
     }
 
     constexpr void reverse_inplace(size_t start, size_t n)
     {
-        assert(start <= m_curr_idx);
-        assert(n <= m_curr_idx);
+        assert(start <= m_size);
+        assert(n <= m_size - start);
         reverse_array_inplace(m_ptr + start, n);
     }
 };

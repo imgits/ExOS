@@ -24,7 +24,7 @@
 
 extern "C" EFI_STATUS kmain(EFI_HANDLE handle, EFI_SYSTEM_TABLE *systab) EFIAPI;
 
-Maybe<Error> (*print_func)(StringRef);
+ValueOrError<size_t> (*printf_func)(StringRef);
 
 EFI_STATUS kmain(EFI_HANDLE handle, EFI_SYSTEM_TABLE *systab)
 {
@@ -45,9 +45,9 @@ EFI_STATUS kmain(EFI_HANDLE handle, EFI_SYSTEM_TABLE *systab)
 
     Framebuffer::init(*gop->Mode);
 
-    print_func = Framebuffer::print_func;
-
     Framebuffer::clear_screen();
+
+    printf_func = Framebuffer::printf_func;
 
     Uefi::MemoryMap memory_map;
     status = Uefi::get_memory_map(bs, memory_map);

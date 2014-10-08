@@ -24,7 +24,6 @@
 #include "lib/array.h"
 #include "lib/value_or_error.h"
 #include "lib/ctstring.h"
-#include "lib/maybe.h"
 
 // printf() and snprintf()-like functions featuring format string checking
 // at compile time. They either return the number of characters written or
@@ -54,6 +53,9 @@ size_t to_string(MutStringRef &buf, ConvFlags flags, unsigned long arg);
 size_t to_string(MutStringRef &buf, ConvFlags flags, long long arg);
 size_t to_string(MutStringRef &buf, ConvFlags flags, unsigned long long arg);
 
+// These two format() functions handle formatting the arguments at runtime.
+// They are able to ommit certain checks since they can rely on the validity
+// of the format string (which is determined at compile-time).
 size_t format(MutStringRef &buf, StringRef fmt);
 
 template <class Arg, class... Args>
@@ -119,6 +121,8 @@ constexpr size_t format(MutStringRef &buf, StringRef fmt, Arg arg, Args... args)
 
     return cnt;
 }
+
+// Checking if the given flags are valid for a given argument type.
 
 template <class T>
 constexpr bool flags_valid(StringRef fmt);
@@ -191,9 +195,17 @@ constexpr bool flags_valid<unsigned long>(StringRef fmt)
     return flags_valid<unsigned long long>(fmt);
 }
 
+// The following is_valid() and is_valid_helper() functions determine the
+// validity of the format string. They return true if they are valid and
+// false if not.
+// They are forced to be executed at compile-time by the static_assert()
+// in snprintf().
+
 template <class ...Ts>
 constexpr bool is_valid(StringRef fmt);
 
+// We need a helper function so that there's no ambiguity when is_valid()
+// is called with an empty paramter pack.
 template <class Arg, class... Args>
 constexpr bool is_valid_helper(StringRef fmt)
 {
@@ -263,6 +275,8 @@ constexpr bool is_valid<>(StringRef fmt)
     return true;
 }
 
+// Type safe version of C's snprintf(), with compile-time checked format
+// strings.
 template <char... Fmt, class... Args>
 constexpr size_t snprintf(MutStringRef &buf, CTString<Fmt...>, Args ...args)
 {
@@ -273,21 +287,18 @@ constexpr size_t snprintf(MutStringRef &buf, CTString<Fmt...>, Args ...args)
     return format(buf, fmt.ref(), args...);
 }
 
-extern Maybe<Error> (*print_func)(StringRef);
+// Pointer to the function that should be used by printf().
+extern ValueOrError<size_t> (*printf_func)(StringRef);
 
+// Type safe version of C's printf(), with compile-time checked format strings.
+// Currently has a hard limit on the output size.
 template <char... Fmt, class... Args>
 constexpr ValueOrError<size_t> printf(CTString<Fmt...> fmt, Args ...args)
 {
     String<2048> buf;
     MutStringRef mut_ref = buf.mut_ref();
 
-    size_t const result = snprintf(mut_ref, fmt, args...);
+    snprintf(mut_ref, fmt, args...);
 
-    Maybe<Error> const err = print_func(mut_ref.to_immut_ref());
-    if (err.is_some())
-    {
-        return err.get();
-    }
-
-    return result;
+    return printf_func(mut_ref.to_immut_ref());
 }

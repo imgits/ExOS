@@ -79,7 +79,7 @@ size_t to_string(MutStringRef &buf, ConvFlags flags, unsigned long long arg)
 {
     size_t cnt = 0;
 
-    size_t const start = buf.curr_idx();
+    size_t const start = buf.size();
 
     do
     {
@@ -94,7 +94,7 @@ size_t to_string(MutStringRef &buf, ConvFlags flags, unsigned long long arg)
         arg /= flags.base;
     } while (arg != 0);
 
-    buf.reverse_inplace(start, buf.curr_idx() - start);
+    buf.reverse_inplace(start, buf.size() - start);
 
     return cnt;
 }
