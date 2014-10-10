@@ -20,8 +20,7 @@
 
 #include "lib/array.h"
 
-namespace Font
-{
+namespace Font {
 
 // A glyph is represented as an array of 16 bytes, where each bit set indicates
 // a foreground pixel, and if not set, a background pixel.

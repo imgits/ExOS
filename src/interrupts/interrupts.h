@@ -21,8 +21,7 @@
 #include "segmentation/structs.h"
 #include "registers/registers.h"
 
-namespace Interrupts
-{
+namespace Interrupts {
 
 struct SelectorErrorCode
 {

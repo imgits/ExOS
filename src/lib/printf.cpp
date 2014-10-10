@@ -69,9 +69,8 @@ size_t to_string(MutStringRef &buf, ConvFlags flags, unsigned long arg)
     return to_string(buf, flags, static_cast<unsigned long long>(arg));
 }
 
-size_t to_string(MutStringRef &buf, ConvFlags, const void *arg)
+size_t to_string(MutStringRef &buf, ConvFlags flags, const void *arg)
 {
-    ConvFlags flags = { .base = 16, .letter_case = Case::LOWER };
     return to_string(buf, flags, reinterpret_cast<uintptr_t>(arg));
 }
 

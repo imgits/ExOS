@@ -53,6 +53,32 @@ size_t to_string(MutStringRef &buf, ConvFlags flags, unsigned long arg);
 size_t to_string(MutStringRef &buf, ConvFlags flags, long long arg);
 size_t to_string(MutStringRef &buf, ConvFlags flags, unsigned long long arg);
 
+template <class T>
+constexpr ConvFlags default_flags()
+{
+    return
+    {
+        .base = 10,
+        .letter_case = Case::LOWER
+    };
+}
+
+template <>
+constexpr ConvFlags default_flags<void const *>()
+{
+    return
+    {
+        .base = 16,
+        .letter_case = Case::LOWER
+    };
+}
+
+template <>
+constexpr ConvFlags default_flags<void *>()
+{
+    return default_flags<void const *>();
+}
+
 // These two format() functions handle formatting the arguments at runtime.
 // They are able to ommit certain checks since they can rely on the validity
 // of the format string (which is determined at compile-time).
@@ -92,7 +118,7 @@ constexpr size_t format(MutStringRef &buf, StringRef fmt, Arg arg, Args... args)
 
         ++i;
 
-        ConvFlags flags = { .base = 10, .letter_case = Case::LOWER };
+        ConvFlags flags = default_flags<Arg>();
 
         for (; fmt[i] != ')'; ++i)
         {

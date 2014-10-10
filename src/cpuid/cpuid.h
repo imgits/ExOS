@@ -20,8 +20,7 @@
 
 #include "lib/array.h"
 
-namespace Cpuid
-{
+namespace Cpuid {
 
 // Executes the cpuid instruction with the given register values.
 void cpuid(uint32_t eax_in, uint32_t ecx_in, uint32_t &eax_out,

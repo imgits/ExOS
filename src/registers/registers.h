@@ -18,8 +18,7 @@
 
 #include <cstdint>
 
-namespace Registers
-{
+namespace Registers {
 
 struct Cr0
 {

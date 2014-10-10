@@ -23,8 +23,7 @@
 
 struct EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE;
 
-namespace Framebuffer
-{
+namespace Framebuffer {
 
 // Currently accepted colors.
 enum class Color

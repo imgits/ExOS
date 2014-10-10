@@ -23,13 +23,11 @@
 #include "lib/either.h"
 #include "lib/maybe.h"
 
-namespace Acpi
-{
+namespace Acpi {
 struct rsdp;
 }
 
-namespace Uefi
-{
+namespace Uefi {
 
 // Prints the string @s using @conout.
 EFI_STATUS print(EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL &conout, StringRefUefi s);

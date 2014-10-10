@@ -18,8 +18,7 @@
 
 #include "segmentation/structs.h"
 
-namespace Asm
-{
+namespace Asm {
 
 void clgi();
 

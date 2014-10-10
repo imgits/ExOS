@@ -20,8 +20,7 @@
 
 #include "lib/util.h"
 
-namespace Segmentation
-{
+namespace Segmentation {
 
 void setup_gdt();
 
