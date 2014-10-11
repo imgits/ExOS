@@ -22,7 +22,8 @@
 
 enum class Error : uint8_t {
     INVALID,
-    NOT_FOUND
+    NOT_FOUND,
+    OVERFLOW
 };
 
 StringRef error_to_string(Error err);

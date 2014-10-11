@@ -23,6 +23,9 @@
 #include "lib/mut_array_ref.h"
 #include "lib/array.h"
 #include "lib/ctstring.h"
+#include "lib/value_or_error.h"
+#include "lib/math.h"
+
 #include "framebuffer/framebuffer.h"
 
 // printf() and snprintf()-like functions featuring format string checking
@@ -81,7 +84,7 @@ constexpr ConvFlags default_flags<void *>()
 size_t format(MutStringRef &buf, StringRef fmt);
 
 template <class Arg, class... Args>
-constexpr size_t format(MutStringRef &buf, StringRef fmt, Arg arg, Args... args)
+constexpr ValueOrError<size_t> format(MutStringRef &buf, StringRef fmt, Arg arg, Args... args)
 {
     size_t cnt = 0;
 
@@ -127,9 +130,19 @@ constexpr size_t format(MutStringRef &buf, StringRef fmt, Arg arg, Args... args)
 
         ++i;
 
-        cnt += to_string(buf, flags, arg);
+        size_t tmp = to_string(buf, flags, arg);
 
-        return cnt + format(buf, fmt.slice_from(i), args...);
+        if (add_overflow(cnt, tmp, cnt))
+            return Error::OVERFLOW;
+
+        ValueOrError<size_t> result = format(buf, fmt.slice_from(i), args...);
+        if (result.is_error())
+            return result.error();
+
+        if (add_overflow(cnt, result.value(), cnt))
+            return Error::OVERFLOW;
+
+        return cnt;
     }
 
     return cnt;
@@ -261,7 +274,7 @@ constexpr bool is_valid<>(StringRef fmt)
 // Type safe version of C's snprintf(), with compile-time checked format
 // strings.
 template <char... Fmt, class... Args>
-constexpr size_t snprintf(MutStringRef &buf, CTString<Fmt...>, Args ...args)
+constexpr ValueOrError<size_t> snprintf(MutStringRef &buf, CTString<Fmt...>, Args ...args)
 {
     constexpr String<sizeof...(Fmt)> fmt = { { Fmt... } };
 
@@ -273,12 +286,14 @@ constexpr size_t snprintf(MutStringRef &buf, CTString<Fmt...>, Args ...args)
 // Type safe version of C's printf(), with compile-time checked format strings.
 // Currently has a hard limit on the output size.
 template <char... Fmt, class... Args>
-constexpr size_t printf(CTString<Fmt...> fmt, Args ...args)
+constexpr ValueOrError<size_t> printf(CTString<Fmt...> fmt, Args ...args)
 {
     String<2048> buf;
     MutStringRef mut_ref = buf.mut_ref();
 
-    snprintf(mut_ref, fmt, args...);
+    ValueOrError<size_t> bytes_needed = snprintf(mut_ref, fmt, args...);
+    if (bytes_needed.is_error())
+        return bytes_needed.error();
 
     Framebuffer::put_string(mut_ref.to_immut_ref());
 
