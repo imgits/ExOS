@@ -47,8 +47,7 @@ using EFI_EVENT = VOID *;
 using EFI_PHYSICAL_ADDRESS = UINT64;
 using EFI_VIRTUAL_ADDRESS = UINT64;
 
-struct EFI_GUID
-{
+struct EFI_GUID {
     UINT32 Data1;
     UINT16 Data2;
     UINT16 Data3;
@@ -62,8 +61,7 @@ struct EFI_GUID
     UINT8 Data12;
 };
 
-enum EFI_MEMORY_TYPE
-{
+enum EFI_MEMORY_TYPE {
     EfiReservedMemoryType,
     EfiLoaderCode,
     EfiLoaderData,
@@ -81,8 +79,7 @@ enum EFI_MEMORY_TYPE
     EfiMaxMemoryType
 };
 
-struct EFI_TIME
-{
+struct EFI_TIME {
     UINT16 Year;
     UINT8 Month;
     UINT8 Day;
@@ -96,8 +93,7 @@ struct EFI_TIME
     UINT8 Pad2;
 };
 
-struct EFI_INPUT_KEY
-{
+struct EFI_INPUT_KEY {
     UINT16 ScanCode;
     CHAR16 UnicodeChar;
 };
@@ -109,8 +105,7 @@ constexpr UINT64 efi_val_to_err(UINT64 x)
     return x | EFI_HIGH_BIT;
 }
 
-enum EFI_STATUS : UINTN
-{
+enum EFI_STATUS : UINTN {
     EFI_SUCCESS                 = 0,
 
     EFI_LOAD_ERROR              = efi_val_to_err(1),

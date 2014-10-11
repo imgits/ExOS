@@ -24,8 +24,6 @@
 
 extern "C" EFI_STATUS kmain(EFI_HANDLE handle, EFI_SYSTEM_TABLE *systab) EFIAPI;
 
-ValueOrError<size_t> (*printf_func)(StringRef);
-
 EFI_STATUS kmain(EFI_HANDLE handle, EFI_SYSTEM_TABLE *systab)
 {
     EFI_BOOT_SERVICES const &bs = *systab->BootServices;
@@ -35,36 +33,26 @@ EFI_STATUS kmain(EFI_HANDLE handle, EFI_SYSTEM_TABLE *systab)
     EFI_GRAPHICS_OUTPUT_PROTOCOL *gop;
     EFI_STATUS status = Uefi::get_gop(handle, bs, gop);
     if (Uefi::status_is_error(status))
-    {
         Uefi::die(conout, status, u"Trying to get GOP"_s);
-    }
     if (gop == nullptr)
-    {
         rs.ResetSystem(EfiResetShutdown, EFI_SUCCESS, 0, nullptr);
-    }
 
     Framebuffer::init(*gop->Mode);
 
     Framebuffer::clear_screen();
 
-    printf_func = Framebuffer::printf_func;
-
     Uefi::MemoryMap memory_map;
     status = Uefi::get_memory_map(bs, memory_map);
     if (Uefi::status_is_error(status))
-    {
         Uefi::die(conout, status, u"Trying to get memory map"_s);
-    }
 
     status = bs.ExitBootServices(handle, memory_map.map_key);
     if (Uefi::status_is_error(status))
-    {
         Uefi::die(conout, status, u"ExitBootServices()"_s);
-    }
 
-    Segmentation::setup_gdt();
+    Gdt::setup();
 
-    Segmentation::setup_idt();
+    Idt::setup();
 
     printf("Welcome! [CPU: ()]\n\n"_cts, Cpuid::get_vendor_string().ref());
 

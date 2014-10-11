@@ -22,8 +22,8 @@
 #include "lib/immut_array_ref.h"
 #include "lib/mut_array_ref.h"
 #include "lib/array.h"
-#include "lib/value_or_error.h"
 #include "lib/ctstring.h"
+#include "framebuffer/framebuffer.h"
 
 // printf() and snprintf()-like functions featuring format string checking
 // at compile time. They either return the number of characters written or
@@ -32,20 +32,18 @@
 // Since the format string is validated at compile time, the runtime
 // formatting function can avoid unneeded checks for validity.
 
-enum class Case : uint8_t
-{
+enum class Case : uint8_t {
     LOWER,
     UPPER
 };
 
-struct ConvFlags
-{
+struct ConvFlags {
     Case letter_case;
     uint8_t base;
 };
 
 size_t to_string(MutStringRef &buf, ConvFlags flags, StringRef arg);
-size_t to_string(MutStringRef &buf, ConvFlags flags, void const *arg);
+size_t to_string(MutStringRef &buf, ConvFlags flags, const void *arg);
 size_t to_string(MutStringRef &buf, ConvFlags flags, int arg);
 size_t to_string(MutStringRef &buf, ConvFlags flags, unsigned int arg);
 size_t to_string(MutStringRef &buf, ConvFlags flags, long arg);
@@ -56,18 +54,16 @@ size_t to_string(MutStringRef &buf, ConvFlags flags, unsigned long long arg);
 template <class T>
 constexpr ConvFlags default_flags()
 {
-    return
-    {
+    return {
         .base = 10,
         .letter_case = Case::LOWER
     };
 }
 
 template <>
-constexpr ConvFlags default_flags<void const *>()
+constexpr ConvFlags default_flags<const void *>()
 {
-    return
-    {
+    return {
         .base = 16,
         .letter_case = Case::LOWER
     };
@@ -76,7 +72,7 @@ constexpr ConvFlags default_flags<void const *>()
 template <>
 constexpr ConvFlags default_flags<void *>()
 {
-    return default_flags<void const *>();
+    return default_flags<const void *>();
 }
 
 // These two format() functions handle formatting the arguments at runtime.
@@ -89,39 +85,30 @@ constexpr size_t format(MutStringRef &buf, StringRef fmt, Arg arg, Args... args)
 {
     size_t cnt = 0;
 
-    for (size_t i = 0;; ++i)
-    {
-        if (fmt[i] != '(')
-        {
+    for (size_t i = 0;; ++i) {
+        if (fmt[i] != '(') {
             ++cnt;
 
             if (buf.is_space_left())
-            {
                 buf.push_back(fmt[i]);
-            }
-
-            continue;
-        }
-
-        if (fmt[i + 1] == '(')
-        {
-            ++cnt;
-            ++i;
-
-            if (buf.is_space_left())
-            {
-                buf.push_back('(');
-            }
 
             continue;
         }
 
         ++i;
 
+        if (fmt[i] == '(') {
+            ++cnt;
+
+            if (buf.is_space_left())
+                buf.push_back('(');
+
+            continue;
+        }
+
         ConvFlags flags = default_flags<Arg>();
 
-        for (; fmt[i] != ')'; ++i)
-        {
+        for (; fmt[i] != ')'; ++i) {
             switch (fmt[i]) {
             case 'x':
                 flags.base = 16;
@@ -162,13 +149,10 @@ constexpr bool flags_valid<long long>(StringRef fmt)
 template <>
 constexpr bool flags_valid<unsigned long long>(StringRef fmt)
 {
-    for (char const c : fmt)
-    {
+    for (const char c : fmt)
         if (c != 'x' && c != 'X' && c != 'o')
-        {
             return false;
-        }
-    }
+
     return true;
 }
 
@@ -179,22 +163,19 @@ constexpr bool flags_valid<StringRef>(StringRef fmt)
 }
 
 template <>
-constexpr bool flags_valid<void const *>(StringRef fmt)
+constexpr bool flags_valid<const void *>(StringRef fmt)
 {
-    for (char const c : fmt)
-    {
+    for (const char c : fmt)
         if (c != 'x' && c != 'X')
-        {
             return false;
-        }
-    }
+
     return true;
 }
 
 template <>
 constexpr bool flags_valid<void *>(StringRef fmt)
 {
-    return flags_valid<void const *>(fmt);
+    return flags_valid<const void *>(fmt);
 }
 
 template <>
@@ -235,43 +216,34 @@ constexpr bool is_valid(StringRef fmt);
 template <class Arg, class... Args>
 constexpr bool is_valid_helper(StringRef fmt)
 {
-    for (size_t i = 0; i < fmt.length(); ++i)
-    {
+    for (size_t i = 0; i < fmt.length(); ++i) {
         if (fmt[i] != '(')
-        {
             continue;
-        }
 
-        if (i + 1 != fmt.length() && fmt[i + 1] == '(')
-        {
+        if (i + 1 != fmt.length() && fmt[i + 1] == '(') {
             ++i;
             continue;
         }
 
         ++i;
 
-        size_t const begin_flags = i;
+        const size_t begin_flags = i;
 
         bool found = false;
-        for (; i < fmt.length(); ++i)
-        {
-            if (fmt[i] == ')')
-            {
+        for (; i < fmt.length(); ++i) {
+            if (fmt[i] == ')') {
                 found = true;
                 break;
             }
         }
-        if (!found)
-        {
+        if (!found) {
             return false;
         }
 
-        size_t const end_flags = i;
+        const size_t end_flags = i;
 
         if (!flags_valid<Arg>(fmt.slice_from_until(begin_flags, end_flags)))
-        {
             return false;
-        }
 
         ++i;
 
@@ -291,12 +263,8 @@ template <>
 constexpr bool is_valid<>(StringRef fmt)
 {
     for (size_t i = 0; i < fmt.length(); ++i)
-    {
         if (fmt[i] == '(' && (i + 1 == fmt.length() || fmt[i++ + 1] != '('))
-        {
             return false;
-        }
-    }
 
     return true;
 }
@@ -313,18 +281,17 @@ constexpr size_t snprintf(MutStringRef &buf, CTString<Fmt...>, Args ...args)
     return format(buf, fmt.ref(), args...);
 }
 
-// Pointer to the function that should be used by printf().
-extern ValueOrError<size_t> (*printf_func)(StringRef);
-
 // Type safe version of C's printf(), with compile-time checked format strings.
 // Currently has a hard limit on the output size.
 template <char... Fmt, class... Args>
-constexpr ValueOrError<size_t> printf(CTString<Fmt...> fmt, Args ...args)
+constexpr size_t printf(CTString<Fmt...> fmt, Args ...args)
 {
     String<2048> buf;
     MutStringRef mut_ref = buf.mut_ref();
 
     snprintf(mut_ref, fmt, args...);
 
-    return printf_func(mut_ref.to_immut_ref());
+    Framebuffer::put_string(mut_ref.to_immut_ref());
+
+    return mut_ref.size();
 }

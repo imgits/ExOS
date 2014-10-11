@@ -16,25 +16,23 @@
 
 #pragma once
 
-#include "segmentation/structs.h"
+#include "segmentation/descriptors.h"
 
 #include "lib/util.h"
 
-namespace Segmentation {
+namespace Gdt {
 
-void setup_gdt();
+void setup();
 
-constexpr SegmentSelector CS_SELECTOR_KERNEL =
-{
-    .requestor_privilege_level = to_underlying_type(PrivilegeLevel::KERNEL),
-    .table_indicator = to_underlying_type(TableIndicator::GDT),
+constexpr Descriptors::SegmentSelector CS_SELECTOR_KERNEL = {
+    .requestor_privilege_level = to_underlying_type(Descriptors::PrivilegeLevel::KERNEL),
+    .table_indicator = to_underlying_type(Descriptors::TableIndicator::GDT),
     .selector_index = 2
 };
 
-constexpr SegmentSelector CS_SELECTOR_USER =
-{
-    .requestor_privilege_level = to_underlying_type(PrivilegeLevel::USER),
-    .table_indicator = to_underlying_type(TableIndicator::GDT),
+constexpr Descriptors::SegmentSelector CS_SELECTOR_USER = {
+    .requestor_privilege_level = to_underlying_type(Descriptors::PrivilegeLevel::USER),
+    .table_indicator = to_underlying_type(Descriptors::TableIndicator::GDT),
     .selector_index = 4
 };
 

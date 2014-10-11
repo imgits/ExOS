@@ -35,14 +35,14 @@ private:
 
 public:
     template <size_t N>
-    explicit constexpr MutArrayRef(T(&ptr)[N])
+    explicit constexpr MutArrayRef(T (&ptr)[N])
     : m_ptr(ptr)
     , m_capacity(N)
     , m_size(0)
     {
     }
 
-    constexpr void push_back(T const &x)
+    constexpr void push_back(const T &x)
     {
         assert(m_size < m_capacity);
         m_ptr[m_size++] = x;

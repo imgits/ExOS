@@ -23,16 +23,15 @@
 namespace Cpuid {
 
 // Executes the cpuid instruction with the given register values.
-void cpuid(uint32_t eax_in, uint32_t ecx_in, uint32_t &eax_out,
-           uint32_t &ebx_out, uint32_t &ecx_out, uint32_t &edx_out);
+void cpuid(uint32_t eax_in, uint32_t ecx_in, uint32_t& eax_out,
+           uint32_t& ebx_out, uint32_t& ecx_out, uint32_t& edx_out);
 
 uint32_t get_largest_standard_function();
 
 // Returns the CPU vendor string (GenuineIntel, AuthenticAMD, etc...).
 String<12> get_vendor_string();
 
-struct IdentInfoAmd
-{
+struct IdentInfoAmd {
     uint32_t stepping : 4;
     uint32_t base_model : 4;
     uint32_t base_family : 4;
@@ -42,8 +41,7 @@ struct IdentInfoAmd
     uint32_t reserved2 : 4;
 };
 
-struct IdentInfoIntel
-{
+struct IdentInfoIntel {
     uint32_t stepping_id : 4;
     uint32_t model : 4;
     uint32_t family_id : 4;
@@ -54,16 +52,14 @@ struct IdentInfoIntel
     uint32_t reserved2 : 4;
 };
 
-union IdentInfo
-{
+union IdentInfo {
     IdentInfoAmd amd;
     IdentInfoIntel intel;
 };
 
 IdentInfo get_version_info();
 
-struct MiscInfo
-{
+struct MiscInfo {
     uint32_t brand_id : 8;
     uint32_t clflush : 8;
     uint32_t logical_processor_count : 8;
@@ -72,8 +68,7 @@ struct MiscInfo
 
 MiscInfo get_misc_info();
 
-struct FeatureInfoAmd
-{
+struct FeatureInfoAmd {
     // ECX
 
     uint32_t sse3 : 1;
@@ -132,8 +127,7 @@ struct FeatureInfoAmd
     uint32_t reserved12 : 3;
 };
 
-struct FeatureInfoIntel
-{
+struct FeatureInfoIntel {
     // ECX
 
     uint32_t sse3 : 1;      // SSE3 extensions
@@ -205,8 +199,7 @@ struct FeatureInfoIntel
     uint32_t pbe : 1; // Pend. Brk. EN.
 };
 
-union FeatureInfo
-{
+union FeatureInfo {
     FeatureInfoIntel amd;
     FeatureInfoIntel intel;
 };

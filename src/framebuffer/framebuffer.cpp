@@ -25,8 +25,7 @@
 
 #include "lib/util.h"
 
-namespace
-{
+namespace {
 
 // Framebuffer start address
 uint32_t *g_framebuffer;
@@ -61,14 +60,10 @@ void scroll()
     size_t const limit = g_current_height * g_pixels_per_scan_line;
 
     for (size_t i = 0; i < limit; ++i)
-    {
         g_framebuffer[i] = g_framebuffer[i + g_font_line_size];
-    }
 
     for (size_t i = 0; i < g_font_line_size; ++i)
-    {
         g_framebuffer[limit + i] = 0;
-    }
 }
 
 void newline()
@@ -76,42 +71,31 @@ void newline()
     g_current_width = 0;
 
     if (g_current_height + Font::Glyph::HEIGHT > g_last_font_column)
-    {
         scroll();
-    }
     else
-    {
         g_current_height += Font::Glyph::HEIGHT;
-    }
 }
 
 void put_glyph(Font::Glyph glyph)
 {
-    for (unsigned int i = 0; i < Font::Glyph::HEIGHT; ++i)
-    {
-        unsigned int const height = g_current_height + i;
+    for (unsigned int i = 0; i < Font::Glyph::HEIGHT; ++i) {
+        const unsigned int height = g_current_height + i;
 
-        for (unsigned int j = 0; j < Font::Glyph::WIDTH; ++j)
-        {
-            unsigned int const width = g_current_width + j;
-            size_t const idx = height * g_pixels_per_scan_line + width;
+        for (unsigned int j = 0; j < Font::Glyph::WIDTH; ++j) {
+            const unsigned int width = g_current_width + j;
+            const size_t idx = height * g_pixels_per_scan_line + width;
 
             if (glyph.data[i] & (0x80 >> j))
-            {
                 g_framebuffer[idx] =  g_color_array[to_underlying_type(g_current_fg_color)];
-            }
             else
-            {
                 g_framebuffer[idx] = g_color_array[to_underlying_type(g_current_bg_color)];
-            }
         }
     }
 }
 
 } // end anonymous namespace
 
-Maybe<Error>
-Framebuffer::init(EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE const &gop_mode)
+Maybe<Error> Framebuffer::init(const EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE &gop_mode)
 {
     g_framebuffer = reinterpret_cast<uint32_t *>(gop_mode.FrameBufferBase);
     g_framebuffer_size = gop_mode.FrameBufferSize;
@@ -174,16 +158,13 @@ Framebuffer::init(EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE const &gop_mode)
 
 void Framebuffer::put_char(char c)
 {
-    if (c == '\n')
-    {
+    if (c == '\n') {
         newline();
         return;
     }
 
     if (g_current_width + Font::Glyph::HEIGHT > g_max_width)
-    {
         newline();
-    }
 
     put_glyph(Font::get_glyph(c));
 
@@ -192,10 +173,8 @@ void Framebuffer::put_char(char c)
 
 void Framebuffer::put_string(StringRef x)
 {
-    for (char const c : x)
-    {
+    for (const char c : x)
         put_char(c);
-    }
 }
 
 void Framebuffer::clear_screen()
@@ -204,12 +183,6 @@ void Framebuffer::clear_screen()
               g_color_array[to_underlying_type(g_current_bg_color)],
               g_framebuffer_size);
     g_current_height = g_current_width = 0;
-}
-
-ValueOrError<size_t> Framebuffer::printf_func(StringRef s)
-{
-    put_string(s);
-    return s.length();
 }
 
 void Framebuffer::set_foreground_color(Color color)

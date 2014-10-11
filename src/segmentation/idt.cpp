@@ -16,31 +16,27 @@
 
 #include "segmentation/idt.h"
 
-#include "segmentation/structs.h"
+#include "segmentation/descriptors.h"
 #include "interrupts/interrupts.h"
 #include "segmentation/gdt.h"
 #include "lib/util.h"
 #include "asm/asm.h"
 
-namespace
-{
+namespace {
 
-InterruptAndTrapGateDescriptor idt[256];
+Descriptors::InterruptAndTrapGate idt[256];
 
-InterruptAndTrapGateDescriptor make_intr_gate(void (*func)())
+Descriptors::InterruptAndTrapGate make_intr_gate(void (*func)())
 {
     auto x = reinterpret_cast<uint64_t>(func);
 
-    return
-    {
+    return {
         .target_offset_15_0 = x & 0xffff,
-        .target_selector = Segmentation::CS_SELECTOR_KERNEL,
+        .target_selector = Gdt::CS_SELECTOR_KERNEL,
         .ist = 0,
-        .type = static_cast<uint8_t>(
-            to_underlying_type(SystemSegmentDescriptorTypes::INTERRUPT_GATE)),
+        .type = static_cast<uint8_t>(to_underlying_type(Descriptors::SystemSegmentTypes::INTERRUPT_GATE)),
         .zero = 0,
-        .descriptor_privilege_level =
-            static_cast<uint8_t>(to_underlying_type(PrivilegeLevel::KERNEL)),
+        .descriptor_privilege_level = static_cast<uint8_t>(to_underlying_type(Descriptors::PrivilegeLevel::KERNEL)),
         .present = 1,
         .target_offset_31_16 = (x >> 16) & 0xffff,
         .target_offset_63_32 = (x >> 32) & 0xffffffff
@@ -49,7 +45,7 @@ InterruptAndTrapGateDescriptor make_intr_gate(void (*func)())
 
 } // end anonymous namespace
 
-void Segmentation::setup_idt()
+void Idt::setup()
 {
     idt[0] = make_intr_gate(intr_div_by_zero);
     idt[1] = make_intr_gate(intr_debug);
@@ -70,8 +66,7 @@ void Segmentation::setup_idt()
     idt[18] = make_intr_gate(intr_machine_check);
     idt[19] = make_intr_gate(intr_simd_floating_point);
 
-    DescriptorTableRegister dtr =
-    {
+    Descriptors::TableRegister dtr = {
         .limit = sizeof(idt) - 1,
         .base_address = reinterpret_cast<uint64_t>(&idt)
     };

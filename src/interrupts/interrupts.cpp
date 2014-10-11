@@ -27,7 +27,7 @@
 extern "C" {
 
 [[noreturn]] SYSV_ABI void
-intr_div_by_zero_cpp(Interrupts::StackNoErrorCode const *stack)
+intr_div_by_zero_cpp(const Interrupts::StackNoErrorCode *stack)
 {
     (void)stack;
     printf("INTR: Divide by zero!"_cts);
@@ -35,7 +35,7 @@ intr_div_by_zero_cpp(Interrupts::StackNoErrorCode const *stack)
 }
 
 [[noreturn]] SYSV_ABI void
-intr_debug_cpp(Interrupts::StackNoErrorCode const *stack)
+intr_debug_cpp(const Interrupts::StackNoErrorCode *stack)
 {
     (void)stack;
     printf("INTR: Debug!"_cts);
@@ -43,7 +43,7 @@ intr_debug_cpp(Interrupts::StackNoErrorCode const *stack)
 }
 
 [[noreturn]] SYSV_ABI void
-intr_nmi_cpp(Interrupts::StackNoErrorCode const *stack)
+intr_nmi_cpp(const Interrupts::StackNoErrorCode *stack)
 {
     (void)stack;
     printf("INTR: NMI"_cts);
@@ -51,7 +51,7 @@ intr_nmi_cpp(Interrupts::StackNoErrorCode const *stack)
 }
 
 [[noreturn]] SYSV_ABI void
-intr_breakpoint_cpp(Interrupts::StackNoErrorCode const *stack)
+intr_breakpoint_cpp(const Interrupts::StackNoErrorCode *stack)
 {
     (void)stack;
     printf("INTR: Breakpoint!"_cts);
@@ -59,7 +59,7 @@ intr_breakpoint_cpp(Interrupts::StackNoErrorCode const *stack)
 }
 
 [[noreturn]] SYSV_ABI void
-intr_overflow_cpp(Interrupts::StackNoErrorCode const *stack)
+intr_overflow_cpp(const Interrupts::StackNoErrorCode *stack)
 {
     (void)stack;
     printf("INTR: Overflow!"_cts);
@@ -67,7 +67,7 @@ intr_overflow_cpp(Interrupts::StackNoErrorCode const *stack)
 }
 
 [[noreturn]] SYSV_ABI void
-intr_bound_range_cpp(Interrupts::StackNoErrorCode const *stack)
+intr_bound_range_cpp(const Interrupts::StackNoErrorCode *stack)
 {
     (void)stack;
     printf("INTR: Bound Range!"_cts);
@@ -75,7 +75,7 @@ intr_bound_range_cpp(Interrupts::StackNoErrorCode const *stack)
 }
 
 [[noreturn]] SYSV_ABI void
-intr_invalid_opcode_cpp(Interrupts::StackNoErrorCode const *stack)
+intr_invalid_opcode_cpp(const Interrupts::StackNoErrorCode *stack)
 {
     (void)stack;
     printf("INTR: Invalid Opcode!"_cts);
@@ -83,7 +83,7 @@ intr_invalid_opcode_cpp(Interrupts::StackNoErrorCode const *stack)
 }
 
 [[noreturn]] SYSV_ABI void
-intr_device_not_available_cpp(Interrupts::StackNoErrorCode const *stack)
+intr_device_not_available_cpp(const Interrupts::StackNoErrorCode *stack)
 {
     (void)stack;
     printf("INTR: Device not available!"_cts);
@@ -139,7 +139,7 @@ intr_page_fault_cpp(Interrupts::StackWithErrorCode const *stack)
 }
 
 [[noreturn]] SYSV_ABI void
-intr_x87_floating_point_cpp(Interrupts::StackNoErrorCode const *stack)
+intr_x87_floating_point_cpp(const Interrupts::StackNoErrorCode *stack)
 {
     (void)stack;
     printf("INTR: x87 Floating Point!"_cts);
@@ -155,7 +155,7 @@ intr_alignment_check_cpp(Interrupts::StackWithErrorCode const *stack)
 }
 
 [[noreturn]] SYSV_ABI void
-intr_machine_check_cpp(Interrupts::StackNoErrorCode const *stack)
+intr_machine_check_cpp(const Interrupts::StackNoErrorCode *stack)
 {
     (void)stack;
     printf("INTR: Machine Check!"_cts);
@@ -163,7 +163,7 @@ intr_machine_check_cpp(Interrupts::StackNoErrorCode const *stack)
 }
 
 [[noreturn]] SYSV_ABI void
-intr_simd_floating_point_cpp(Interrupts::StackNoErrorCode const *stack)
+intr_simd_floating_point_cpp(const Interrupts::StackNoErrorCode *stack)
 {
     (void)stack;
     printf("INTR: SIMD Floating Point!"_cts);

@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include "segmentation/structs.h"
+#include "segmentation/descriptors.h"
 
 namespace Asm {
 
@@ -30,14 +30,22 @@ void clts();
 
 void invd();
 
-void invlpg(uint8_t tlb_entry);
+void wbinvd();
 
-void invlpga(uint64_t virtual_page, uint32_t asid);
+void invlpg(uint64_t page);
 
-void lgdt(DescriptorTableRegister const &dtr);
+void lgdt(const Descriptors::TableRegister &dtr);
 
-void lidt(DescriptorTableRegister const &dtr);
+void lidt(const Descriptors::TableRegister &dtr);
 
-void reload_cs_register(SegmentSelector selector);
+void sgdt(Descriptors::TableRegister &dtr);
+
+void sidt(Descriptors::TableRegister &dtr);
+
+void reload_cs_register(Descriptors::SegmentSelector selector);
+
+uint64_t rdmsr(uint32_t msr);
+
+void wrmsr(uint32_t msr, uint64_t value);
 
 } // end namespace Asm

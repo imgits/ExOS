@@ -21,9 +21,7 @@
 // Also relieves the user from putting the format string in angle brackets.
 
 template <char... Chars>
-struct CTString
-{
-};
+struct CTString { };
 
 template <class T, T... Ts>
 constexpr CTString<Ts...> operator"" _cts()

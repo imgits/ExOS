@@ -29,7 +29,7 @@ bool Uefi::status_is_error(EFI_STATUS x)
     return x & EFI_HIGH_BIT;
 }
 
-EFI_STATUS Uefi::get_memory_map(EFI_BOOT_SERVICES const &bs, MemoryMap &map)
+EFI_STATUS Uefi::get_memory_map(const EFI_BOOT_SERVICES &bs, MemoryMap &map)
 {
     map.memory_map_size = 0;
 
@@ -37,50 +37,38 @@ EFI_STATUS Uefi::get_memory_map(EFI_BOOT_SERVICES const &bs, MemoryMap &map)
                                         &map.map_key, &map.descriptor_size,
                                         &map.descriptor_version);
     if (status_is_error(status) && status != EFI_BUFFER_TOO_SMALL)
-    {
         return status;
-    }
 
-    do
-    {
+    do {
         map.memory_map_size *= 2;
 
         status = bs.AllocatePool(EfiLoaderData, map.memory_map_size,
                                  reinterpret_cast<VOID **>(&map.memory_map));
         if (status_is_error(status))
-        {
             return status;
-        }
 
         status = bs.GetMemoryMap(&map.memory_map_size, map.memory_map,
                                  &map.map_key, &map.descriptor_size,
                                  &map.descriptor_version);
         if (status_is_error(status) && status != EFI_BUFFER_TOO_SMALL)
-        {
             return status;
-        }
     } while (status == EFI_BUFFER_TOO_SMALL);
 
     return EFI_SUCCESS;
 }
 
-Acpi::rsdp *Uefi::get_acpi_rsdp(EFI_SYSTEM_TABLE const &systab)
+Acpi::rsdp *Uefi::get_acpi_rsdp(const EFI_SYSTEM_TABLE &systab)
 {
-    EFI_GUID const acpi = EFI_ACPI_TABLE_GUID;
+    const EFI_GUID acpi = EFI_ACPI_TABLE_GUID;
 
     for (UINTN i = 0; i < systab.NumberOfTableEntries; ++i)
-    {
         if (are_memory_equal(systab.ConfigurationTable[i].VendorGuid, acpi))
-        {
-            return static_cast<Acpi::rsdp *>(
-                systab.ConfigurationTable[i].VendorTable);
-        }
-    }
+            return static_cast<Acpi::rsdp *>( systab.ConfigurationTable[i].VendorTable);
 
     return nullptr;
 }
 
-EFI_STATUS Uefi::get_gop(EFI_HANDLE handle, EFI_BOOT_SERVICES const &bs,
+EFI_STATUS Uefi::get_gop(EFI_HANDLE handle, const EFI_BOOT_SERVICES &bs,
                          EFI_GRAPHICS_OUTPUT_PROTOCOL *&gop)
 {
     gop = nullptr;
@@ -93,22 +81,16 @@ EFI_STATUS Uefi::get_gop(EFI_HANDLE handle, EFI_BOOT_SERVICES const &bs,
     EFI_STATUS status = bs.LocateHandleBuffer(ByProtocol, &gop_guid, nullptr,
                                               &num, &handles);
     if (status_is_error(status))
-    {
         return status;
-    }
 
-    for (UINTN i = 0; i < num; ++i)
-    {
+    for (UINTN i = 0; i < num; ++i) {
         status = bs.OpenProtocol(handles[i], &gop_guid,
                                  reinterpret_cast<VOID **>(&gop), handle,
                                  nullptr, EFI_OPEN_PROTOCOL_BY_HANDLE_PROTOCOL);
         if (status_is_error(status))
-        {
             return status;
-        }
 
-        switch (gop->Mode->Info->PixelFormat)
-        {
+        switch (gop->Mode->Info->PixelFormat) {
         case PixelBlueGreenRedReserved8BitPerColor:
         case PixelRedGreenBlueReserved8BitPerColor:
             return EFI_SUCCESS;

@@ -18,13 +18,12 @@
 
 #include <cstdint>
 
-#include "segmentation/structs.h"
+#include "segmentation/descriptors.h"
 #include "registers/registers.h"
 
 namespace Interrupts {
 
-struct SelectorErrorCode
-{
+struct SelectorErrorCode {
     uint32_t ext : 1;
     uint32_t idt : 1;
     uint32_t ti : 1;
@@ -32,8 +31,7 @@ struct SelectorErrorCode
     uint32_t reserved : 16;
 };
 
-struct PageFaultErrorCode
-{
+struct PageFaultErrorCode {
     uint32_t p : 1;
     uint32_t rw : 1;
     uint32_t us : 1;
@@ -42,31 +40,27 @@ struct PageFaultErrorCode
     uint32_t reserved : 27;
 };
 
-union ErrorCode
-{
+union ErrorCode {
     SelectorErrorCode selector_error;
     PageFaultErrorCode page_fault_error;
 };
 
-struct Cr8
-{
+struct Cr8 {
     uint64_t task_priority : 4;
     uint64_t reserved : 60;
 };
 
-struct StackNoErrorCode
-{
+struct StackNoErrorCode {
     void *return_rip;
-    SegmentSelector return_cs;
+    Descriptors::SegmentSelector return_cs;
     uint8_t __pad[6];
     Registers::Rflags rflags;
     void *return_rsp;
-    SegmentSelector return_ss;
+    Descriptors::SegmentSelector return_ss;
     uint8_t __pad2[6];
 };
 
-struct StackWithErrorCode
-{
+struct StackWithErrorCode {
     ErrorCode error_code;
     uint8_t __pad[4];
     StackNoErrorCode rest_of_stack;

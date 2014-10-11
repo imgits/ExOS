@@ -32,16 +32,13 @@ template <class T>
 constexpr void set_array(T *ptr, T c, size_t size)
 {
     for (size_t i = 0; i < size; ++i)
-    {
         ptr[i] = c;
-    }
 }
 
 template <class T>
 constexpr void reverse_array_inplace(T *ptr, size_t n)
 {
-    for (size_t i = n - 1, j = 0; j < i; --i, ++j)
-    {
+    for (size_t i = n - 1, j = 0; j < i; --i, ++j) {
         T x = ptr[i];
         ptr[i] = ptr[j];
         ptr[j] = x;
@@ -49,18 +46,14 @@ constexpr void reverse_array_inplace(T *ptr, size_t n)
 }
 
 template <class T>
-constexpr bool are_memory_equal(T const &x, T const &y)
+constexpr bool are_memory_equal(const T &x, const T &y)
 {
-    auto a = reinterpret_cast<uint8_t const *>(&x);
-    auto b = reinterpret_cast<uint8_t const *>(&y);
+    auto a = reinterpret_cast<const uint8_t *>(&x);
+    auto b = reinterpret_cast<const uint8_t *>(&y);
 
     for (size_t i = 0; i < sizeof(T); ++i)
-    {
         if (a[i] != b[i])
-        {
             return false;
-        }
-    }
 
     return true;
 }

@@ -18,33 +18,30 @@
 
 #include <cstdint>
 
-enum class TableIndicator
-{
+namespace Descriptors {
+
+struct TableRegister {
+    uint16_t limit;
+    uint64_t base_address __attribute__((packed));
+};
+
+enum class TableIndicator : uint8_t {
     GDT = 0,
     LDT = 1
 };
 
-enum class PrivilegeLevel
-{
-    KERNEL = 0,
-    USER = 3
-};
-
-struct SegmentSelector
-{
+struct SegmentSelector {
     uint16_t requestor_privilege_level : 2;
     uint16_t table_indicator : 1;
     uint16_t selector_index : 13;
 };
 
-struct DescriptorTableRegister
-{
-    uint16_t limit;
-    uint64_t base_address __attribute__((packed));
+enum class PrivilegeLevel : uint8_t {
+    KERNEL = 0,
+    USER = 3
 };
 
-struct CodeSegmentDescriptor
-{
+struct CodeSegment {
     uint64_t ignored : 42;
     uint64_t conforming : 1;
     uint64_t one : 1;
@@ -57,8 +54,7 @@ struct CodeSegmentDescriptor
     uint64_t ignored3 : 9;
 };
 
-struct DataSegmentDescriptor
-{
+struct DataSegment {
     uint64_t ignored : 43;
     uint64_t zero : 1;
     uint64_t one : 1;
@@ -67,8 +63,7 @@ struct DataSegmentDescriptor
     uint64_t ignored3 : 16;
 };
 
-enum class SystemSegmentDescriptorTypes
-{
+enum class SystemSegmentTypes : uint8_t {
     LDT = 0x2,
     TSS_AVAILABLE = 0x9,
     TSS_BUSY = 0xa,
@@ -77,8 +72,7 @@ enum class SystemSegmentDescriptorTypes
     TRAP_GATE = 0xf
 };
 
-struct SystemSegmentDescriptor
-{
+struct SystemSegment {
     uint64_t segment_limit_15_0 : 16;
     uint64_t base_address_23_0 : 24;
     uint64_t type : 4;
@@ -96,8 +90,7 @@ struct SystemSegmentDescriptor
     uint64_t ignored3 : 19;
 };
 
-struct CallGateDescriptor
-{
+struct CallGate {
     uint64_t target_offset_15_0 : 16;
     SegmentSelector target_selector;
     uint64_t ignored : 8;
@@ -111,8 +104,7 @@ struct CallGateDescriptor
     uint64_t ignored3 : 19;
 };
 
-struct InterruptAndTrapGateDescriptor
-{
+struct InterruptAndTrapGate {
     uint64_t target_offset_15_0 : 16;
     SegmentSelector target_selector;
     uint64_t ist : 3;
@@ -125,3 +117,6 @@ struct InterruptAndTrapGateDescriptor
     uint64_t target_offset_63_32 : 32;
     uint64_t ignored2 : 32;
 };
+
+} // end namespace Descriptors
+

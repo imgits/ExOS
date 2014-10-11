@@ -18,48 +18,43 @@
 
 #include "asm/asm.h"
 
-namespace
-{
+namespace {
 
-union GdtEntry
-{
-    CodeSegmentDescriptor cs;
-    DataSegmentDescriptor ds;
-    SystemSegmentDescriptor ss;
+union GdtEntry {
+    Descriptors::CodeSegment cs;
+    Descriptors::DataSegment ds;
+    Descriptors::SystemSegment ss;
 };
 
 GdtEntry gdt[4];
 
 } // end anonymous namespace
 
-void Segmentation::setup_gdt()
+void Gdt::setup()
 {
     gdt[0] = { };
 
-    gdt[1].cs =
-    {
+    gdt[1].cs = {
         .conforming = 1,
         .one = 1,
         .one2 = 1,
-        .descriptor_privilege_level = to_underlying_type(PrivilegeLevel::KERNEL),
+        .descriptor_privilege_level = to_underlying_type(Descriptors::PrivilegeLevel::KERNEL),
         .present = 1,
         .long_attribute = 1,
         .default_operand_size = 0
     };
 
-    gdt[2].cs =
-    {
+    gdt[2].cs = {
         .conforming = 1,
         .one = 1,
         .one2 = 1,
-        .descriptor_privilege_level = to_underlying_type(PrivilegeLevel::USER),
+        .descriptor_privilege_level = to_underlying_type(Descriptors::PrivilegeLevel::USER),
         .present = 1,
         .long_attribute = 1,
         .default_operand_size = 0
     };
 
-    DescriptorTableRegister const gdtr =
-    {
+    const Descriptors::TableRegister gdtr = {
         .base_address = reinterpret_cast<uint64_t>(&gdt),
         .limit = sizeof(gdt) - 1
     };

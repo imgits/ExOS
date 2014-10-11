@@ -16,8 +16,8 @@
 
 #pragma once
 
-namespace Segmentation {
+namespace Idt {
 
-void setup_idt();
+void setup();
 
 }

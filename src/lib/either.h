@@ -22,8 +22,7 @@
 
 // Tagged union for 2 data members.
 
-enum class Tag : uint8_t
-{
+enum class Tag : uint8_t {
     LEFT,
     RIGHT
 };
@@ -34,8 +33,7 @@ enum class Tag : uint8_t
 template <class T, class U>
 class Either {
 private:
-    union
-    {
+    union {
         T m_left;
         U m_right;
     };

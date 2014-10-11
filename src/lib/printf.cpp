@@ -18,8 +18,7 @@
 
 #include "lib/util.h"
 
-namespace
-{
+namespace {
 
 char digit_to_ascii(unsigned char c, Case letter_case)
 {
@@ -38,13 +37,9 @@ char digit_to_ascii(unsigned char c, Case letter_case)
 
 size_t to_string(MutStringRef &buf, ConvFlags, StringRef arg)
 {
-    for (char const c : arg)
-    {
+    for (const char c : arg)
         if (buf.is_space_left())
-        {
             buf.push_back(c);
-        }
-    }
 
     return arg.length();
 }
@@ -78,15 +73,13 @@ size_t to_string(MutStringRef &buf, ConvFlags flags, unsigned long long arg)
 {
     size_t cnt = 0;
 
-    size_t const start = buf.size();
+    const size_t start = buf.size();
 
-    do
-    {
+    do {
         ++cnt;
 
-        if (buf.is_space_left())
-        {
-            auto x = static_cast<unsigned char const>(arg % flags.base);
+        if (buf.is_space_left()) {
+            auto x = static_cast<unsigned char>(arg % flags.base);
             buf.push_back(digit_to_ascii(x, flags.letter_case));
         }
 
@@ -102,14 +95,11 @@ size_t to_string(MutStringRef &buf, ConvFlags flags, long long arg)
 {
     size_t cnt = 0;
 
-    if (arg < 0)
-    {
+    if (arg < 0) {
         ++cnt;
 
         if (buf.is_space_left())
-        {
             buf.push_back('-');
-        }
     }
 
     return cnt + to_string(buf, flags, unsigned_abs(arg));
@@ -119,19 +109,14 @@ size_t format(MutStringRef &buf, StringRef fmt)
 {
     size_t cnt = 0;
 
-    for (size_t i = 0; i < fmt.length(); ++i)
-    {
+    for (size_t i = 0; i < fmt.length(); ++i) {
         if (fmt[i] == '(' && fmt[i + 1] == '(')
-        {
             ++i;
-        }
 
         ++cnt;
 
         if (buf.is_space_left())
-        {
             buf.push_back(fmt[i]);
-        }
     }
 
     return cnt;

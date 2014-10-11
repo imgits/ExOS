@@ -25,17 +25,17 @@
 template <class T>
 class ImmutArrayRef {
 private:
-    T const *m_ptr;
+    const T *m_ptr;
     size_t m_size;
 
 public:
-    explicit constexpr ImmutArrayRef(T const *s, size_t l)
+    explicit constexpr ImmutArrayRef(const T *s, size_t l)
     : m_ptr(s)
     , m_size(l)
     {
     }
 
-    constexpr T const *data() const
+    constexpr const T *data() const
     {
         return m_ptr;
     }
@@ -45,7 +45,7 @@ public:
         return m_size;
     }
 
-    constexpr T const &operator[](size_t i) const
+    constexpr const T &operator[](size_t i) const
     {
         assert(i < m_size);
         return m_ptr[i];
@@ -67,13 +67,13 @@ public:
 };
 
 template <class T>
-constexpr T const *begin(ImmutArrayRef<T> x)
+constexpr const T *begin(ImmutArrayRef<T> x)
 {
     return x.data();
 }
 
 template <class T>
-constexpr T const *end(ImmutArrayRef<T> x)
+constexpr const T *end(ImmutArrayRef<T> x)
 {
     return x.data() + x.length();
 }
@@ -81,7 +81,7 @@ constexpr T const *end(ImmutArrayRef<T> x)
 using StringRef = ImmutArrayRef<char>;
 using StringRefUefi = ImmutArrayRef<char16_t>;
 
-constexpr StringRef operator"" _s(char const *s, size_t l)
+constexpr StringRef operator"" _s(const char *s, size_t l)
 {
     return StringRef(s, l);
 }

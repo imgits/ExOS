@@ -26,8 +26,7 @@ struct EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE;
 namespace Framebuffer {
 
 // Currently accepted colors.
-enum class Color
-{
+enum class Color {
     BLACK,
     WHITE,
     RED,
@@ -48,7 +47,7 @@ enum class Color
 
 // Initializes the framebuffer. You must call this before calling any other
 // framebuffer function.
-Maybe<Error> init(EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE const &gop_mode);
+Maybe<Error> init(const EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE &gop_mode);
 
 // Redraws the entire screen in the current background color.
 void clear_screen();
@@ -60,8 +59,5 @@ void set_background_color(Color color);
 void put_char(char c);
 
 void put_string(StringRef x);
-
-// To be plugged into printf().
-ValueOrError<size_t> printf_func(StringRef s);
 
 } // namespace Framebuffer end

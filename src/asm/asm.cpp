@@ -42,29 +42,37 @@ void Asm::invd()
     __asm__("invd");
 }
 
-void Asm::invlpg(uint8_t tlb_entry)
+void Asm::invlpg(uint64_t page)
 {
-    __asm__("invlpg %[tlb_entry]" : : [tlb_entry] "mem"(tlb_entry));
+    __asm__("invlpg [page]" : : [page]"m"(page));
 }
 
-void Asm::invlpga(uint64_t virtual_page, uint32_t asid)
+void Asm::wbinvd()
 {
-    __asm__("invlpga %[virtual_page], %[asid]"
-            :
-            : [virtual_page] "a"(virtual_page), [asid] "c"(asid));
+    __asm__("wbinvd");
 }
 
-void Asm::lgdt(DescriptorTableRegister const &dtr)
+void Asm::lgdt(const Descriptors::TableRegister &dtr)
 {
-    __asm__("lgdt %[dtr]" : : [dtr] "m"(dtr));
+    __asm__("lgdt %[dtr]" : : [dtr]"m"(dtr));
 }
 
-void Asm::lidt(DescriptorTableRegister const &dtr)
+void Asm::lidt(const Descriptors::TableRegister &dtr)
 {
-    __asm__("lidt %[dtr]" : : [dtr] "m"(dtr));
+    __asm__("lidt %[dtr]" : : [dtr]"m"(dtr));
 }
 
-void Asm::reload_cs_register(SegmentSelector selector)
+void Asm::sgdt(Descriptors::TableRegister &dtr)
+{
+    __asm__("sgdt %[dtr]" : : [dtr]"m"(dtr));
+}
+
+void Asm::sidt(Descriptors::TableRegister &dtr)
+{
+    __asm__("sidt %[dtr]" : : [dtr]"m"(dtr));
+}
+
+void Asm::reload_cs_register(Descriptors::SegmentSelector selector)
 {
     uint64_t dummy;
     __asm__("pushq %[selector];"
@@ -72,7 +80,33 @@ void Asm::reload_cs_register(SegmentSelector selector)
             "pushq %[dummy];"
             "lretq;"
             "label:"
-            : [dummy] "=r"(dummy)
-            : [selector] "m"(selector)
+            : [dummy]"=r"(dummy)
+            : [selector]"m"(selector)
             : "memory");
+}
+
+uint64_t Asm::rdmsr(uint32_t msr)
+{
+    union {
+        uint64_t x;
+        uint32_t regs[2];
+    } u;
+
+    __asm__("rdmsr"
+            : "=c"(msr)
+            : "a"(u.regs[0]), "d"(u.regs[1]));
+
+    return u.x;
+}
+
+void Asm::wrmsr(uint32_t msr, uint64_t value)
+{
+    union {
+        uint64_t x;
+        uint32_t regs[2];
+    } u = {
+        .x = value
+    };
+
+    __asm__("wrmsr" : : "c"(msr), "a"(u.regs[0]), "d"(u.regs[1]));
 }
