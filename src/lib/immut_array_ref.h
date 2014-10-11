@@ -19,6 +19,7 @@
 #include <cstddef>
 
 #include "lib/assert.h"
+#include "lib/maybe.h"
 
 // Reference to an immutable(const) array. Small enough to be passed by-value.
 
@@ -63,6 +64,15 @@ public:
         assert(end < m_size);
         assert(end >= begin);
         return ImmutArrayRef<T>(m_ptr + begin, end - begin);
+    }
+
+    constexpr Maybe<size_t> index_of(T x)
+    {
+        for (size_t i = 0; i < m_size; ++i)
+            if (m_ptr[i] == x)
+                return i;
+
+        return Unit::NONE;
     }
 };
 

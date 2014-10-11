@@ -225,29 +225,18 @@ constexpr bool is_valid_helper(StringRef fmt)
             continue;
         }
 
-        ++i;
+        const size_t begin_flags = i + 1;
 
-        const size_t begin_flags = i;
-
-        bool found = false;
-        for (; i < fmt.length(); ++i) {
-            if (fmt[i] == ')') {
-                found = true;
-                break;
-            }
-        }
-        if (!found) {
+        const Maybe<size_t> index = fmt.slice_from(begin_flags).index_of(')');
+        if (index.is_none())
             return false;
-        }
 
-        const size_t end_flags = i;
+        const size_t end_flags = begin_flags + index.get();
 
         if (!flags_valid<Arg>(fmt.slice_from_until(begin_flags, end_flags)))
             return false;
 
-        ++i;
-
-        return is_valid<Args...>(fmt.slice_from(i));
+        return is_valid<Args...>(fmt.slice_from(end_flags + 1));
     }
 
     return false;
