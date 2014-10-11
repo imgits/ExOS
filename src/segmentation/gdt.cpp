@@ -34,7 +34,7 @@ void Gdt::setup()
 {
     gdt[0] = { };
 
-    gdt[1].cs = {
+    gdt[1].cs = Descriptors::CodeSegment {
         .conforming = 1,
         .one = 1,
         .one2 = 1,
@@ -44,7 +44,7 @@ void Gdt::setup()
         .default_operand_size = 0
     };
 
-    gdt[2].cs = {
+    gdt[2].cs = Descriptors::CodeSegment {
         .conforming = 1,
         .one = 1,
         .one2 = 1,

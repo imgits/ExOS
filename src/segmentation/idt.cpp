@@ -30,7 +30,7 @@ Descriptors::InterruptAndTrapGate make_intr_gate(void (*func)())
 {
     auto x = reinterpret_cast<uint64_t>(func);
 
-    return {
+    return Descriptors::InterruptAndTrapGate {
         .target_offset_15_0 = x & 0xffff,
         .target_selector = Gdt::CS_SELECTOR_KERNEL,
         .ist = 0,

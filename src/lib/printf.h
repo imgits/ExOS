@@ -54,7 +54,7 @@ size_t to_string(MutStringRef &buf, ConvFlags flags, unsigned long long arg);
 template <class T>
 constexpr ConvFlags default_flags()
 {
-    return {
+    return ConvFlags {
         .base = 10,
         .letter_case = Case::LOWER
     };
@@ -63,7 +63,7 @@ constexpr ConvFlags default_flags()
 template <>
 constexpr ConvFlags default_flags<const void *>()
 {
-    return {
+    return ConvFlags {
         .base = 16,
         .letter_case = Case::LOWER
     };
