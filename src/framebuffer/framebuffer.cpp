@@ -86,7 +86,7 @@ void put_glyph(Font::Glyph glyph)
             const size_t idx = height * g_pixels_per_scan_line + width;
 
             if (glyph.data[i] & (0x80 >> j))
-                g_framebuffer[idx] =  g_color_array[to_underlying_type(g_current_fg_color)];
+                g_framebuffer[idx] = g_color_array[to_underlying_type(g_current_fg_color)];
             else
                 g_framebuffer[idx] = g_color_array[to_underlying_type(g_current_bg_color)];
         }
