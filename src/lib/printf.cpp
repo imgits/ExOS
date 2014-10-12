@@ -49,7 +49,7 @@ size_t to_string(MutStringRef &buf, ConvFlags flags, int arg)
     return to_string(buf, flags, static_cast<long long>(arg));
 }
 
-size_t to_string(MutStringRef &buf, ConvFlags flags, unsigned int arg)
+size_t to_string(MutStringRef &buf, ConvFlags flags, unsigned arg)
 {
     return to_string(buf, flags, static_cast<unsigned long long>(arg));
 }

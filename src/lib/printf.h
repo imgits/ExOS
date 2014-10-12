@@ -48,7 +48,7 @@ struct ConvFlags {
 size_t to_string(MutStringRef &buf, ConvFlags flags, StringRef arg);
 size_t to_string(MutStringRef &buf, ConvFlags flags, const void *arg);
 size_t to_string(MutStringRef &buf, ConvFlags flags, int arg);
-size_t to_string(MutStringRef &buf, ConvFlags flags, unsigned int arg);
+size_t to_string(MutStringRef &buf, ConvFlags flags, unsigned arg);
 size_t to_string(MutStringRef &buf, ConvFlags flags, long arg);
 size_t to_string(MutStringRef &buf, ConvFlags flags, unsigned long arg);
 size_t to_string(MutStringRef &buf, ConvFlags flags, long long arg);
@@ -198,7 +198,7 @@ constexpr bool flags_valid<int>(StringRef fmt)
 }
 
 template <>
-constexpr bool flags_valid<unsigned int>(StringRef fmt)
+constexpr bool flags_valid<unsigned>(StringRef fmt)
 {
     return flags_valid<unsigned long long>(fmt);
 }

@@ -27,8 +27,8 @@ namespace Font {
 struct Glyph {
     Array<uint8_t, 16> data;
 
-    static constexpr unsigned int HEIGHT = 16;
-    static constexpr unsigned int WIDTH = 8;
+    static constexpr unsigned HEIGHT = 16;
+    static constexpr unsigned WIDTH = 8;
 };
 
 Glyph get_glyph(char c);
