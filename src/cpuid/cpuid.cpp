@@ -16,8 +16,8 @@
 
 #include "cpuid/cpuid.h"
 
-void Cpuid::cpuid(uint32_t eax_in, uint32_t ecx_in, uint32_t& eax_out,
-                  uint32_t& ebx_out, uint32_t& ecx_out, uint32_t& edx_out)
+void Cpuid::cpuid(uint32_t eax_in, uint32_t ecx_in, uint32_t &eax_out,
+                  uint32_t &ebx_out, uint32_t &ecx_out, uint32_t &edx_out)
 {
     __asm__("cpuid"
             : "=a"(eax_out), "=b"(ebx_out), "=c"(ecx_out), "=d"(edx_out)
