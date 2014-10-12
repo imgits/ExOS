@@ -26,8 +26,8 @@ extern "C" EFI_STATUS kmain(EFI_HANDLE handle, EFI_SYSTEM_TABLE *systab) EFIAPI;
 
 EFI_STATUS kmain(EFI_HANDLE handle, EFI_SYSTEM_TABLE *systab)
 {
-    EFI_BOOT_SERVICES const &bs = *systab->BootServices;
-    EFI_RUNTIME_SERVICES const &rs = *systab->RuntimeServices;
+    const EFI_BOOT_SERVICES &bs = *systab->BootServices;
+    const EFI_RUNTIME_SERVICES &rs = *systab->RuntimeServices;
     EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL &conout = *systab->ConOut;
 
     EFI_GRAPHICS_OUTPUT_PROTOCOL *gop;
