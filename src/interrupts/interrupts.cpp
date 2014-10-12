@@ -91,7 +91,7 @@ intr_device_not_available_cpp(const Interrupts::StackNoErrorCode *stack)
 }
 
 [[noreturn]] SYSV_ABI void
-intr_double_fault_cpp(Interrupts::StackWithErrorCode const *stack)
+intr_double_fault_cpp(const Interrupts::StackWithErrorCode *stack)
 {
     (void)stack;
     printf("INTR: Double Fault!"_cts);
@@ -99,7 +99,7 @@ intr_double_fault_cpp(Interrupts::StackWithErrorCode const *stack)
 }
 
 [[noreturn]] SYSV_ABI void
-intr_invalid_tss_cpp(Interrupts::StackWithErrorCode const *stack)
+intr_invalid_tss_cpp(const Interrupts::StackWithErrorCode *stack)
 {
     (void)stack;
     printf("INTR: Invalid TSS!"_cts);
@@ -107,7 +107,7 @@ intr_invalid_tss_cpp(Interrupts::StackWithErrorCode const *stack)
 }
 
 [[noreturn]] SYSV_ABI void
-intr_segment_not_present_cpp(Interrupts::StackWithErrorCode const *stack)
+intr_segment_not_present_cpp(const Interrupts::StackWithErrorCode *stack)
 {
     (void)stack;
     printf("INTR: Segment Not Present!"_cts);
@@ -115,7 +115,7 @@ intr_segment_not_present_cpp(Interrupts::StackWithErrorCode const *stack)
 }
 
 [[noreturn]] SYSV_ABI void
-intr_stack_cpp(Interrupts::StackWithErrorCode const *stack)
+intr_stack_cpp(const Interrupts::StackWithErrorCode *stack)
 {
     (void)stack;
     printf("INTR: Stack!"_cts);
@@ -123,7 +123,7 @@ intr_stack_cpp(Interrupts::StackWithErrorCode const *stack)
 }
 
 [[noreturn]] SYSV_ABI void
-intr_general_protection_cpp(Interrupts::StackWithErrorCode const *stack)
+intr_general_protection_cpp(const Interrupts::StackWithErrorCode *stack)
 {
     (void)stack;
     printf("INTR: General Protection!"_cts);
@@ -131,7 +131,7 @@ intr_general_protection_cpp(Interrupts::StackWithErrorCode const *stack)
 }
 
 [[noreturn]] SYSV_ABI void
-intr_page_fault_cpp(Interrupts::StackWithErrorCode const *stack)
+intr_page_fault_cpp(const Interrupts::StackWithErrorCode *stack)
 {
     (void)stack;
     printf("INTR: Page Fault!"_cts);
@@ -147,7 +147,7 @@ intr_x87_floating_point_cpp(const Interrupts::StackNoErrorCode *stack)
 }
 
 [[noreturn]] SYSV_ABI void
-intr_alignment_check_cpp(Interrupts::StackWithErrorCode const *stack)
+intr_alignment_check_cpp(const Interrupts::StackWithErrorCode *stack)
 {
     (void)stack;
     printf("INTR: Alignment Check!"_cts);

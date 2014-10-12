@@ -22,10 +22,8 @@ namespace {
 
 char digit_to_ascii(unsigned char c, Case letter_case)
 {
-    static constexpr char lowercase_letters[] = "0123456789abcdefghijklmnopqrst"
-                                                "uvwxyz";
-    static constexpr char uppercase_letters[] = "0123456789ABCDEFGHIJKLMNOPQRST"
-                                                "UVWXYZ";
+    static constexpr char lowercase_letters[] = "0123456789abcdefghijklmnopqrstuvwxyz";
+    static constexpr char uppercase_letters[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     switch (letter_case) {
     case Case::LOWER: return lowercase_letters[c];

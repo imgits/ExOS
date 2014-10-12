@@ -16,6 +16,8 @@
 
 #include "font/font.h"
 
+#include "lib/assert.h"
+
 Font::Glyph Font::get_glyph(char c)
 {
     static constexpr Glyph strange_glyph = { { {
@@ -1731,6 +1733,9 @@ Font::Glyph Font::get_glyph(char c)
         }}},
         [127] = strange_glyph
     };
+
+    assert(c >= ' ');
+    assert(c <= '~');
 
     return font[static_cast<unsigned char>(c)];
 }

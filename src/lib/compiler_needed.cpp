@@ -28,7 +28,7 @@ void *memset(void *b, int c, size_t len)
     auto a = reinterpret_cast<unsigned char *>(b);
 
     for (size_t i = 0; i < len; ++i)
-    a[i] = static_cast<unsigned char>(c);
+        a[i] = static_cast<unsigned char>(c);
 
     return b;
 }

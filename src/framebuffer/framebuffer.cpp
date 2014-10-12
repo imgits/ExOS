@@ -14,15 +14,13 @@
  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#include "framebuffer/framebuffer.h"
+
 #include <cstdint>
 #include <cstddef>
 
-#include "framebuffer/framebuffer.h"
-
 #include "font/font.h"
-
 #include "uefi/protocols/console_support/graphics_output.h"
-
 #include "lib/util.h"
 
 namespace {
@@ -57,7 +55,7 @@ uint32_t g_color_array[to_underlying_type(Framebuffer::Color::NAVY) + 1];
 // Move every line until the current one up, make current row blank
 void scroll()
 {
-    size_t const limit = g_current_height * g_pixels_per_scan_line;
+    const size_t limit = g_current_height * g_pixels_per_scan_line;
 
     for (size_t i = 0; i < limit; ++i)
         g_framebuffer[i] = g_framebuffer[i + g_font_line_size];

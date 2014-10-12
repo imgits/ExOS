@@ -24,9 +24,7 @@ union GdtEntry {
     Descriptors::CodeSegment cs;
     Descriptors::DataSegment ds;
     Descriptors::SystemSegment ss;
-};
-
-GdtEntry gdt[4];
+} gdt[4];
 
 } // end anonymous namespace
 
