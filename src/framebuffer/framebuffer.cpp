@@ -31,6 +31,9 @@ uint32_t *g_framebuffer;
 // Size of the framebuffer in bytes
 size_t g_framebuffer_size;
 
+// Size of the framebuffer in pixels
+size_t g_framebuffer_size_in_pixels;
+
 // max visible horizontal pixels
 uint32_t g_max_width;
 // max vertical pixels
@@ -42,7 +45,7 @@ uint32_t g_current_width;
 uint32_t g_current_height;
 
 // amount of pixels of one font line
-size_t g_font_line_size;
+uint32_t g_font_line_size;
 
 // height of the last column which can display the full font height
 uint32_t g_last_font_column;
@@ -55,7 +58,7 @@ uint32_t g_color_array[to_underlying_type(Framebuffer::Color::NAVY) + 1];
 // Move every line until the current one up, make current row blank
 void scroll()
 {
-    const size_t limit = g_current_height * g_pixels_per_scan_line;
+    const size_t limit = static_cast<size_t>(g_current_height) * g_pixels_per_scan_line;
 
     for (size_t i = 0; i < limit; ++i)
         g_framebuffer[i] = g_framebuffer[i + g_font_line_size];
@@ -81,7 +84,7 @@ void put_glyph(Font::Glyph glyph)
 
         for (unsigned j = 0; j < Font::Glyph::WIDTH; ++j) {
             const uint32_t width = g_current_width + j;
-            const size_t idx = height * g_pixels_per_scan_line + width;
+            const size_t idx = static_cast<size_t>(height) * g_pixels_per_scan_line + width;
 
             if (glyph.data[i] & (0x80 >> j))
                 g_framebuffer[idx] = g_color_array[to_underlying_type(g_current_fg_color)];
@@ -93,7 +96,7 @@ void put_glyph(Font::Glyph glyph)
 
 } // end anonymous namespace
 
-Maybe<Error> Framebuffer::init(const EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE &gop_mode)
+void Framebuffer::init(const EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE &gop_mode)
 {
     g_framebuffer = reinterpret_cast<uint32_t *>(gop_mode.FrameBufferBase);
     g_framebuffer_size = gop_mode.FrameBufferSize;
@@ -104,6 +107,7 @@ Maybe<Error> Framebuffer::init(const EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE &gop_mode
     g_current_height = 0;
     g_font_line_size = Font::Glyph::HEIGHT * g_pixels_per_scan_line;
     g_last_font_column = g_max_height - Font::Glyph::HEIGHT;
+    g_framebuffer_size_in_pixels = static_cast<size_t>(g_max_height) * g_pixels_per_scan_line;
 
     switch (gop_mode.Info->PixelFormat) {
     case PixelRedGreenBlueReserved8BitPerColor:
@@ -145,13 +149,11 @@ Maybe<Error> Framebuffer::init(const EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE &gop_mode
     case PixelBitMask:
     case PixelBltOnly:
     case PixelFormatMax:
-        return Error::INVALID;
+        assert(0 && "Invalid pixel format!");
     }
 
     g_current_bg_color = Color::BLACK;
     g_current_fg_color = Color::WHITE;
-
-    return Unit::NONE;
 }
 
 void Framebuffer::put_char(char c)
@@ -179,7 +181,7 @@ void Framebuffer::clear_screen()
 {
     set_array(g_framebuffer,
               g_color_array[to_underlying_type(g_current_bg_color)],
-              g_framebuffer_size);
+              g_framebuffer_size_in_pixels);
     g_current_height = g_current_width = 0;
 }
 

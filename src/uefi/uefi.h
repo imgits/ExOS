@@ -20,8 +20,6 @@
 #include "uefi/protocols/console_support/all.h"
 
 #include "lib/immut_array_ref.h"
-#include "lib/either.h"
-#include "lib/maybe.h"
 
 namespace Acpi {
 struct rsdp;
