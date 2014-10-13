@@ -17,13 +17,16 @@
 #include "lib/printf.h"
 
 #include "lib/util.h"
+#include "lib/assert.h"
 
 namespace {
 
 char digit_to_ascii(unsigned char c, Case letter_case)
 {
-    static constexpr char lowercase_letters[] = "0123456789abcdefghijklmnopqrstuvwxyz";
-    static constexpr char uppercase_letters[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    static constexpr Array<char, 37> lowercase_letters = { "0123456789abcdefghijklmnopqrstuvwxyz" };
+    static constexpr Array<char, 37> uppercase_letters = { "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ" };
+
+    assert(c <= 36);
 
     switch (letter_case) {
     case Case::LOWER: return lowercase_letters[c];
@@ -69,6 +72,9 @@ size_t to_string(MutStringRef &buf, ConvFlags flags, const void *arg)
 
 size_t to_string(MutStringRef &buf, ConvFlags flags, unsigned long long arg)
 {
+    assert(flags.base >= 2);
+    assert(flags.base <= 36);
+
     size_t cnt = 0;
 
     const size_t start = buf.size();

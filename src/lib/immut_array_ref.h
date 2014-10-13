@@ -66,7 +66,7 @@ public:
         return ImmutArrayRef<T>(m_ptr + begin, end - begin);
     }
 
-    constexpr Maybe<size_t> index_of(T x) const
+    constexpr Maybe<size_t> index_of(const T &x) const
     {
         for (size_t i = 0; i < m_size; ++i)
             if (m_ptr[i] == x)

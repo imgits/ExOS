@@ -44,6 +44,12 @@ struct Array {
         return m_data[i];
     }
 
+    constexpr T &operator[](size_t i)
+    {
+        assert(i < N);
+        return m_data[i];
+    }
+
     constexpr const T *data() const
     {
         return m_data;

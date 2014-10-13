@@ -20,7 +20,7 @@
 
 Font::Glyph Font::get_glyph(char c)
 {
-    static constexpr Glyph strange_glyph = { { {
+    static constexpr Glyph strange_glyph = {{{
         0b11111110,
         0b10000010,
         0b10000010,
@@ -37,9 +37,9 @@ Font::Glyph Font::get_glyph(char c)
         0b11111110,
         0b00000000,
         0b00000000
-    } } };
+    }}};
 
-    static constexpr Glyph font[] = {
+    static constexpr Array<Glyph, 128> font = {{
         [0 ... 31] = strange_glyph,
         [' '] = { },
         ['!'] = {{{
@@ -1732,7 +1732,7 @@ Font::Glyph Font::get_glyph(char c)
             0b00000000
         }}},
         [127] = strange_glyph
-    };
+    }};
 
     assert(c >= ' ');
     assert(c <= '~');

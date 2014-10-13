@@ -32,20 +32,20 @@ uint32_t *g_framebuffer;
 size_t g_framebuffer_size;
 
 // max visible horizontal pixels
-unsigned g_max_width;
+uint32_t g_max_width;
 // max vertical pixels
-unsigned g_max_height;
+uint32_t g_max_height;
 // actual amount of horizontal pixels
-unsigned g_pixels_per_scan_line;
+uint32_t g_pixels_per_scan_line;
 
-unsigned g_current_width;
-unsigned g_current_height;
+uint32_t g_current_width;
+uint32_t g_current_height;
 
 // amount of pixels of one font line
 size_t g_font_line_size;
 
 // height of the last column which can display the full font height
-unsigned g_last_font_column;
+uint32_t g_last_font_column;
 
 Framebuffer::Color g_current_bg_color;
 Framebuffer::Color g_current_fg_color;
@@ -77,10 +77,10 @@ void newline()
 void put_glyph(Font::Glyph glyph)
 {
     for (unsigned i = 0; i < Font::Glyph::HEIGHT; ++i) {
-        const unsigned height = g_current_height + i;
+        const uint32_t height = g_current_height + i;
 
         for (unsigned j = 0; j < Font::Glyph::WIDTH; ++j) {
-            const unsigned width = g_current_width + j;
+            const uint32_t width = g_current_width + j;
             const size_t idx = height * g_pixels_per_scan_line + width;
 
             if (glyph.data[i] & (0x80 >> j))

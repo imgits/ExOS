@@ -17,6 +17,7 @@
 #include "segmentation/gdt.h"
 
 #include "asm/asm.h"
+#include "lib/array.h"
 
 namespace {
 
@@ -24,7 +25,9 @@ union GdtEntry {
     Descriptors::CodeSegment cs;
     Descriptors::DataSegment ds;
     Descriptors::SystemSegment ss;
-} gdt[4];
+};
+
+Array<GdtEntry, 4> gdt;
 
 } // end anonymous namespace
 

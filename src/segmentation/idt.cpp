@@ -21,10 +21,11 @@
 #include "segmentation/gdt.h"
 #include "lib/util.h"
 #include "asm/asm.h"
+#include "lib/array.h"
 
 namespace {
 
-Descriptors::InterruptAndTrapGate idt[256];
+Array<Descriptors::InterruptAndTrapGate, 256> idt;
 
 Descriptors::InterruptAndTrapGate make_intr_gate(void (*func)())
 {
