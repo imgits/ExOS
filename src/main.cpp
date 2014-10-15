@@ -24,10 +24,14 @@
 
 extern "C" EFI_STATUS kmain(EFI_HANDLE handle, EFI_SYSTEM_TABLE *systab) EFIAPI;
 
+// Shares its definition with the symbol in uefi/uefi.h
+const EFI_RUNTIME_SERVICES *Uefi::g_runtime;
+
 EFI_STATUS kmain(EFI_HANDLE handle, EFI_SYSTEM_TABLE *systab)
 {
+    Uefi::g_runtime = systab->RuntimeServices;
+
     const EFI_BOOT_SERVICES &bs = *systab->BootServices;
-    const EFI_RUNTIME_SERVICES &rs = *systab->RuntimeServices;
     EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL &conout = *systab->ConOut;
 
     EFI_GRAPHICS_OUTPUT_PROTOCOL *gop;
@@ -35,7 +39,7 @@ EFI_STATUS kmain(EFI_HANDLE handle, EFI_SYSTEM_TABLE *systab)
     if (Uefi::status_is_error(status))
         Uefi::die(conout, status, u"Trying to get GOP"_s);
     if (gop == nullptr)
-        rs.ResetSystem(EfiResetShutdown, EFI_SUCCESS, 0, nullptr);
+        Uefi::g_runtime->ResetSystem(EfiResetShutdown, EFI_SUCCESS, 0, nullptr);
 
     Framebuffer::init(*gop->Mode);
 

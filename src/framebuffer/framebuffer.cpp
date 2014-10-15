@@ -21,6 +21,7 @@
 
 #include "font/font.h"
 #include "uefi/protocols/console_support/graphics_output.h"
+#include "uefi/uefi.h"
 #include "lib/util.h"
 
 namespace {
@@ -149,7 +150,7 @@ void Framebuffer::init(const EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE &gop_mode)
     case PixelBitMask:
     case PixelBltOnly:
     case PixelFormatMax:
-        assert(0 && "Invalid pixel format!");
+        Uefi::g_runtime->ResetSystem(EfiResetShutdown, EFI_SUCCESS, 0, nullptr);
     }
 
     g_current_bg_color = Color::BLACK;

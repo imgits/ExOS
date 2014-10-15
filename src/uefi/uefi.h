@@ -27,6 +27,10 @@ struct rsdp;
 
 namespace Uefi {
 
+// Pointer to the Uefi Runtime Services Routines. Set early in the main routine.
+// Every function can access the Uefi runtime through this pointer.
+extern const EFI_RUNTIME_SERVICES *g_runtime;
+
 // Prints the string @s using @conout.
 EFI_STATUS print(EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL &conout, StringRefUefi s);
 
