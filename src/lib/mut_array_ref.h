@@ -77,4 +77,3 @@ public:
 };
 
 using MutStringRef = MutArrayRef<char>;
-using MutStringRefUefi = MutArrayRef<char16_t>;

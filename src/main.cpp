@@ -37,7 +37,7 @@ EFI_STATUS kmain(EFI_HANDLE handle, EFI_SYSTEM_TABLE *systab)
     EFI_GRAPHICS_OUTPUT_PROTOCOL *gop;
     EFI_STATUS status = Uefi::get_gop(handle, bs, gop);
     if (Uefi::status_is_error(status))
-        Uefi::die(conout, status, u"Trying to get GOP"_s);
+        Uefi::die(conout, status, u"Trying to get GOP");
     if (gop == nullptr)
         Uefi::g_runtime->ResetSystem(EfiResetShutdown, EFI_SUCCESS, 0, nullptr);
 
@@ -48,11 +48,11 @@ EFI_STATUS kmain(EFI_HANDLE handle, EFI_SYSTEM_TABLE *systab)
     Uefi::MemoryMap memory_map;
     status = Uefi::get_memory_map(bs, memory_map);
     if (Uefi::status_is_error(status))
-        Uefi::die(conout, status, u"Trying to get memory map"_s);
+        Uefi::die(conout, status, u"Trying to get memory map");
 
     status = bs.ExitBootServices(handle, memory_map.map_key);
     if (Uefi::status_is_error(status))
-        Uefi::die(conout, status, u"ExitBootServices()"_s);
+        Uefi::die(conout, status, u"ExitBootServices()");
 
     Gdt::setup();
 

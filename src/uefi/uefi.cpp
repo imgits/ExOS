@@ -19,9 +19,9 @@
 #include "lib/util.h"
 #include "asm/asm.h"
 
-EFI_STATUS Uefi::print(EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL &conout, StringRefUefi s)
+EFI_STATUS Uefi::print(EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL &conout, const CHAR16 *s)
 {
-    return conout.OutputString(&conout, const_cast<CHAR16 *>(s.data()));
+    return conout.OutputString(&conout, const_cast<CHAR16 *>(s));
 }
 
 bool Uefi::status_is_error(EFI_STATUS x)
@@ -57,13 +57,13 @@ EFI_STATUS Uefi::get_memory_map(const EFI_BOOT_SERVICES &bs, MemoryMap &map)
     return EFI_SUCCESS;
 }
 
-Acpi::rsdp *Uefi::get_acpi_rsdp(const EFI_SYSTEM_TABLE &systab)
+Acpi::Rsdp *Uefi::get_acpi_rsdp(const EFI_SYSTEM_TABLE &systab)
 {
     const EFI_GUID acpi = EFI_ACPI_TABLE_GUID;
 
     for (UINTN i = 0; i < systab.NumberOfTableEntries; ++i)
         if (are_memory_equal(systab.ConfigurationTable[i].VendorGuid, acpi))
-            return static_cast<Acpi::rsdp *>( systab.ConfigurationTable[i].VendorTable);
+            return static_cast<Acpi::Rsdp *>(systab.ConfigurationTable[i].VendorTable);
 
     return nullptr;
 }
@@ -104,56 +104,56 @@ EFI_STATUS Uefi::get_gop(EFI_HANDLE handle, const EFI_BOOT_SERVICES &bs,
     return EFI_SUCCESS;
 }
 
-StringRefUefi Uefi::status_to_string(EFI_STATUS status)
+const CHAR16 *Uefi::status_to_string(EFI_STATUS status)
 {
     switch (status) {
-    case EFI_SUCCESS:               return u"Success"_s;
-    case EFI_LOAD_ERROR:            return u"Load error"_s;
-    case EFI_INVALID_PARAMETER:     return u"Invalid parameter"_s;
-    case EFI_UNSUPPORTED:           return u"Unsupported"_s;
-    case EFI_BAD_BUFFER_SIZE:       return u"Bad buffer size"_s;
-    case EFI_BUFFER_TOO_SMALL:      return u"Buffer too small"_s;
-    case EFI_NOT_READY:             return u"Not ready"_s;
-    case EFI_DEVICE_ERROR:          return u"Device error"_s;
-    case EFI_WRITE_PROTECTED:       return u"Write protected"_s;
-    case EFI_OUT_OF_RESOURCES:      return u"Out of resources"_s;
-    case EFI_VOLUME_CORRUPTED:      return u"Volume corrupted"_s;
-    case EFI_VOLUME_FULL:           return u"Volume full"_s;
-    case EFI_NO_MEDIA:              return u"No media"_s;
-    case EFI_MEDIA_CHANGED:         return u"Media changed"_s;
-    case EFI_NOT_FOUND:             return u"Not found"_s;
-    case EFI_ACCESS_DENIED:         return u"Access denied"_s;
-    case EFI_NO_RESPONSE:           return u"No response"_s;
-    case EFI_NO_MAPPING:            return u"No mapping"_s;
-    case EFI_TIMEOUT:               return u"Timeout"_s;
-    case EFI_NOT_STARTED:           return u"Not started"_s;
-    case EFI_ALREADY_STARTED:       return u"Already started"_s;
-    case EFI_ABORTED:               return u"Aborted"_s;
-    case EFI_ICMP_ERROR:            return u"ICMP error"_s;
-    case EFI_TFTP_ERROR:            return u"TFTP error"_s;
-    case EFI_PROTOCOL_ERROR:        return u"Protocol error"_s;
-    case EFI_INCOMPATIBLE_VERSION:  return u"Incompatible version"_s;
-    case EFI_SECURITY_VIOLATION:    return u"Security violation"_s;
-    case EFI_CRC_ERROR:             return u"CRC error"_s;
-    case EFI_END_OF_MEDIA:          return u"End of media"_s;
-    case EFI_END_OF_FILE:           return u"End of file"_s;
-    case EFI_INVALID_LANGUAGE:      return u"Invalid language"_s;
-    case EFI_COMPROMISED_DATA:      return u"Compromised data"_s;
-    case EFI_IP_ADDRESS_CONFLICT:   return u"IP address conflict"_s;
-    case EFI_WARN_UNKNOWN_GLYPH:    return u"Unknown glyph"_s;
-    case EFI_WARN_DELETE_FAILURE:   return u"Delete failure"_s;
-    case EFI_WARN_WRITE_FAILURE:    return u"Write failure"_s;
-    case EFI_WARN_BUFFER_TOO_SMALL: return u"Buffer too small"_s;
-    case EFI_WARN_STALE_DATA:       return u"Stale data"_s;
+    case EFI_SUCCESS:               return u"Success";
+    case EFI_LOAD_ERROR:            return u"Load error";
+    case EFI_INVALID_PARAMETER:     return u"Invalid parameter";
+    case EFI_UNSUPPORTED:           return u"Unsupported";
+    case EFI_BAD_BUFFER_SIZE:       return u"Bad buffer size";
+    case EFI_BUFFER_TOO_SMALL:      return u"Buffer too small";
+    case EFI_NOT_READY:             return u"Not ready";
+    case EFI_DEVICE_ERROR:          return u"Device error";
+    case EFI_WRITE_PROTECTED:       return u"Write protected";
+    case EFI_OUT_OF_RESOURCES:      return u"Out of resources";
+    case EFI_VOLUME_CORRUPTED:      return u"Volume corrupted";
+    case EFI_VOLUME_FULL:           return u"Volume full";
+    case EFI_NO_MEDIA:              return u"No media";
+    case EFI_MEDIA_CHANGED:         return u"Media changed";
+    case EFI_NOT_FOUND:             return u"Not found";
+    case EFI_ACCESS_DENIED:         return u"Access denied";
+    case EFI_NO_RESPONSE:           return u"No response";
+    case EFI_NO_MAPPING:            return u"No mapping";
+    case EFI_TIMEOUT:               return u"Timeout";
+    case EFI_NOT_STARTED:           return u"Not started";
+    case EFI_ALREADY_STARTED:       return u"Already started";
+    case EFI_ABORTED:               return u"Aborted";
+    case EFI_ICMP_ERROR:            return u"ICMP error";
+    case EFI_TFTP_ERROR:            return u"TFTP error";
+    case EFI_PROTOCOL_ERROR:        return u"Protocol error";
+    case EFI_INCOMPATIBLE_VERSION:  return u"Incompatible version";
+    case EFI_SECURITY_VIOLATION:    return u"Security violation";
+    case EFI_CRC_ERROR:             return u"CRC error";
+    case EFI_END_OF_MEDIA:          return u"End of media";
+    case EFI_END_OF_FILE:           return u"End of file";
+    case EFI_INVALID_LANGUAGE:      return u"Invalid language";
+    case EFI_COMPROMISED_DATA:      return u"Compromised data";
+    case EFI_IP_ADDRESS_CONFLICT:   return u"IP address conflict";
+    case EFI_WARN_UNKNOWN_GLYPH:    return u"Unknown glyph";
+    case EFI_WARN_DELETE_FAILURE:   return u"Delete failure";
+    case EFI_WARN_WRITE_FAILURE:    return u"Write failure";
+    case EFI_WARN_BUFFER_TOO_SMALL: return u"Buffer too small";
+    case EFI_WARN_STALE_DATA:       return u"Stale data";
     }
 }
 
 void Uefi::die(EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL &conout, EFI_STATUS status,
-               StringRefUefi s)
+               const CHAR16 *s)
 {
     print(conout, s);
-    print(conout, u": "_s);
+    print(conout, u": ");
     print(conout, status_to_string(status));
-    print(conout, u"\n"_s);
+    print(conout, u"\n");
     Asm::hlt();
 }

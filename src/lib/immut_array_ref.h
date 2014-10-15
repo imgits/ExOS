@@ -89,14 +89,8 @@ constexpr const T *end(ImmutArrayRef<T> x)
 }
 
 using StringRef = ImmutArrayRef<char>;
-using StringRefUefi = ImmutArrayRef<char16_t>;
 
 constexpr StringRef operator"" _s(const char *s, size_t l)
 {
     return StringRef(s, l);
-}
-
-constexpr StringRefUefi operator"" _s(char16_t const *s, size_t l)
-{
-    return StringRefUefi(s, l);
 }
