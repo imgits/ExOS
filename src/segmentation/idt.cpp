@@ -35,9 +35,9 @@ Descriptors::InterruptAndTrapGate make_intr_gate(void (*func)())
         .target_offset_15_0 = x & 0xffff,
         .target_selector = Gdt::CS_SELECTOR_KERNEL,
         .ist = 0,
-        .type = static_cast<uint8_t>(to_underlying_type(Descriptors::SystemSegmentTypes::INTERRUPT_GATE)),
+        .type = to_underlying_type(Descriptors::SystemSegmentTypes::INTERRUPT_GATE),
         .zero = 0,
-        .descriptor_privilege_level = static_cast<uint8_t>(to_underlying_type(Descriptors::PrivilegeLevel::KERNEL)),
+        .descriptor_privilege_level = to_underlying_type(Descriptors::PrivilegeLevel::KERNEL),
         .present = 1,
         .target_offset_31_16 = (x >> 16) & 0xffff,
         .target_offset_63_32 = (x >> 32) & 0xffffffff
