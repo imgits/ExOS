@@ -24,8 +24,7 @@ constexpr EFI_GUID EFI_DRIVER_HEALTH_PROTOCOL_GUID = {
 
 struct EFI_DRIVER_HEALTH_PROTOCOL;
 
-enum EFI_DRIVER_HEALTH_STATUS
-{
+enum EFI_DRIVER_HEALTH_STATUS {
     EfiDriverHealthStatusHealthy,
     EfiDriverHealthStatusRepairRequired,
     EfiDriverHealthStatusConfigurationRequired,
@@ -34,8 +33,7 @@ enum EFI_DRIVER_HEALTH_STATUS
     EfiDriverHealthStatusRebootRequired
 };
 
-struct EFI_DRIVER_HEALTH_HII_MESSAGE
-{
+struct EFI_DRIVER_HEALTH_HII_MESSAGE {
     EFI_HII_HANDLE HiiHandle;
     EFI_STRING_ID StringId;
     UINT64 MessageCode;
@@ -55,8 +53,7 @@ EFI_STATUS (*)(EFI_DRIVER_HEALTH_PROTOCOL *This, EFI_HANDLE ControllerHandle,
                EFI_HANDLE ChildHandle,
                EFI_DRIVER_HEALTH_REPAIR_NOTIFY RepairNotify);
 
-struct EFI_DRIVER_HEALTH_PROTOCOL
-{
+struct EFI_DRIVER_HEALTH_PROTOCOL {
     EFI_DRIVER_HEALTH_GET_HEALTH_STATUS GetHealthStatus;
     EFI_DRIVER_HEALTH_REPAIR Repeair;
 };

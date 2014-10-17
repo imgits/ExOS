@@ -21,8 +21,7 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wpadded"
 
-struct EFI_TIME_CAPABILITIES
-{
+struct EFI_TIME_CAPABILITIES {
     UINT32 Resolution;
     UINT32 Accuracy;
     BOOLEAN SetsToZero;

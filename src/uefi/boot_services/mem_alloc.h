@@ -18,8 +18,7 @@
 
 #include "uefi/types.h"
 
-enum EFI_ALLOCATE_TYPE
-{
+enum EFI_ALLOCATE_TYPE {
     AllocateAnyPages,
     AllocateMaxAddress,
     MaxAllocateType
@@ -47,8 +46,7 @@ constexpr UINT32 EFI_MEMORY_DESCRIPTOR_VERSION = 1;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wpadded"
 
-struct EFI_MEMORY_DESCRIPTOR
-{
+struct EFI_MEMORY_DESCRIPTOR {
     UINT32 Type;
     EFI_PHYSICAL_ADDRESS PhysicalStart;
     EFI_VIRTUAL_ADDRESS VirtualStart;

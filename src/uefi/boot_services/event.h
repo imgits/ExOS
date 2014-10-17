@@ -63,8 +63,7 @@ EFI_STATUS (*)(UINTN NumberOfEvents, EFI_EVENT *Event, UINTN *Index);
 
 using EFI_CHECK_EVENT = EFIAPI EFI_STATUS (*)(EFI_EVENT Event);
 
-enum EFI_TIMER_DELAY
-{
+enum EFI_TIMER_DELAY {
     TimerCancel,
     TimerPeriodic,
     TimerRelative

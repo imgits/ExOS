@@ -32,8 +32,7 @@ using EFI_DEVICE_PATH_TO_TEXT_PATH = EFIAPI
     CHAR16 *(*)(CONST EFI_DEVICE_PATH_PROTOCOL *DevicePath, BOOLEAN DisplayOnly,
                 BOOLEAN AllowShortcuts);
 
-struct EFI_DEVICE_PATH_TO_TEXT_PROTOCOL
-{
+struct EFI_DEVICE_PATH_TO_TEXT_PROTOCOL {
     EFI_DEVICE_PATH_TO_TEXT_NODE ConvertDeviceNodeToText;
     EFI_DEVICE_PATH_TO_TEXT_PATH ConvertDevicePathToText;
 };

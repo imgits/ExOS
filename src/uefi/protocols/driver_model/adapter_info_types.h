@@ -22,8 +22,7 @@ constexpr EFI_GUID EFI_ADAPTER_INFO_MEDIA_STATE_GUID = {
     0xD7C74207, 0xA831, 0x4A26, 0xB1, 0xF5, 0xD1, 0x93, 0x06, 0x5C, 0xE8, 0xB6
 };
 
-struct EFI_ADAPTER_INFO_MEDIA_STATES
-{
+struct EFI_ADAPTER_INFO_MEDIA_STATES {
     EFI_STATUS MediaStates;
 };
 
@@ -31,8 +30,7 @@ constexpr EFI_GUID EFI_ADAPTER_INFO_NETWORK_BOOT_GUID = {
     0x1FBD2960, 0x4130, 0x41E5, 0x94, 0xAC, 0xD2, 0xCF, 0x03, 0x7F, 0xB3, 0x7C
 };
 
-struct EFI_ADAPTER_INFO_NETWORK_BOOT
-{
+struct EFI_ADAPTER_INFO_NETWORK_BOOT {
     BOOLEAN iSsciIpv4BootCapablity;
     BOOLEAN iScsiIpv6BootCapablity;
     BOOLEAN FCoeBootCapablity;
@@ -46,7 +44,6 @@ constexpr EFI_GUID EFI_ADAPTER_INFO_SAN_MAC_ADDRESS_GUID = {
     0x114da5ef, 0x2cf1, 0x4e12, 0x9b, 0xbb, 0xc4, 0x70, 0xb5, 0x52, 0x5, 0xd9
 };
 
-struct EFI_ADAPTER_INFO_SAN_MAC_ADDRESS
-{
+struct EFI_ADAPTER_INFO_SAN_MAC_ADDRESS {
     EFI_MAC_ADDRESS SanMacAddress;
 };

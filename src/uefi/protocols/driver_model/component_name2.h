@@ -33,8 +33,7 @@ EFI_STATUS (*)(EFI_COMPONENT_NAME2_PROTOCOL *This, EFI_HANDLE ControllerHandle,
                EFI_HANDLE ChildHandle, CHAR8 *Language,
                CHAR16 **ControllerName);
 
-struct EFI_COMPONENT_NAME2_PROTOCOL
-{
+struct EFI_COMPONENT_NAME2_PROTOCOL {
     EFI_COMPONENT_NAME_GET_DRIVER_NAME GetDriverName;
     EFI_COMPONENT_NAME_GET_CONTROLLER_NAME GetControllerName;
     CHAR8 *SupportedLanguages;

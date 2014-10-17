@@ -24,11 +24,12 @@ constexpr EFI_GUID EFI_DRIVER_DIAGNOSTICS_PROTOCOL_GUID = {
 
 struct EFI_DRIVER_DIAGNOSTICS2_PROTOCOL;
 
-enum EFI_DRIVER_DIAGNOSTIC_TYPE
-{
-    EfiDriverDiagnosticTypeStandard EfiDriverDiagnosticTypeExtended
-        EfiDriverDiagnosticTypeManufacturing EfiDriverDiagnosticTypeCancel
-            EfiDriverDiagnosticTypeMaximum
+enum EFI_DRIVER_DIAGNOSTIC_TYPE {
+    EfiDriverDiagnosticTypeStandard,
+    EfiDriverDiagnosticTypeExtended,
+    EfiDriverDiagnosticTypeManufacturing,
+    EfiDriverDiagnosticTypeCancel,
+    EfiDriverDiagnosticTypeMaximum
 };
 
 using EFI_DRIVER_DIAGNOSTICS2_RUN_DIAGNOSTICS = EFIAPI
@@ -37,8 +38,7 @@ EFI_STATUS (*)(EFI_DRIVER_DIAGNOSTICS2_PROTOCOL *This,
                EFI_DRIVER_DIAGNOSTIC_TYPE DiagnosticType, CHAR8 *Language,
                EFI_GUID **ErrorType, UINTN *BufferSize, CHAR16 **Buffer);
 
-struct EFI_DRIVER_DIAGNOSTICS2_PROTOCOL
-{
+struct EFI_DRIVER_DIAGNOSTICS2_PROTOCOL {
     EFI_DRIVER_DIAGNOSTICS2_RUN_DIAGNOSTICS RunDiagnostics;
     CHAR8 *SupportedLanguages;
 };

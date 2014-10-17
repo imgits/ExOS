@@ -18,8 +18,7 @@
 
 #include "uefi/types.h"
 
-enum EFI_RESET_TYPE
-{
+enum EFI_RESET_TYPE {
     EfiResetCold,
     EfiResetWarm,
     EfiResetShutdown,
@@ -32,18 +31,15 @@ VOID (*)(EFI_RESET_TYPE ResetType, EFI_STATUS ResetStatus, UINTN DataSize,
 
 using EFI_GET_NEXT_HIGH_MONO_COUNT = EFIAPI EFI_STATUS (*)(UINT32 *HighCount);
 
-struct EFI_CAPSULE_BLOCK_DESCRIPTOR
-{
+struct EFI_CAPSULE_BLOCK_DESCRIPTOR {
     UINT64 Length;
-    union
-    {
+    union {
         EFI_PHYSICAL_ADDRESS DataBlock;
         EFI_PHYSICAL_ADDRESS ContinuationPointer;
     } Union;
 };
 
-struct EFI_CAPSULE_HEADER
-{
+struct EFI_CAPSULE_HEADER {
     EFI_GUID CapsuleGuid;
     UINT32 HeaderSize;
     UINT32 Flags;
@@ -74,8 +70,7 @@ constexpr EFI_GUID EFI_CAPSULE_REPORT_GUID = {
     0x39b68c46, 0xf7fb, 0x441b, 0xb6, 0xec, 0x16, 0xb0, 0xf6, 0x98, 0x21, 0xf3
 };
 
-struct EFI_CAPSULE_RESULT_VARIABLE_HEADER
-{
+struct EFI_CAPSULE_RESULT_VARIABLE_HEADER {
     UINT32 VariableTotalSize;
     UINT32 Reserved; // for alignment
     EFI_GUID CapsuleGuid;
@@ -83,8 +78,7 @@ struct EFI_CAPSULE_RESULT_VARIABLE_HEADER
     EFI_STATUS CaspuleStatus;
 };
 
-struct EFI_CAPSULE_RESULT_VARIABLE_FMP
-{
+struct EFI_CAPSULE_RESULT_VARIABLE_FMP {
     UINT16 Version;
     UINT8 PayloadIndex;
     UINT8 UpdateImageIndex;

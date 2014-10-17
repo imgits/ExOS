@@ -18,8 +18,7 @@
 
 #include "uefi/types.h"
 
-enum EFI_INTERFACE_TYPE
-{
+enum EFI_INTERFACE_TYPE {
     EFI_NATIVE_INTERFACE
 };
 
@@ -37,8 +36,7 @@ EFI_STATUS (*)(EFI_HANDLE Handle, EFI_GUID *Protocol, VOID *OldInterface,
 using EFI_REGISTER_PROTOCOL_NOTIFY = EFIAPI
 EFI_STATUS (*)(EFI_GUID *Protocol, EFI_EVENT Event, VOID **Registration);
 
-enum EFI_LOCATE_SEARCH_TYPE
-{
+enum EFI_LOCATE_SEARCH_TYPE {
     AllHandles,
     ByRegisterNotify,
     ByProtocol
@@ -73,8 +71,7 @@ using EFI_CLOSE_PROTOCOL = EFIAPI
 EFI_STATUS (*)(EFI_HANDLE Handle, EFI_GUID *Protocol, EFI_HANDLE AgentHandle,
                EFI_HANDLE ControllerHandle);
 
-struct EFI_OPEN_PROTOCOL_INFORMATION_ENTRY
-{
+struct EFI_OPEN_PROTOCOL_INFORMATION_ENTRY {
     EFI_HANDLE AgentHandle;
     EFI_HANDLE ControllerHandle;
     UINT32 Attribute;

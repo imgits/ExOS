@@ -25,8 +25,7 @@ constexpr EFI_GUID EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL_GUID = {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wpadded"
 
-struct SIMPLE_TEXT_OUTPUT_MODE
-{
+struct SIMPLE_TEXT_OUTPUT_MODE {
     INT32 MaxMode;
     // current settings
     INT32 Mode;
@@ -159,8 +158,7 @@ EFI_STATUS (*)(EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL *This, UINTN Column, UINTN Row);
 using EFI_TEXT_ENABLE_CURSOR = EFIAPI
 EFI_STATUS (*)(EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL *This, BOOLEAN Visible);
 
-struct EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL
-{
+struct EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL {
     EFI_TEXT_RESET Reset;
     EFI_TEXT_STRING OutputString;
     EFI_TEXT_TEST_STRING TestString;

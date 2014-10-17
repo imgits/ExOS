@@ -39,29 +39,25 @@ using EFI_SET_VARIABLE = EFIAPI
 EFI_STATUS (*)(CHAR16 *VariableName, EFI_GUID *VendorGuid, UINT32 Attributes,
                UINTN DataSize, VOID *Data);
 
-struct WIN_CERTIFICATE
-{
+struct WIN_CERTIFICATE {
     UINT32 dwLength;
     UINT16 wRevision;
     UINT16 wCertificateType;
     // UINT8 bCertificate[ANYSIZE_ARRAY]
 };
 
-struct WIN_CERTIFICATE_UEFI_GUID
-{
+struct WIN_CERTIFICATE_UEFI_GUID {
     WIN_CERTIFICATE Hdr;
     EFI_GUID CertType;
     // UINT8 CertData[ANYSIZE_ARRAY];
 };
 
-struct EFI_VARIABLE_AUTHENTICATION
-{
+struct EFI_VARIABLE_AUTHENTICATION {
     UINT64 MonotonicCount;
     WIN_CERTIFICATE_UEFI_GUID AuthInfo;
 };
 
-struct EFI_VARIABLE_AUTHENTICATION_2
-{
+struct EFI_VARIABLE_AUTHENTICATION_2 {
     EFI_TIME TimeStamp;
     WIN_CERTIFICATE_UEFI_GUID AuthInfo;
 };

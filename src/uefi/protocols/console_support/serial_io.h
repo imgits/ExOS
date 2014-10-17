@@ -24,8 +24,7 @@ constexpr EFI_GUID EFI_SERIAL_IO_PROTOCOL_GUID = {
 
 constexpr UINT32 EFI_SERIAL_IO_PROTOCOL_REVISION = 0x00010000;
 
-enum EFI_PARITY_TYPE
-{
+enum EFI_PARITY_TYPE {
     DefaultParity,
     NoParity,
     EvenParity,
@@ -34,16 +33,14 @@ enum EFI_PARITY_TYPE
     SpaceParity
 };
 
-enum EFI_STOP_BITS_TYPE
-{
+enum EFI_STOP_BITS_TYPE {
     DefaultStopBits,
     OneStopBit,      // 1 stop bit
     OneFiveStopBits, // 1.5 stop bits
     TwoStopBits      // 2 stop bits
 };
 
-struct SERIAL_IO_MODE
-{
+struct SERIAL_IO_MODE {
     UINT32 ControlMask;
     // current Attributes
     UINT32 Timeout;
@@ -87,8 +84,7 @@ EFI_STATUS (*)(EFI_SERIAL_IO_PROTOCOL *This, UINTN *BufferSize, VOID *Buffer);
 using EFI_SERIAL_READ = EFIAPI
 EFI_STATUS (*)(EFI_SERIAL_IO_PROTOCOL *This, UINTN *BufferSize, VOID *Buffer);
 
-struct EFI_SERIAL_IO_PROTOCOL
-{
+struct EFI_SERIAL_IO_PROTOCOL {
     UINT32 Revision;
     EFI_SERIAL_RESET Reset;
     EFI_SERIAL_SET_ATTRIBUTES SetAttributes;
