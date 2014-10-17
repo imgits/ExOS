@@ -74,19 +74,17 @@ public:
 
         return Unit::NONE;
     }
+
+    constexpr const T *begin()
+    {
+        return m_ptr;
+    }
+
+    constexpr const T *end()
+    {
+        return m_ptr + m_size;
+    }
 };
-
-template <class T>
-constexpr const T *begin(ImmutArrayRef<T> x)
-{
-    return x.data();
-}
-
-template <class T>
-constexpr const T *end(ImmutArrayRef<T> x)
-{
-    return x.data() + x.length();
-}
 
 using StringRef = ImmutArrayRef<char>;
 

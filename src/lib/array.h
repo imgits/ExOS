@@ -59,19 +59,17 @@ struct Array {
     {
         return N;
     }
+
+    constexpr const T *begin()
+    {
+        return m_data;
+    }
+
+    constexpr const T *end()
+    {
+        return m_data + N;
+    }
 };
-
-template <class T, size_t N>
-constexpr const T *begin(const Array<T, N> &x)
-{
-    return x.data();
-}
-
-template <class T, size_t N>
-constexpr const T *end(const Array<T, N> &x)
-{
-    return x.data() + x.size();
-}
 
 template <size_t N>
 using String = Array<char, N>;
