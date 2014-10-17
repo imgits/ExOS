@@ -34,6 +34,8 @@ public:
     : m_ptr(s)
     , m_size(l)
     {
+        if (s == nullptr)
+            assert(l == 0);
     }
 
     constexpr const T *data() const
@@ -84,6 +86,14 @@ public:
     {
         return m_ptr + m_size;
     }
+
+    // Converts to a number. Returns Unit::NONE if the whole string is garbage,
+    // otherwise returns the number. If $end is not nullptr, any occuring
+    // garbage at the end of the string is put in *$end.
+    //
+    // Only defined for T = char and U = int,unsigned,long,...
+    template <class U>
+    Maybe<U> to_number(Maybe<unsigned> base, ImmutArrayRef<char> *end);
 };
 
 using StringRef = ImmutArrayRef<char>;
