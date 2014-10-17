@@ -84,9 +84,7 @@ size_t format(MutStringRef &buf, StringRef fmt);
 template <class Arg, class... Args>
 constexpr size_t format(MutStringRef &buf, StringRef fmt, Arg arg, Args... args)
 {
-    size_t cnt = 0;
-
-    for (size_t i = 0;; ++i) {
+    for (size_t i = 0, cnt = 0;; ++i) {
         if (fmt[i] != '(') {
             ++cnt;
 
@@ -138,8 +136,6 @@ constexpr size_t format(MutStringRef &buf, StringRef fmt, Arg arg, Args... args)
 
         return cnt;
     }
-
-    return cnt;
 }
 
 // Checking if the given flags are valid for a given argument type.
