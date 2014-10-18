@@ -98,7 +98,7 @@ private:
 
     static constexpr B construct_right(U x)
     {
-        return _Private::dummy<B, U>::construct(x);
+        return _Private::dummy<U, B>::construct(x);
     }
 
     static constexpr T ret_left(A x)
