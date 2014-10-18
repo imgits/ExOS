@@ -44,7 +44,7 @@ void Asm::invd()
 
 void Asm::invlpg(uint64_t page)
 {
-    __asm__("invlpg [page]" : : [page]"m"(page));
+    __asm__("invlpg %[page]" : : [page]"m"(page));
 }
 
 void Asm::wbinvd()
