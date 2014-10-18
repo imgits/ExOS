@@ -16,6 +16,9 @@
 
 #include "lib/immut_array_ref.h"
 
+#include "lib/assert.h"
+#include "lib/math.h"
+
 // A char array can be parsed to a number.
 template <>
 template <class T>
@@ -96,9 +99,9 @@ Maybe<T> StringRef::to_number(Maybe<unsigned> base, StringRef *end)
         char digit;
         if (m_ptr[i] >= '0' && m_ptr[i] <= '9')
             digit = m_ptr[i] - '0';
-        else if (m_ptr[i] >= 'a' && m_ptr[i] <= 'f')
+        else if (m_ptr[i] >= 'a' && m_ptr[i] <= 'z')
             digit = m_ptr[i] - 'a' + 0xa;
-        else if (m_ptr[i] >= 'A' && m_ptr[i] <= 'F')
+        else if (m_ptr[i] >= 'A' && m_ptr[i] <= 'Z')
             digit = m_ptr[i] - 'A' + 0xA;
         else
             break;
@@ -106,7 +109,8 @@ Maybe<T> StringRef::to_number(Maybe<unsigned> base, StringRef *end)
         if (static_cast<unsigned>(digit) > radix)
             break;
 
-        result = result * static_cast<T>(radix) + static_cast<T>(digit);
+        assert(!mul_overflow(result, static_cast<T>(radix), result));
+        assert(!add_overflow(result, static_cast<T>(digit), result));
 
         ++i;
 
