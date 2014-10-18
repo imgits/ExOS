@@ -87,8 +87,18 @@ size_t to_string(MutStringRef &buf, ConvFlags flags, unsigned long long arg)
             buf.push_back(digit_to_ascii(x, flags.letter_case));
         }
 
+        if (flags.min_field_width > 0)
+            --flags.min_field_width;
+
         arg /= flags.base;
     } while (arg != 0);
+
+    for (; flags.min_field_width-->0; ) {
+        ++cnt;
+
+        if (buf.is_space_left())
+            buf.push_back(flags.pad_char);
+    }
 
     buf.reverse_inplace(start, buf.size() - start);
 
@@ -104,6 +114,9 @@ size_t to_string(MutStringRef &buf, ConvFlags flags, long long arg)
 
         if (buf.is_space_left())
             buf.push_back('-');
+
+        if (flags.min_field_width > 0)
+            --flags.min_field_width;
     }
 
     return cnt + to_string(buf, flags, unsigned_abs(arg));

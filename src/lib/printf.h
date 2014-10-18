@@ -38,10 +38,17 @@ enum class Case : uint8_t {
     UPPER
 };
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpadded"
+
 struct ConvFlags {
+    unsigned min_field_width;
     Case letter_case;
     uint8_t base;
+    char pad_char;
 };
+
+#pragma clang diagnostic pop
 
 size_t to_string(MutStringRef &buf, ConvFlags flags, StringRef arg);
 size_t to_string(MutStringRef &buf, ConvFlags flags, const void *arg);
@@ -57,7 +64,9 @@ constexpr ConvFlags default_flags()
 {
     return ConvFlags {
         .base = 10,
-        .letter_case = Case::LOWER
+        .letter_case = Case::LOWER,
+        .pad_char = ' ',
+        .min_field_width = 0
     };
 }
 
@@ -66,7 +75,9 @@ constexpr ConvFlags default_flags<const void *>()
 {
     return ConvFlags {
         .base = 16,
-        .letter_case = Case::LOWER
+        .letter_case = Case::LOWER,
+        .pad_char = ' ',
+        .min_field_width = 0
     };
 }
 
@@ -107,21 +118,34 @@ constexpr size_t format(MutStringRef &buf, StringRef fmt, Arg arg, Args... args)
 
         ConvFlags flags = default_flags<Arg>();
 
-        for (; fmt[i] != ')'; ++i) {
-            switch (fmt[i]) {
-            case 'x':
-                flags.base = 16;
-                flags.letter_case = Case::LOWER;
-                break;
-            case 'X':
-                flags.base = 16;
-                flags.letter_case = Case::UPPER;
-                break;
-            case 'o':
-                flags.base = 8;
-                flags.letter_case = Case::LOWER;
-                break;
-            }
+        if (fmt[i] == '0') {
+            flags.pad_char = '0';
+            ++i;
+        }
+
+        StringRef end(nullptr, 0);
+        Maybe<unsigned> min_length = fmt.slice_from(i).to_number<unsigned>(10, end);
+        if (min_length.is_some()) {
+            flags.min_field_width = min_length.get();
+            i += fmt.slice_from(i).length() - end.length();
+        }
+
+        switch (fmt[i]) {
+        case 'x':
+            flags.base = 16;
+            flags.letter_case = Case::LOWER;
+            ++i;
+            break;
+        case 'X':
+            flags.base = 16;
+            flags.letter_case = Case::UPPER;
+            ++i;
+            break;
+        case 'o':
+            flags.base = 8;
+            flags.letter_case = Case::LOWER;
+            ++i;
+            break;
         }
 
         ++i;
@@ -146,17 +170,64 @@ constexpr bool flags_valid(StringRef fmt);
 template <>
 constexpr bool flags_valid<long long>(StringRef fmt)
 {
-    return fmt.length() == 0;
+    if (fmt.length() == 0)
+        return true;
+
+    size_t i = 0;
+
+    if (fmt[i] == '0') {
+        ++i;
+
+        if (i == fmt.length())
+            return false;
+    }
+
+    while (fmt[i] >= '0' && fmt[i] <= '9') {
+        ++i;
+
+        if (i == fmt.length())
+            return true;
+    }
+
+    if (i == fmt.length())
+        return true;
+
+    return false;
 }
 
 template <>
 constexpr bool flags_valid<unsigned long long>(StringRef fmt)
 {
-    for (const char c : fmt)
-        if (c != 'x' && c != 'X' && c != 'o')
-            return false;
+    if (fmt.length() == 0)
+        return true;
 
-    return true;
+    size_t i = 0;
+
+    if (fmt[i] == '0') {
+        ++i;
+
+        if (i == fmt.length())
+            return false;
+    }
+
+    while (fmt[i] >= '0' && fmt[i] <= '9') {
+        ++i;
+
+        if (i == fmt.length())
+            return true;
+    }
+
+    if (fmt[i] == 'x' || fmt[i] == 'X' || fmt[i] == 'o') {
+        ++i;
+
+        if (i == fmt.length())
+            return true;
+    }
+
+    if (i == fmt.length())
+        return true;
+
+    return false;
 }
 
 template <>
@@ -168,11 +239,7 @@ constexpr bool flags_valid<StringRef>(StringRef fmt)
 template <>
 constexpr bool flags_valid<const void *>(StringRef fmt)
 {
-    for (const char c : fmt)
-        if (c != 'x' && c != 'X')
-            return false;
-
-    return true;
+    return flags_valid<uintptr_t>(fmt);
 }
 
 template <>

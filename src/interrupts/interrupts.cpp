@@ -18,8 +18,49 @@
 
 #include "asm/asm.h"
 #include "lib/printf.h"
+#include "lib/util.h"
 
 #define SYSV_ABI __attribute__((sysv_abi))
+
+namespace {
+
+StringRef priv_to_string(uint8_t priv)
+{
+    switch (priv) {
+    case to_underlying_type(Descriptors::PrivilegeLevel::KERNEL): return "Kernel"_s;
+    case to_underlying_type(Descriptors::PrivilegeLevel::USER):   return "User"_s;
+    default: return ""_s;
+    }
+}
+
+StringRef ti_to_string(uint8_t ti)
+{
+    switch (ti) {
+    case to_underlying_type(Descriptors::TableIndicator::GDT): return "GDT"_s;
+    case to_underlying_type(Descriptors::TableIndicator::LDT): return "LDT"_s;
+    default: return ""_s;
+    }
+}
+
+void print_selector(Descriptors::SegmentSelector sel)
+{
+    printf("() ()[()]\n"_cts, priv_to_string(sel.requestor_privilege_level),
+                              ti_to_string(sel.table_indicator),
+                              sel.selector_index / 2);
+}
+
+void print_stack(const Interrupts::StackNoErrorCode &stack)
+{
+    printf("RIP: 0x(016x)\n"_cts, stack.return_rip);
+    printf("CS: "_cts);
+    print_selector(stack.return_cs);
+    printf("RFLAGS: 0x(016x)\n"_cts, *reinterpret_cast<const uint64_t *>(&stack.rflags));
+    printf("RSP: 0x(016x)\n"_cts, stack.return_rsp);
+    printf("SS: "_cts);
+    print_selector(stack.return_ss);
+}
+
+} // end anonymous namespace
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wmissing-prototypes"
@@ -29,144 +70,144 @@ extern "C" {
 [[noreturn]] SYSV_ABI void
 intr_div_by_zero_cpp(const Interrupts::StackNoErrorCode *stack)
 {
-    (void)stack;
-    printf("INTR: Divide by zero!"_cts);
+    printf("[INTERRUPT]: Division by Zero\n"_cts);
+    print_stack(*stack);
     Asm::hlt();
 }
 
 [[noreturn]] SYSV_ABI void
 intr_debug_cpp(const Interrupts::StackNoErrorCode *stack)
 {
-    (void)stack;
-    printf("INTR: Debug!"_cts);
+    printf("[INTERRUPT]: Debug\n"_cts);
+    print_stack(*stack);
     Asm::hlt();
 }
 
 [[noreturn]] SYSV_ABI void
 intr_nmi_cpp(const Interrupts::StackNoErrorCode *stack)
 {
-    (void)stack;
-    printf("INTR: NMI"_cts);
+    printf("[INTERRUPT]: NMI\n"_cts);
+    print_stack(*stack);
     Asm::hlt();
 }
 
 [[noreturn]] SYSV_ABI void
 intr_breakpoint_cpp(const Interrupts::StackNoErrorCode *stack)
 {
-    (void)stack;
-    printf("INTR: Breakpoint!"_cts);
+    printf("[INTERRUPT]: Breakpoint\n"_cts);
+    print_stack(*stack);
     Asm::hlt();
 }
 
 [[noreturn]] SYSV_ABI void
 intr_overflow_cpp(const Interrupts::StackNoErrorCode *stack)
 {
-    (void)stack;
-    printf("INTR: Overflow!"_cts);
+    printf("[INTERRUPT]: Overflow\n"_cts);
+    print_stack(*stack);
     Asm::hlt();
 }
 
 [[noreturn]] SYSV_ABI void
 intr_bound_range_cpp(const Interrupts::StackNoErrorCode *stack)
 {
-    (void)stack;
-    printf("INTR: Bound Range!"_cts);
+    printf("[INTERRUPT]: Bound Range\n"_cts);
+    print_stack(*stack);
     Asm::hlt();
 }
 
 [[noreturn]] SYSV_ABI void
 intr_invalid_opcode_cpp(const Interrupts::StackNoErrorCode *stack)
 {
-    (void)stack;
-    printf("INTR: Invalid Opcode!"_cts);
+    printf("[INTERRUPT]: Invalid Opcode\n"_cts);
+    print_stack(*stack);
     Asm::hlt();
 }
 
 [[noreturn]] SYSV_ABI void
 intr_device_not_available_cpp(const Interrupts::StackNoErrorCode *stack)
 {
-    (void)stack;
-    printf("INTR: Device not available!"_cts);
+    printf("[INTERRUPT]: Device not Available\n"_cts);
+    print_stack(*stack);
     Asm::hlt();
 }
 
 [[noreturn]] SYSV_ABI void
 intr_double_fault_cpp(const Interrupts::StackWithErrorCode *stack)
 {
-    (void)stack;
-    printf("INTR: Double Fault!"_cts);
+    printf("[INTERRUPT]: Double Fault\n"_cts);
+    print_stack(stack->rest_of_stack);
     Asm::hlt();
 }
 
 [[noreturn]] SYSV_ABI void
 intr_invalid_tss_cpp(const Interrupts::StackWithErrorCode *stack)
 {
-    (void)stack;
-    printf("INTR: Invalid TSS!"_cts);
+    printf("[INTERRUPT]: Invalid TSS\n"_cts);
+    print_stack(stack->rest_of_stack);
     Asm::hlt();
 }
 
 [[noreturn]] SYSV_ABI void
 intr_segment_not_present_cpp(const Interrupts::StackWithErrorCode *stack)
 {
-    (void)stack;
-    printf("INTR: Segment Not Present!"_cts);
+    printf("[INTERRUPT]: Segment not Present\n"_cts);
+    print_stack(stack->rest_of_stack);
     Asm::hlt();
 }
 
 [[noreturn]] SYSV_ABI void
 intr_stack_cpp(const Interrupts::StackWithErrorCode *stack)
 {
-    (void)stack;
-    printf("INTR: Stack!"_cts);
+    printf("[INTERRUPT]: Stack\n"_cts);
+    print_stack(stack->rest_of_stack);
     Asm::hlt();
 }
 
 [[noreturn]] SYSV_ABI void
 intr_general_protection_cpp(const Interrupts::StackWithErrorCode *stack)
 {
-    (void)stack;
-    printf("INTR: General Protection!"_cts);
+    printf("[INTERRUPT]: General Protection\n"_cts);
+    print_stack(stack->rest_of_stack);
     Asm::hlt();
 }
 
 [[noreturn]] SYSV_ABI void
 intr_page_fault_cpp(const Interrupts::StackWithErrorCode *stack)
 {
-    (void)stack;
-    printf("INTR: Page Fault!"_cts);
+    printf("[INTERRUPT]: Page Fault\n"_cts);
+    print_stack(stack->rest_of_stack);
     Asm::hlt();
 }
 
 [[noreturn]] SYSV_ABI void
 intr_x87_floating_point_cpp(const Interrupts::StackNoErrorCode *stack)
 {
-    (void)stack;
-    printf("INTR: x87 Floating Point!"_cts);
+    printf("[INTERRUPT]: x87 Floating Point\n"_cts);
+    print_stack(*stack);
     Asm::hlt();
 }
 
 [[noreturn]] SYSV_ABI void
 intr_alignment_check_cpp(const Interrupts::StackWithErrorCode *stack)
 {
-    (void)stack;
-    printf("INTR: Alignment Check!"_cts);
+    printf("[INTERRUPT]: Alignment Check\n"_cts);
+    print_stack(stack->rest_of_stack);
     Asm::hlt();
 }
 
 [[noreturn]] SYSV_ABI void
 intr_machine_check_cpp(const Interrupts::StackNoErrorCode *stack)
 {
-    (void)stack;
-    printf("INTR: Machine Check!"_cts);
+    printf("[INTERRUPT]: Machine Check\n"_cts);
+    print_stack(*stack);
     Asm::hlt();
 }
 
 [[noreturn]] SYSV_ABI void
 intr_simd_floating_point_cpp(const Interrupts::StackNoErrorCode *stack)
 {
-    (void)stack;
-    printf("INTR: SIMD Floating Point!"_cts);
+    printf("[INTERRUPT]: SIMD Floating Point\n"_cts);
+    print_stack(*stack);
     Asm::hlt();
 }
 
