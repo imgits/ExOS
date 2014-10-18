@@ -18,6 +18,7 @@
 
 #include <cstdint>
 
+#include <type_traits>
 #include "lib/assert.h"
 
 // Tagged union for 2 data members.
@@ -27,27 +28,104 @@ enum class Tag : uint8_t {
     RIGHT
 };
 
+namespace _Private {
+
+// This stuff here is needed to transparently handle lvalue references.
+// If the types being wrapped by Either are references, we want to
+// store pointers (since we cannot store references).
+// Thus we need to take the address of the argument of the constructor
+// if, and _only_ if, the argument is a reference.
+// Likewise, left()/right() need to dereference the data if it is a reference,
+// but not if it's not a reference.
+//
+// Since we cannot partially specialize functions, we partially specialize
+// a dummy struct which wraps the functions for us.
+// As another limitation, we sadly need to do this outside the class.
+
+template <class T, class U, bool B = std::is_lvalue_reference<T>::value>
+struct dummy { };
+
+template <class T, class U>
+struct dummy<T, U, true> {
+    // T is a reference type.
+
+    static constexpr U construct(T x)
+    {
+        return &x;
+    }
+
+    static constexpr T ret(U x)
+    {
+        return *x;
+    }
+};
+
+template <class T, class U>
+struct dummy<T, U, false> {
+    // T is not a reference type.
+
+    static constexpr U construct(T x)
+    {
+        return x;
+    }
+
+    static constexpr T ret(U x)
+    {
+        return x;
+    }
+};
+
+}
+
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wpadded"
 
 template <class T, class U>
 class Either {
 private:
+    static constexpr bool left_is_ref = std::is_lvalue_reference<T>::value;
+    using A = std::conditional_t<left_is_ref, std::add_pointer_t<T>, T>;
+
+    static constexpr bool right_is_ref = std::is_lvalue_reference<U>::value;
+    using B = std::conditional_t<right_is_ref, std::add_pointer_t<U>, U>;
+
+    // Wrap the dummy structs's functions for convenience.
+
+    static constexpr A construct_left(T x)
+    {
+        return _Private::dummy<T, A>::construct(x);
+    }
+
+    static constexpr B construct_right(U x)
+    {
+        return _Private::dummy<B, U>::construct(x);
+    }
+
+    static constexpr T ret_left(A x)
+    {
+        return _Private::dummy<T, A>::ret(x);
+    }
+
+    static constexpr U ret_right(B x)
+    {
+        return _Private::dummy<U, B>::ret(x);
+    }
+
     union {
-        T m_left;
-        U m_right;
+        A m_left;
+        B m_right;
     };
     Tag m_tag;
 
 public:
     constexpr Either(T x)
-    : m_left(x)
+    : m_left(construct_left(x))
     , m_tag(Tag::LEFT)
     {
     }
 
     constexpr Either(U x)
-    : m_right(x)
+    : m_right(construct_right(x))
     , m_tag(Tag::RIGHT)
     {
     }
@@ -55,13 +133,13 @@ public:
     constexpr T left() const
     {
         assert(is_left());
-        return m_left;
+        return ret_left(m_left);
     }
 
     constexpr U right() const
     {
         assert(is_right());
-        return m_right;
+        return ret_right(m_right);
     }
 
     constexpr bool is_left() const

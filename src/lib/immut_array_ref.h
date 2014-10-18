@@ -87,7 +87,7 @@ public:
         return m_ptr + m_size;
     }
 
-    // Converts to a number. Returns Unit::NONE if the whole string is garbage,
+    // Converts to a number. Returns None() if the whole string is garbage,
     // otherwise returns the number. If $end is_some(), any occuring
     // garbage at the end of the string is put in $end.get().
     //
