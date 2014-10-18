@@ -74,7 +74,7 @@ public:
             if (m_ptr[i] == x)
                 return i;
 
-        return Unit::NONE;
+        return None();
     }
 
     constexpr const T *begin()
@@ -88,12 +88,12 @@ public:
     }
 
     // Converts to a number. Returns Unit::NONE if the whole string is garbage,
-    // otherwise returns the number. If $end is not nullptr, any occuring
-    // garbage at the end of the string is put in *$end.
+    // otherwise returns the number. If $end is_some(), any occuring
+    // garbage at the end of the string is put in $end.get().
     //
     // Only defined for T = char and U = int,unsigned,long,...
     template <class U>
-    Maybe<U> to_number(Maybe<unsigned> base, ImmutArrayRef<char> *end);
+    Maybe<U> to_number(Maybe<unsigned> base, Maybe<ImmutArrayRef<char> &> end);
 };
 
 using StringRef = ImmutArrayRef<char>;

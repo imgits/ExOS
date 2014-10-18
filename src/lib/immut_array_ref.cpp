@@ -22,7 +22,7 @@
 // A char array can be parsed to a number.
 template <>
 template <class T>
-Maybe<T> StringRef::to_number(Maybe<unsigned> base, StringRef *end)
+Maybe<T> StringRef::to_number(Maybe<unsigned> base, Maybe<StringRef &> end)
 {
     if (base.is_some()) {
         assert(base.get() >= 2);
@@ -30,7 +30,7 @@ Maybe<T> StringRef::to_number(Maybe<unsigned> base, StringRef *end)
     }
 
     if (m_size == 0)
-        return Unit::NONE;
+        return None();
 
     size_t i = 0;
 
@@ -38,7 +38,7 @@ Maybe<T> StringRef::to_number(Maybe<unsigned> base, StringRef *end)
         ++i;
 
         if (i == m_size)
-            return Unit::NONE;
+            return None();
     }
 
     bool negative = false;
@@ -48,7 +48,7 @@ Maybe<T> StringRef::to_number(Maybe<unsigned> base, StringRef *end)
         ++i;
 
         if (i == m_size)
-            return Unit::NONE;
+            return None();
 
         break;
     case '-':
@@ -57,7 +57,7 @@ Maybe<T> StringRef::to_number(Maybe<unsigned> base, StringRef *end)
         ++i;
 
         if (i == m_size)
-            return Unit::NONE;
+            return None();
 
         break;
     }
@@ -69,7 +69,7 @@ Maybe<T> StringRef::to_number(Maybe<unsigned> base, StringRef *end)
         ++i;
 
         if (i == m_size)
-            return Unit::NONE;
+            return None();
 
         switch (m_ptr[i]) {
         case 'x':
@@ -77,7 +77,7 @@ Maybe<T> StringRef::to_number(Maybe<unsigned> base, StringRef *end)
             ++i;
 
             if (i == m_size)
-               return Unit::NONE;
+               return None();
 
             radix = 16;
             break;
@@ -106,7 +106,7 @@ Maybe<T> StringRef::to_number(Maybe<unsigned> base, StringRef *end)
         else
             break;
 
-        if (static_cast<unsigned>(digit) > radix)
+        if (static_cast<unsigned>(digit) >= radix)
             break;
 
         assert(!mul_overflow(result, static_cast<T>(radix), result));
@@ -119,21 +119,21 @@ Maybe<T> StringRef::to_number(Maybe<unsigned> base, StringRef *end)
     }
 
     if (i == begin_num) // Whole string is garbage
-        return Unit::NONE;
+        return None();
 
     if (negative)
         result = -result;
 
-    if (i != m_size && end != nullptr)
-        *end = slice_from(i);
+    if (i != m_size && end.is_some())
+        end.get() = slice_from(i);
 
     return result;
 }
 
 // Explicit instantiation for all relevant types.
-template Maybe<int> StringRef::to_number(Maybe<unsigned> base, StringRef *end);
-template Maybe<unsigned> StringRef::to_number(Maybe<unsigned> base, StringRef *end);
-template Maybe<long> StringRef::to_number(Maybe<unsigned> base, StringRef *end);
-template Maybe<unsigned long> StringRef::to_number(Maybe<unsigned> base, StringRef *end);
-template Maybe<long long> StringRef::to_number(Maybe<unsigned> base, StringRef *end);
-template Maybe<unsigned long long> StringRef::to_number(Maybe<unsigned> base, StringRef *end);
+template Maybe<int> StringRef::to_number(Maybe<unsigned> base, Maybe<StringRef &> end);
+template Maybe<unsigned> StringRef::to_number(Maybe<unsigned> base, Maybe<StringRef &> end);
+template Maybe<long> StringRef::to_number(Maybe<unsigned> base, Maybe<StringRef &> end);
+template Maybe<unsigned long> StringRef::to_number(Maybe<unsigned> base, Maybe<StringRef &> end);
+template Maybe<long long> StringRef::to_number(Maybe<unsigned> base, Maybe<StringRef &> end);
+template Maybe<unsigned long long> StringRef::to_number(Maybe<unsigned> base, Maybe<StringRef &> end);
