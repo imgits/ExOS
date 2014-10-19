@@ -25,9 +25,8 @@
 void test_strings()
 {
     assert("1234"_s == "1234"_s);
-    assert("12"_s < "123"_s);
-    assert("acd"_s != "ace"_s);
-    assert("12344"_s >= "123"_s);
+    assert("abcd"_s != "ABCD"_s);
+    assert("abcde"_s != "abcd"_s);
 
     StringRef end(nullptr, 0);
     Maybe<int> num = "-1234"_s.to_number<int>(None(), end);

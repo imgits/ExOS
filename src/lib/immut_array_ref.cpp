@@ -154,35 +154,3 @@ bool operator!=(StringRef x, StringRef y)
 {
     return !(x == y);
 }
-
-bool operator<(StringRef x, StringRef y)
-{
-    if (x.length() < y.length())
-        return true;
-    if (x.length() > y.length())
-        return false;
-
-    for (size_t i = 0; i < x.length(); ++i) {
-        if (x[i] < y[i])
-            return true;
-        if (x[i] > y[i])
-            return false;
-    }
-
-    return false;
-}
-
-bool operator>(StringRef x, StringRef y)
-{
-    return y < x;
-}
-
-bool operator<=(StringRef x, StringRef y)
-{
-    return !(x > y);
-}
-
-bool operator>=(StringRef x, StringRef y)
-{
-    return !(x < y);
-}

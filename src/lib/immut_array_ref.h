@@ -105,7 +105,3 @@ constexpr StringRef operator"" _s(const char *s, size_t l)
 
 bool operator==(StringRef x, StringRef y);
 bool operator!=(StringRef x, StringRef y);
-bool operator<(StringRef x, StringRef y);
-bool operator>(StringRef x, StringRef y);
-bool operator<=(StringRef x, StringRef y);
-bool operator>=(StringRef x, StringRef y);
