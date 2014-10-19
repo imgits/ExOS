@@ -60,9 +60,11 @@ EFI_STATUS kmain(EFI_HANDLE handle, EFI_SYSTEM_TABLE *systab)
 
     printf("Welcome! [CPU: ()]\n\n"_cts, Cpuid::get_vendor_string().ref());
 
-    printf("Testing if interrupts are working ((provoking GP)...\n\n"_cts);
+    printf("Testing if interrupts are working ((dividing by zero)...\n\n"_cts);
 
-    __asm__("int $42");
+    volatile int x = 0;
+    volatile int y = 42 / x;
+    (void)y;
 
-    Asm::hlt();
+    __builtin_unreachable();
 }
