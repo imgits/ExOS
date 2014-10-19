@@ -28,6 +28,9 @@ and the UEFI firmware for Qemu, `OVMF.fd`, available here: http://tianocore.sour
 
 Now run `make run`.
 
+Additionally, components which are testable without hardware can be tested by running `make tests`
+followed by `make run-tests`.  
+
 ### Debugging
 
 Install `gdb` to debug with Qemu.
