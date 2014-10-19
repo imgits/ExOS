@@ -50,6 +50,12 @@ void test_strings()
     num2 = "deadbeef"_s.to_number<unsigned>(16, None());
     assert(num2.is_some());
     assert(num2.get() == 0xdeadbeef);
+
+    assert("1234"_s.slice_from(2) == "34"_s);
+    assert("1234"_s.slice_from_until(2, 3) == "3"_s);
+    assert("1234"_s.slice_from(0) == "1234"_s);
+    assert("1234"_s.slice_from_until(0, 4).slice_from(2) == "34"_s);
+    assert("1234"_s.slice_from_until(0, 4) == "1234"_s);
 }
 
 void test_printf()

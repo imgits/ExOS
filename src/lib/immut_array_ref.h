@@ -63,7 +63,7 @@ public:
     constexpr ImmutArrayRef<T> slice_from_until(size_t begin, size_t end) const
     {
         assert(begin < m_size);
-        assert(end < m_size);
+        assert(end <= m_size);
         assert(end >= begin);
         return ImmutArrayRef<T>(m_ptr + begin, end - begin);
     }
