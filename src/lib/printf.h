@@ -97,12 +97,16 @@ size_t format(MutStringRef &buf, StringRef fmt);
 template <class Arg, class... Args>
 constexpr size_t format(MutStringRef &buf, StringRef fmt, Arg arg, Args... args)
 {
-    for (size_t i = 0, cnt = 0;; ++i) {
+    size_t i = 0, cnt = 0;
+
+    for (;;) {
         if (fmt[i] != '(') {
             ++cnt;
 
             if (buf.is_space_left())
                 buf.push_back(fmt[i]);
+
+            ++i;
 
             continue;
         }
@@ -115,53 +119,57 @@ constexpr size_t format(MutStringRef &buf, StringRef fmt, Arg arg, Args... args)
             if (buf.is_space_left())
                 buf.push_back('(');
 
+            ++i;
+
             continue;
         }
 
-        ConvFlags flags = default_flags<Arg>();
-
-        if (fmt[i] == '0') {
-            flags.pad_char = '0';
-            ++i;
-        }
-
-        StringRef end(nullptr, 0);
-        Maybe<unsigned> min_length = fmt.slice_from(i).to_number<unsigned>(10, end);
-        if (min_length.is_some()) {
-            flags.min_field_width = min_length.get();
-            i += fmt.slice_from(i).length() - end.length();
-        }
-
-        switch (fmt[i]) {
-        case 'x':
-            flags.base = 16;
-            flags.letter_case = Case::LOWER;
-            ++i;
-            break;
-        case 'X':
-            flags.base = 16;
-            flags.letter_case = Case::UPPER;
-            ++i;
-            break;
-        case 'o':
-            flags.base = 8;
-            flags.letter_case = Case::LOWER;
-            ++i;
-            break;
-        }
-
-        ++i;
-
-        size_t tmp = to_string(buf, flags, arg);
-
-        assert(!add_overflow(cnt, tmp, cnt));
-
-        tmp = format(buf, fmt.slice_from(i), args...);
-
-        assert(!add_overflow(cnt, tmp, cnt));
-
-        return cnt;
+        break;
     }
+
+    ConvFlags flags = default_flags<Arg>();
+
+    if (fmt[i] == '0') {
+        flags.pad_char = '0';
+        ++i;
+    }
+
+    StringRef end(nullptr, 0);
+    Maybe<unsigned> min_length = fmt.slice_from(i).to_number<unsigned>(10, end);
+    if (min_length.is_some()) {
+        flags.min_field_width = min_length.get();
+        i += fmt.slice_from(i).length() - end.length();
+    }
+
+    switch (fmt[i]) {
+    case 'x':
+        flags.base = 16;
+        flags.letter_case = Case::LOWER;
+        ++i;
+        break;
+    case 'X':
+        flags.base = 16;
+        flags.letter_case = Case::UPPER;
+        ++i;
+        break;
+    case 'o':
+        flags.base = 8;
+        flags.letter_case = Case::LOWER;
+        ++i;
+        break;
+    }
+
+    ++i;
+
+    size_t tmp = to_string(buf, flags, arg);
+
+    assert(!add_overflow(cnt, tmp, cnt));
+
+    tmp = format(buf, fmt.slice_from(i), args...);
+
+    assert(!add_overflow(cnt, tmp, cnt));
+
+    return cnt;
 }
 
 // Checking if the given flags are valid for a given argument type.
