@@ -17,8 +17,8 @@
 #pragma once
 
 #include <cstdint>
-
 #include <type_traits>
+
 #include "lib/assert.h"
 
 // Tagged union for 2 data members.
@@ -75,7 +75,7 @@ struct dummy<T, U, false> {
     }
 };
 
-}
+} // end namespace _Private
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wpadded"

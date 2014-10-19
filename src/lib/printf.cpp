@@ -21,7 +21,7 @@
 
 namespace {
 
-char digit_to_ascii(unsigned char c, Case letter_case)
+char digit_to_ascii(unsigned char c, _Private::Case letter_case)
 {
     static constexpr Array<char, 37> lowercase_letters = { "0123456789abcdefghijklmnopqrstuvwxyz" };
     static constexpr Array<char, 37> uppercase_letters = { "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ" };
@@ -29,14 +29,14 @@ char digit_to_ascii(unsigned char c, Case letter_case)
     assert(c <= 36);
 
     switch (letter_case) {
-    case Case::LOWER: return lowercase_letters[c];
-    case Case::UPPER: return uppercase_letters[c];
+    case _Private::Case::LOWER: return lowercase_letters[c];
+    case _Private::Case::UPPER: return uppercase_letters[c];
     }
 }
 
 } // anonymous namespace end
 
-size_t to_string(MutStringRef &buf, ConvFlags, StringRef arg)
+size_t _Private::to_string(MutStringRef &buf, ConvFlags, StringRef arg)
 {
     for (const char c : arg)
         if (buf.is_space_left())
@@ -45,32 +45,32 @@ size_t to_string(MutStringRef &buf, ConvFlags, StringRef arg)
     return arg.length();
 }
 
-size_t to_string(MutStringRef &buf, ConvFlags flags, int arg)
+size_t _Private::to_string(MutStringRef &buf, ConvFlags flags, int arg)
 {
     return to_string(buf, flags, static_cast<long long>(arg));
 }
 
-size_t to_string(MutStringRef &buf, ConvFlags flags, unsigned arg)
+size_t _Private::to_string(MutStringRef &buf, ConvFlags flags, unsigned arg)
 {
     return to_string(buf, flags, static_cast<unsigned long long>(arg));
 }
 
-size_t to_string(MutStringRef &buf, ConvFlags flags, long arg)
+size_t _Private::to_string(MutStringRef &buf, ConvFlags flags, long arg)
 {
     return to_string(buf, flags, static_cast<long long>(arg));
 }
 
-size_t to_string(MutStringRef &buf, ConvFlags flags, unsigned long arg)
+size_t _Private::to_string(MutStringRef &buf, ConvFlags flags, unsigned long arg)
 {
     return to_string(buf, flags, static_cast<unsigned long long>(arg));
 }
 
-size_t to_string(MutStringRef &buf, ConvFlags flags, const void *arg)
+size_t _Private::to_string(MutStringRef &buf, ConvFlags flags, const void *arg)
 {
     return to_string(buf, flags, reinterpret_cast<uintptr_t>(arg));
 }
 
-size_t to_string(MutStringRef &buf, ConvFlags flags, unsigned long long arg)
+size_t _Private::to_string(MutStringRef &buf, ConvFlags flags, unsigned long long arg)
 {
     assert(flags.base >= 2);
     assert(flags.base <= 36);
@@ -105,7 +105,7 @@ size_t to_string(MutStringRef &buf, ConvFlags flags, unsigned long long arg)
     return cnt;
 }
 
-size_t to_string(MutStringRef &buf, ConvFlags flags, long long arg)
+size_t _Private::to_string(MutStringRef &buf, ConvFlags flags, long long arg)
 {
     size_t cnt = 0;
 
@@ -122,7 +122,7 @@ size_t to_string(MutStringRef &buf, ConvFlags flags, long long arg)
     return cnt + to_string(buf, flags, unsigned_abs(arg));
 }
 
-size_t format(MutStringRef &buf, StringRef fmt)
+size_t _Private::format(MutStringRef &buf, StringRef fmt)
 {
     size_t cnt = 0;
 

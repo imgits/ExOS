@@ -33,6 +33,8 @@
 // Since the format string is validated at compile time, the runtime
 // formatting function can avoid unneeded checks for validity.
 
+namespace _Private {
+
 enum class Case : uint8_t {
     LOWER,
     UPPER
@@ -328,6 +330,8 @@ constexpr bool is_valid<>(StringRef fmt)
     return true;
 }
 
+} // end namespace _Private
+
 // Type safe version of C's snprintf(), with compile-time checked format
 // strings.
 template <char... Fmt, class... Args>
@@ -335,9 +339,9 @@ constexpr size_t snprintf(MutStringRef &buf, CTString<Fmt...>, Args ...args)
 {
     constexpr String<sizeof...(Fmt)> fmt = { { Fmt... } };
 
-    static_assert(is_valid<Args...>(fmt.ref()), "Invalid format string!");
+    static_assert(_Private::is_valid<Args...>(fmt.ref()), "Invalid format string!");
 
-    return format(buf, fmt.ref(), args...);
+    return _Private::format(buf, fmt.ref(), args...);
 }
 
 // Type safe version of C's printf(), with compile-time checked format strings.
