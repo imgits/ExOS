@@ -22,7 +22,7 @@
 // A char array can be parsed to a number.
 template <>
 template <class T>
-Maybe<T> StringRef::to_number(Maybe<unsigned> base, Maybe<StringRef &> end)
+Maybe<T> StringRef::to_number(Maybe<unsigned> base, Maybe<StringRef &> end) const
 {
     if (base.is_some()) {
         assert(base.get() >= 2);
@@ -131,9 +131,58 @@ Maybe<T> StringRef::to_number(Maybe<unsigned> base, Maybe<StringRef &> end)
 }
 
 // Explicit instantiation for all relevant types.
-template Maybe<int> StringRef::to_number(Maybe<unsigned> base, Maybe<StringRef &> end);
-template Maybe<unsigned> StringRef::to_number(Maybe<unsigned> base, Maybe<StringRef &> end);
-template Maybe<long> StringRef::to_number(Maybe<unsigned> base, Maybe<StringRef &> end);
-template Maybe<unsigned long> StringRef::to_number(Maybe<unsigned> base, Maybe<StringRef &> end);
-template Maybe<long long> StringRef::to_number(Maybe<unsigned> base, Maybe<StringRef &> end);
-template Maybe<unsigned long long> StringRef::to_number(Maybe<unsigned> base, Maybe<StringRef &> end);
+template Maybe<int> StringRef::to_number(Maybe<unsigned> base, Maybe<StringRef &> end) const;
+template Maybe<unsigned> StringRef::to_number(Maybe<unsigned> base, Maybe<StringRef &> end) const;
+template Maybe<long> StringRef::to_number(Maybe<unsigned> base, Maybe<StringRef &> end) const;
+template Maybe<unsigned long> StringRef::to_number(Maybe<unsigned> base, Maybe<StringRef &> end) const;
+template Maybe<long long> StringRef::to_number(Maybe<unsigned> base, Maybe<StringRef &> end) const;
+template Maybe<unsigned long long> StringRef::to_number(Maybe<unsigned> base, Maybe<StringRef &> end) const;
+
+bool operator==(StringRef x, StringRef y)
+{
+    if (x.length() != y.length())
+        return false;
+
+    for (size_t i = 0; i < x.length(); ++i)
+        if (x[i] != y[i])
+            return false;
+
+    return true;
+}
+
+bool operator!=(StringRef x, StringRef y)
+{
+    return !(x == y);
+}
+
+bool operator<(StringRef x, StringRef y)
+{
+    if (x.length() < y.length())
+        return true;
+    if (x.length() > y.length())
+        return false;
+
+    for (size_t i = 0; i < x.length(); ++i) {
+        if (x[i] < y[i])
+            return true;
+        if (x[i] > y[i])
+            return false;
+    }
+
+    return false;
+}
+
+bool operator>(StringRef x, StringRef y)
+{
+    return y < x;
+}
+
+bool operator<=(StringRef x, StringRef y)
+{
+    return !(x > y);
+}
+
+bool operator>=(StringRef x, StringRef y)
+{
+    return !(x < y);
+}

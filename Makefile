@@ -54,3 +54,9 @@ exos.macho: $(OBJECTS)
 
 exos.efi: exos.macho mtoc
 	./mtoc exos.macho exos.efi
+
+tests: test/test.cpp $(OBJECTS)
+	$(CXX) -iquote src/ -std=c++1y test/test.cpp $(OBJECTS) -o tests
+
+run-tests: tests
+	./tests

@@ -93,7 +93,7 @@ public:
     //
     // Only defined for T = char and U = int,unsigned,long,...
     template <class U>
-    Maybe<U> to_number(Maybe<unsigned> base, Maybe<ImmutArrayRef<char> &> end);
+    Maybe<U> to_number(Maybe<unsigned> base, Maybe<ImmutArrayRef<char> &> end) const;
 };
 
 using StringRef = ImmutArrayRef<char>;
@@ -102,3 +102,10 @@ constexpr StringRef operator"" _s(const char *s, size_t l)
 {
     return StringRef(s, l);
 }
+
+bool operator==(StringRef x, StringRef y);
+bool operator!=(StringRef x, StringRef y);
+bool operator<(StringRef x, StringRef y);
+bool operator>(StringRef x, StringRef y);
+bool operator<=(StringRef x, StringRef y);
+bool operator>=(StringRef x, StringRef y);
