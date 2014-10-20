@@ -64,6 +64,14 @@ void test_printf()
 
     snprintf(mut_ref, "0x(08x) hallo (4) ()"_cts, 0xdeadU, 23, -4545);
     assert(mut_ref.to_immut_ref() == "0x0000dead hallo   23 -4545"_s);
+
+    String<2> buf2;
+    mut_ref = buf2.mut_ref();
+    StringRef s = "test"_s;
+
+    size_t ret = snprintf(mut_ref, "()"_cts, s);
+    assert(mut_ref.to_immut_ref() == "te"_s);
+    assert(ret == s.length());
 }
 
 int main()
