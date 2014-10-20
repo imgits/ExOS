@@ -38,8 +38,10 @@ EFI_STATUS kmain(EFI_HANDLE handle, EFI_SYSTEM_TABLE *systab)
     EFI_STATUS status = Uefi::get_gop(handle, bs, gop);
     if (Uefi::status_is_error(status))
         Uefi::die(conout, status, u"Trying to get GOP");
-    if (gop == nullptr)
+    if (gop == nullptr) {
         Uefi::g_runtime->ResetSystem(EfiResetShutdown, EFI_SUCCESS, 0, nullptr);
+        __builtin_unreachable();
+    }
 
     Framebuffer::init(*gop->Mode);
 
