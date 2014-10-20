@@ -151,6 +151,7 @@ void Framebuffer::init(const EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE &gop_mode)
     case PixelBltOnly:
     case PixelFormatMax:
         Uefi::g_runtime->ResetSystem(EfiResetShutdown, EFI_SUCCESS, 0, nullptr);
+        __builtin_unreachable();
     }
 
     g_current_bg_color = Color::BLACK;
