@@ -21,6 +21,7 @@
 #include "asm/asm.h"
 #include "segmentation/gdt.h"
 #include "segmentation/idt.h"
+#include "paging/paging.h"
 
 extern "C" EFI_STATUS kmain(EFI_HANDLE handle, EFI_SYSTEM_TABLE *systab) EFIAPI;
 
@@ -59,6 +60,8 @@ EFI_STATUS kmain(EFI_HANDLE handle, EFI_SYSTEM_TABLE *systab)
     Gdt::setup();
 
     Idt::setup();
+
+    Paging::setup(memory_map);
 
     printf("Welcome! [CPU: ()]\n\n"_cts, Cpuid::get_vendor_string().ref());
 

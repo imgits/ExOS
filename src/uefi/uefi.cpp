@@ -154,6 +154,27 @@ void Uefi::die(EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL &conout, EFI_STATUS status,
     print(conout, s);
     print(conout, u": ");
     print(conout, status_to_string(status));
-    print(conout, u"\n");
+    print(conout, u"\r\n");
     Asm::hlt();
+}
+
+StringRef Uefi::memory_type_to_string(EFI_MEMORY_TYPE type)
+{
+    switch (type) {
+    case EfiReservedMemoryType: return "Reserved"_s;
+    case EfiLoaderCode: return "Loader Code"_s;
+    case EfiLoaderData: return "Loader Data"_s;
+    case EfiBootServicesCode: return "Boot Services Code"_s;
+    case EfiBootServicesData: return "Boot Services Data"_s;
+    case EfiRuntimeServicesCode: return "Runtime Services Code"_s;
+    case EfiRuntimeServicesData: return "Runtime Services Data"_s;
+    case EfiConventionalMemory: return "Conventional Memory"_s;
+    case EfiUnusableMemory: return "Unusable Memory"_s;
+    case EfiACPIReclaimMemory: return "ACPI Reclaim Memory"_s;
+    case EfiACPIMemoryNVS: return "ACPI Memory NVS"_s;
+    case EfiMemoryMappedIO: return "Memory-Mapped I/O"_s;
+    case EfiMemoryMappedIOPortSpace: return "Memory-Mapped I/O Port Space"_s;
+    case EfiPalCode: return "Pal Code"_s;
+    case EfiMaxMemoryType: return "Max"_s;
+    }
 }

@@ -105,9 +105,10 @@ struct Cr4 {
     uint64_t fsgsbase_enable : 1;
     uint64_t pcid_enable : 1;
     uint64_t osxsave : 1;
+    uint64_t reserved3 : 1;
     uint64_t smep_enable : 1;
     uint64_t smap_enable : 1;
-    uint64_t reserved3 : 42;
+    uint64_t reserved4 : 42;
 };
 
 struct XCR0 {

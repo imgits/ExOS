@@ -36,6 +36,12 @@ constexpr void set_array(T *ptr, T c, size_t size)
 }
 
 template <class T>
+constexpr void zero_array(T *ptr, size_t size)
+{
+    set_array(ptr, T(), size);
+}
+
+template <class T>
 constexpr void reverse_array_inplace(T *ptr, size_t n)
 {
     for (size_t i = n - 1, j = 0; j < i; --i, ++j) {
@@ -62,4 +68,25 @@ template <class T>
 constexpr auto unsigned_abs(T x)
 {
     return static_cast<std::make_unsigned_t<T>>(x < 0 ? -x : x);
+}
+
+template <class T>
+void constexpr inc_ptr_by_num_bytes(T *&x, size_t n)
+{
+    x = reinterpret_cast<T *>(reinterpret_cast<uint8_t *>(x) + n);
+}
+
+template <class T>
+T align(T x, size_t alignment)
+{
+    const auto diff = x % alignment;
+    if (diff == 0)
+        return x;
+    return x + alignment - diff;
+}
+
+template <class T>
+T *align(T *x, size_t alignment)
+{
+    return reinterpret_cast<T *>(align(reinterpret_cast<uintptr_t>(x), alignment));
 }

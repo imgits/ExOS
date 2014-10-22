@@ -45,6 +45,14 @@ size_t _Private::to_string(MutStringRef &buf, ConvFlags, StringRef arg)
     return arg.length();
 }
 
+size_t _Private::to_string(MutStringRef &buf, _Private::ConvFlags, char arg)
+{
+    if (buf.is_space_left())
+        buf.push_back(arg);
+
+    return 1;
+}
+
 size_t _Private::to_string(MutStringRef &buf, ConvFlags flags, int arg)
 {
     return to_string(buf, flags, static_cast<long long>(arg));

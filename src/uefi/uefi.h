@@ -18,6 +18,7 @@
 
 #include "uefi/systab.h"
 #include "uefi/protocols/console_support/all.h"
+#include "lib/immut_array_ref.h"
 
 namespace Acpi {
 struct Rsdp;
@@ -64,5 +65,7 @@ const CHAR16 *status_to_string(EFI_STATUS status);
 [[noreturn]]
 void die(EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL &conout, EFI_STATUS status,
          const CHAR16 *s);
+
+StringRef memory_type_to_string(EFI_MEMORY_TYPE type);
 
 } // namespace Uefi end

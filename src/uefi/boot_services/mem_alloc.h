@@ -21,6 +21,7 @@
 enum EFI_ALLOCATE_TYPE {
     AllocateAnyPages,
     AllocateMaxAddress,
+    AllocateAddress,
     MaxAllocateType
 };
 

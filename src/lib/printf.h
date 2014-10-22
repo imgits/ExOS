@@ -53,6 +53,7 @@ struct ConvFlags {
 #pragma clang diagnostic pop
 
 size_t to_string(MutStringRef &buf, ConvFlags flags, StringRef arg);
+size_t to_string(MutStringRef &buf, ConvFlags flags, char arg);
 size_t to_string(MutStringRef &buf, ConvFlags flags, const void *arg);
 size_t to_string(MutStringRef &buf, ConvFlags flags, int arg);
 size_t to_string(MutStringRef &buf, ConvFlags flags, unsigned arg);
@@ -242,6 +243,12 @@ constexpr bool flags_valid<unsigned long long>(StringRef fmt)
 
 template <>
 constexpr bool flags_valid<StringRef>(StringRef fmt)
+{
+    return fmt.length() == 0;
+}
+
+template <>
+constexpr bool flags_valid<char>(StringRef fmt)
 {
     return fmt.length() == 0;
 }
