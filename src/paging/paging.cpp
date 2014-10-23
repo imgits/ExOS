@@ -58,55 +58,63 @@ void Paging::setup(const Uefi::MemoryMap &map)
     void *start = get_largest_free_memory_region(map, max_num_pages);
     PageTableEntry *page_entries = static_cast<decltype(page_entries)>(start);
 
+    for (uint64_t phys = 0, i = 0; i < max_num_pages; ++i, phys += PAGE_SIZE) {
+        page_entries[i] = PageTableEntry {
+            .physical_page_base_offset = phys >> 12,
+            .present = 1,
+            .read_write = 1
+        };
+    }
+
     const uint64_t end_page_entries = align(max_num_pages, 512);
     const uint64_t num_page_tables = end_page_entries / 512;
 
-    zero_array(page_entries, end_page_entries);
-
-    for (uint64_t phys = 0, i = 0; i < max_num_pages; ++i, phys += PAGE_SIZE) {
-        page_entries[i].physical_page_base_offset = phys >> 12;
-        page_entries[i].present = 1;
-        page_entries[i].read_write = 1;
-    }
+    zero_array(&page_entries[max_num_pages], end_page_entries - max_num_pages);
 
     // -- pages tables done --
 
     start = align(&page_entries[end_page_entries], PAGE_SIZE);
     PageDirectoryEntry *page_dir_entries = static_cast<decltype(page_dir_entries)>(start);
 
+    for (uint64_t table = 0, i = 0; i < num_page_tables; ++i, table += 512) {
+        page_dir_entries[i] = PageDirectoryEntry {
+            .page_table_base_offset = reinterpret_cast<uint64_t>(&page_entries[table]) >> 12,
+            .present = 1,
+            .read_write = 1
+        };
+    }
+
     const uint64_t end_page_dir_entries = align(num_page_tables, 512);
     const uint64_t num_page_dir_tables = end_page_dir_entries / 512;
 
-    zero_array(page_dir_entries, end_page_dir_entries);
-
-    for (uint64_t table = 0, i = 0; i < num_page_tables; ++i, table += 512) {
-        page_dir_entries[i].page_table_base_offset = reinterpret_cast<uint64_t>(&page_entries[table]) >> 12;
-        page_dir_entries[i].present = 1;
-        page_dir_entries[i].read_write = 1;
-    }
+    zero_array(&page_dir_entries[num_page_tables], end_page_dir_entries - num_page_tables);
 
     // -- page directory tables done --
 
     start = align(&page_dir_entries[end_page_dir_entries], PAGE_SIZE);
     PageDirectoryPointerEntry *page_dir_ptr_entries = static_cast<decltype(page_dir_ptr_entries)>(start);
 
+    for (uint64_t table = 0, i = 0; i < num_page_dir_tables; ++i, table += 512) {
+        page_dir_ptr_entries[i] = PageDirectoryPointerEntry {
+            .page_directory_base_offset = reinterpret_cast<uint64_t>(&page_dir_entries[table]) >> 12,
+            .present = 1,
+            .read_write = 1
+        };
+    }
+
     const uint64_t end_page_dir_ptr_entries = align(num_page_dir_tables, 512);
     const uint64_t num_page_dir_ptr_tables = end_page_dir_ptr_entries / 512;
 
-    zero_array(page_dir_ptr_entries, end_page_dir_ptr_entries);
-
-    for (uint64_t table = 0, i = 0; i < num_page_dir_tables; ++i, table += 512) {
-        page_dir_ptr_entries[i].page_directory_base_offset = reinterpret_cast<uint64_t>(&page_dir_entries[table]) >> 12;
-        page_dir_ptr_entries[i].present = 1;
-        page_dir_ptr_entries[i].read_write = 1;
-    }
+    zero_array(&page_dir_ptr_entries[num_page_dir_tables], end_page_dir_ptr_entries - num_page_dir_tables);
 
     // -- page directory pointer tables done --
 
     for (uint64_t table = 0, i = 0; i < num_page_dir_ptr_tables; ++i, table += 512) {
-        pml4_table[i].page_directory_pointer_base_offset = reinterpret_cast<uint64_t>(&page_dir_ptr_entries[table]) >> 12;
-        pml4_table[i].present = 1;
-        pml4_table[i].read_write = 1;
+        pml4_table[i] = PageMapLevel4Entry {
+            .page_directory_pointer_base_offset = reinterpret_cast<uint64_t>(&page_dir_ptr_entries[table]) >> 12,
+            .present = 1,
+            .read_write = 1
+        };
     }
 
     // -- pml4 table done --
