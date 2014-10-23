@@ -26,7 +26,9 @@
 
 namespace {
 
-alignas(Paging::PAGE_SIZE) Array<PageMapLevel4Entry, 512> pml4_table;
+constexpr unsigned NUM_TABLE_ENTRIES = 512;
+
+alignas(Paging::PAGE_SIZE) Array<PageMapLevel4Entry, NUM_TABLE_ENTRIES> pml4_table;
 
 void *get_largest_free_memory_region(const Uefi::MemoryMap &map, size_t &limit)
 {
@@ -66,8 +68,8 @@ void Paging::setup(const Uefi::MemoryMap &map)
         };
     }
 
-    const uint64_t end_page_entries = align(max_num_pages, 512);
-    const uint64_t num_page_tables = end_page_entries / 512;
+    const size_t end_page_entries = align(max_num_pages, NUM_TABLE_ENTRIES);
+    const size_t num_page_tables = end_page_entries / NUM_TABLE_ENTRIES;
 
     zero_array(&page_entries[max_num_pages], end_page_entries - max_num_pages);
 
@@ -76,7 +78,7 @@ void Paging::setup(const Uefi::MemoryMap &map)
     start = align(&page_entries[end_page_entries], PAGE_SIZE);
     PageDirectoryEntry *page_dir_entries = static_cast<PageDirectoryEntry *>(start);
 
-    for (uint64_t table = 0, i = 0; i < num_page_tables; ++i, table += 512) {
+    for (size_t table = 0, i = 0; i < num_page_tables; ++i, table += NUM_TABLE_ENTRIES) {
         page_dir_entries[i] = PageDirectoryEntry {
             .page_table_base_offset = reinterpret_cast<uint64_t>(&page_entries[table]) >> 12,
             .present = 1,
@@ -84,8 +86,8 @@ void Paging::setup(const Uefi::MemoryMap &map)
         };
     }
 
-    const uint64_t end_page_dir_entries = align(num_page_tables, 512);
-    const uint64_t num_page_dir_tables = end_page_dir_entries / 512;
+    const size_t end_page_dir_entries = align(num_page_tables, NUM_TABLE_ENTRIES);
+    const size_t num_page_dir_tables = end_page_dir_entries / NUM_TABLE_ENTRIES;
 
     zero_array(&page_dir_entries[num_page_tables], end_page_dir_entries - num_page_tables);
 
@@ -94,7 +96,7 @@ void Paging::setup(const Uefi::MemoryMap &map)
     start = align(&page_dir_entries[end_page_dir_entries], PAGE_SIZE);
     PageDirectoryPointerEntry *page_dir_ptr_entries = static_cast<PageDirectoryPointerEntry *>(start);
 
-    for (uint64_t table = 0, i = 0; i < num_page_dir_tables; ++i, table += 512) {
+    for (size_t table = 0, i = 0; i < num_page_dir_tables; ++i, table += NUM_TABLE_ENTRIES) {
         page_dir_ptr_entries[i] = PageDirectoryPointerEntry {
             .page_directory_base_offset = reinterpret_cast<uint64_t>(&page_dir_entries[table]) >> 12,
             .present = 1,
@@ -102,14 +104,14 @@ void Paging::setup(const Uefi::MemoryMap &map)
         };
     }
 
-    const uint64_t end_page_dir_ptr_entries = align(num_page_dir_tables, 512);
-    const uint64_t num_page_dir_ptr_tables = end_page_dir_ptr_entries / 512;
+    const size_t end_page_dir_ptr_entries = align(num_page_dir_tables, NUM_TABLE_ENTRIES);
+    const size_t num_page_dir_ptr_tables = end_page_dir_ptr_entries / NUM_TABLE_ENTRIES;
 
     zero_array(&page_dir_ptr_entries[num_page_dir_tables], end_page_dir_ptr_entries - num_page_dir_tables);
 
     // -- page directory pointer tables done --
 
-    for (uint64_t table = 0, i = 0; i < num_page_dir_ptr_tables; ++i, table += 512) {
+    for (size_t table = 0, i = 0; i < num_page_dir_ptr_tables; ++i, table += NUM_TABLE_ENTRIES) {
         pml4_table[i] = PageMapLevel4Entry {
             .page_directory_pointer_base_offset = reinterpret_cast<uint64_t>(&page_dir_ptr_entries[table]) >> 12,
             .present = 1,
@@ -119,7 +121,7 @@ void Paging::setup(const Uefi::MemoryMap &map)
 
     // -- pml4 table done --
 
-    Registers::Cr3 cr3 = {
+    const Registers::Cr3 cr3 = {
         .page_map_level_4_table_base_address = reinterpret_cast<uint64_t>(&pml4_table[0]) >> 12
     };
 
