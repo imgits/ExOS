@@ -56,7 +56,7 @@ void Paging::setup(const Uefi::MemoryMap &map)
 {
     size_t max_num_pages;
     void *start = get_largest_free_memory_region(map, max_num_pages);
-    PageTableEntry *page_entries = static_cast<decltype(page_entries)>(start);
+    PageTableEntry *page_entries = static_cast<PageTableEntry *>(start);
 
     for (uint64_t phys = 0, i = 0; i < max_num_pages; ++i, phys += PAGE_SIZE) {
         page_entries[i] = PageTableEntry {
@@ -74,7 +74,7 @@ void Paging::setup(const Uefi::MemoryMap &map)
     // -- pages tables done --
 
     start = align(&page_entries[end_page_entries], PAGE_SIZE);
-    PageDirectoryEntry *page_dir_entries = static_cast<decltype(page_dir_entries)>(start);
+    PageDirectoryEntry *page_dir_entries = static_cast<PageDirectoryEntry *>(start);
 
     for (uint64_t table = 0, i = 0; i < num_page_tables; ++i, table += 512) {
         page_dir_entries[i] = PageDirectoryEntry {
@@ -92,7 +92,7 @@ void Paging::setup(const Uefi::MemoryMap &map)
     // -- page directory tables done --
 
     start = align(&page_dir_entries[end_page_dir_entries], PAGE_SIZE);
-    PageDirectoryPointerEntry *page_dir_ptr_entries = static_cast<decltype(page_dir_ptr_entries)>(start);
+    PageDirectoryPointerEntry *page_dir_ptr_entries = static_cast<PageDirectoryPointerEntry *>(start);
 
     for (uint64_t table = 0, i = 0; i < num_page_dir_tables; ++i, table += 512) {
         page_dir_ptr_entries[i] = PageDirectoryPointerEntry {
