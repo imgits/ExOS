@@ -59,7 +59,7 @@ void Paging::setup(const Uefi::MemoryMap &map)
     PageTableEntry *page_entries = static_cast<decltype(page_entries)>(start);
 
     const uint64_t end_page_entries = align(max_num_pages, 512);
-    const uint64_t num_page_entries = end_page_entries / 512;
+    const uint64_t num_page_tables = end_page_entries / 512;
 
     zero_array(page_entries, end_page_entries);
 
@@ -74,12 +74,12 @@ void Paging::setup(const Uefi::MemoryMap &map)
     start = align(&page_entries[end_page_entries], PAGE_SIZE);
     PageDirectoryEntry *page_dir_entries = static_cast<decltype(page_dir_entries)>(start);
 
-    const uint64_t end_page_dir_entries = align(num_page_entries, 512);
-    const uint64_t num_page_dir_entries = end_page_dir_entries / 512;
+    const uint64_t end_page_dir_entries = align(num_page_tables, 512);
+    const uint64_t num_page_dir_tables = end_page_dir_entries / 512;
 
     zero_array(page_dir_entries, end_page_dir_entries);
 
-    for (uint64_t table = 0, i = 0; i < num_page_entries; ++i, table += 512) {
+    for (uint64_t table = 0, i = 0; i < num_page_tables; ++i, table += 512) {
         page_dir_entries[i].page_table_base_offset = reinterpret_cast<uint64_t>(&page_entries[table]) >> 12;
         page_dir_entries[i].present = 1;
         page_dir_entries[i].read_write = 1;
@@ -90,12 +90,12 @@ void Paging::setup(const Uefi::MemoryMap &map)
     start = align(&page_dir_entries[end_page_dir_entries], PAGE_SIZE);
     PageDirectoryPointerEntry *page_dir_ptr_entries = static_cast<decltype(page_dir_ptr_entries)>(start);
 
-    const uint64_t end_page_dir_ptr_entries = align(num_page_dir_entries, 512);
-    const uint64_t num_page_dir_ptr_entries = end_page_dir_ptr_entries / 512;
+    const uint64_t end_page_dir_ptr_entries = align(num_page_dir_tables, 512);
+    const uint64_t num_page_dir_ptr_tables = end_page_dir_ptr_entries / 512;
 
     zero_array(page_dir_ptr_entries, end_page_dir_ptr_entries);
 
-    for (uint64_t table = 0, i = 0; i < num_page_dir_entries; ++i, table += 512) {
+    for (uint64_t table = 0, i = 0; i < num_page_dir_tables; ++i, table += 512) {
         page_dir_ptr_entries[i].page_directory_base_offset = reinterpret_cast<uint64_t>(&page_dir_entries[table]) >> 12;
         page_dir_ptr_entries[i].present = 1;
         page_dir_ptr_entries[i].read_write = 1;
@@ -103,7 +103,7 @@ void Paging::setup(const Uefi::MemoryMap &map)
 
     // -- page directory pointer tables done --
 
-    for (uint64_t table = 0, i = 0; i < num_page_dir_ptr_entries; ++i, table += 512) {
+    for (uint64_t table = 0, i = 0; i < num_page_dir_ptr_tables; ++i, table += 512) {
         pml4_table[i].page_directory_pointer_base_offset = reinterpret_cast<uint64_t>(&page_dir_ptr_entries[table]) >> 12;
         pml4_table[i].present = 1;
         pml4_table[i].read_write = 1;
