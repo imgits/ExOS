@@ -111,7 +111,7 @@ struct Cr4 {
     uint64_t reserved4 : 42;
 };
 
-struct XCR0 {
+struct Xcr0 {
     uint64_t x87_state : 1; // must be 1
     uint64_t sse_state : 1;
     uint64_t avx_state : 1;

@@ -16,71 +16,94 @@
 
 #include "cpuid/cpuid.h"
 
-void Cpuid::cpuid(uint32_t eax_in, uint32_t ecx_in, uint32_t &eax_out,
-                  uint32_t &ebx_out, uint32_t &ecx_out, uint32_t &edx_out)
+namespace {
+
+void cpuid(uint32_t eax_in, uint32_t ecx_in, uint32_t &eax_out,
+           uint32_t &ebx_out, uint32_t &ecx_out, uint32_t &edx_out)
 {
     __asm__("cpuid"
             : "=a"(eax_out), "=b"(ebx_out), "=c"(ecx_out), "=d"(edx_out)
             : "a"(eax_in), "c"(ecx_in));
 }
 
-uint32_t Cpuid::get_largest_standard_function()
+uint32_t g_largest_standard_function;
+
+String<12> g_vendor_string;
+
+Cpuid::IdentInfo g_ident_info;
+
+Cpuid::MiscInfo g_misc_info;
+
+Cpuid::FeatureInfo g_feature_info;
+
+} // end anonymous namespace
+
+void Cpuid::initialize()
 {
     uint32_t eax, ebx, ecx, edx;
 
     cpuid(0, 0, eax, ebx, ecx, edx);
 
-    return eax;
-}
+    g_largest_standard_function = eax;
 
-String<12> Cpuid::get_vendor_string()
-{
     union {
         String<12> x;
         uint32_t regs[3];
     } u;
-    uint32_t eax;
 
     cpuid(0, 0, eax, u.regs[0], u.regs[2], u.regs[1]);
 
-    return u.x;
+    g_vendor_string = u.x;
+
+    union {
+        IdentInfo x;
+        uint32_t eax;
+    } u2;
+
+    cpuid(1, 0, u2.eax, ebx, ecx, edx);
+
+    g_ident_info = u2.x;
+
+    union {
+        MiscInfo x;
+        uint32_t ebx;
+    } u3;
+
+    cpuid(1, 0, eax, u3.ebx, ecx, edx);
+
+    g_misc_info = u3.x;
+
+    union {
+        FeatureInfo x;
+        uint32_t ecx_edx[2];
+    } u4;
+
+    cpuid(0, 1, eax, ebx, u4.ecx_edx[0], u4.ecx_edx[1]);
+
+    g_feature_info = u4.x;
+}
+
+uint32_t Cpuid::get_largest_standard_function()
+{
+    return g_largest_standard_function;
+}
+
+String<12> Cpuid::get_vendor_string()
+{
+    return g_vendor_string;
 }
 
 Cpuid::IdentInfo Cpuid::get_version_info()
 {
-    union {
-        IdentInfo x;
-        uint32_t eax;
-    } u;
-    uint32_t ebx, ecx, edx;
-
-    cpuid(1, 0, u.eax, ebx, ecx, edx);
-
-    return u.x;
+    return g_ident_info;
 }
 
 Cpuid::MiscInfo Cpuid::get_misc_info()
 {
-    union {
-        MiscInfo x;
-        uint32_t ebx;
-    } u;
-    uint32_t eax, ecx, edx;
-
-    cpuid(1, 0, eax, u.ebx, ecx, edx);
-
-    return u.x;
+    return g_misc_info;
 }
 
 Cpuid::FeatureInfo Cpuid::get_feature_info()
 {
-    union {
-        FeatureInfo x;
-        uint32_t ecx_edx[2];
-    } u;
-    uint32_t eax, ebx;
-
-    cpuid(0, 1, eax, ebx, u.ecx_edx[0], u.ecx_edx[1]);
-
-    return u.x;
+    return g_feature_info;
 }

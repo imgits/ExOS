@@ -22,9 +22,7 @@
 
 namespace Cpuid {
 
-// Executes the cpuid instruction with the given register values.
-void cpuid(uint32_t eax_in, uint32_t ecx_in, uint32_t &eax_out,
-           uint32_t &ebx_out, uint32_t &ecx_out, uint32_t &edx_out);
+void initialize();
 
 uint32_t get_largest_standard_function();
 

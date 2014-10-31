@@ -57,15 +57,15 @@ EFI_STATUS Uefi::get_memory_map(const EFI_BOOT_SERVICES &bs, MemoryMap &map)
     return EFI_SUCCESS;
 }
 
-Acpi::Rsdp *Uefi::get_acpi_rsdp(const EFI_SYSTEM_TABLE &systab)
+Maybe<Acpi::Rsdp &> Uefi::get_acpi_rsdp(const EFI_SYSTEM_TABLE &systab)
 {
     const EFI_GUID acpi = EFI_ACPI_TABLE_GUID;
 
     for (UINTN i = 0; i < systab.NumberOfTableEntries; ++i)
         if (are_memory_equal(systab.ConfigurationTable[i].VendorGuid, acpi))
-            return static_cast<Acpi::Rsdp *>(systab.ConfigurationTable[i].VendorTable);
+            return *static_cast<Acpi::Rsdp *>(systab.ConfigurationTable[i].VendorTable);
 
-    return nullptr;
+    return None();
 }
 
 EFI_STATUS Uefi::get_gop(EFI_HANDLE handle, const EFI_BOOT_SERVICES &bs,
@@ -161,20 +161,20 @@ void Uefi::die(EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL &conout, EFI_STATUS status,
 StringRef Uefi::memory_type_to_string(EFI_MEMORY_TYPE type)
 {
     switch (type) {
-    case EfiReservedMemoryType: return "Reserved"_s;
-    case EfiLoaderCode: return "Loader Code"_s;
-    case EfiLoaderData: return "Loader Data"_s;
-    case EfiBootServicesCode: return "Boot Services Code"_s;
-    case EfiBootServicesData: return "Boot Services Data"_s;
-    case EfiRuntimeServicesCode: return "Runtime Services Code"_s;
-    case EfiRuntimeServicesData: return "Runtime Services Data"_s;
-    case EfiConventionalMemory: return "Conventional Memory"_s;
-    case EfiUnusableMemory: return "Unusable Memory"_s;
-    case EfiACPIReclaimMemory: return "ACPI Reclaim Memory"_s;
-    case EfiACPIMemoryNVS: return "ACPI Memory NVS"_s;
-    case EfiMemoryMappedIO: return "Memory-Mapped I/O"_s;
-    case EfiMemoryMappedIOPortSpace: return "Memory-Mapped I/O Port Space"_s;
-    case EfiPalCode: return "Pal Code"_s;
-    case EfiMaxMemoryType: return "Max"_s;
+    case EfiReservedMemoryType:         return "Reserved"_s;
+    case EfiLoaderCode:                 return "Loader Code"_s;
+    case EfiLoaderData:                 return "Loader Data"_s;
+    case EfiBootServicesCode:           return "Boot Services Code"_s;
+    case EfiBootServicesData:           return "Boot Services Data"_s;
+    case EfiRuntimeServicesCode:        return "Runtime Services Code"_s;
+    case EfiRuntimeServicesData:        return "Runtime Services Data"_s;
+    case EfiConventionalMemory:         return "Conventional Memory"_s;
+    case EfiUnusableMemory:             return "Unusable Memory"_s;
+    case EfiACPIReclaimMemory:          return "ACPI Reclaim Memory"_s;
+    case EfiACPIMemoryNVS:              return "ACPI Memory NVS"_s;
+    case EfiMemoryMappedIO:             return "Memory-Mapped I/O"_s;
+    case EfiMemoryMappedIOPortSpace:    return "Memory-Mapped I/O Port Space"_s;
+    case EfiPalCode:                    return "Pal Code"_s;
+    case EfiMaxMemoryType:              return "Max"_s;
     }
 }

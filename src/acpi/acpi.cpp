@@ -14,47 +14,27 @@
  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#pragma once
+#include "acpi/acpi.h"
 
-#include "lib/immut_array_ref.h"
+void *Acpi::Xsdt::get_table(StringRef signature) const
+{
+    uint32_t len = header.length - sizeof(header);
 
-struct EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE;
+    for (uint32_t i = 0; i < len; ++i) {
+        TableHeader *head = reinterpret_cast<TableHeader *>(entries[i]);
+        if (head->signature.ref() == signature)
+            return head;
+    }
 
-namespace Framebuffer {
+    return nullptr;
+}
 
-// Currently accepted colors.
-enum class Color {
-    BLACK,
-    WHITE,
-    RED,
-    LIME,
-    BLUE,
-    YELLOW,
-    CYAN,
-    MAGENTA,
-    SILVER,
-    GRAY,
-    MAROON,
-    OLIVE,
-    GREEN,
-    PURPLE,
-    TEAL,
-    NAVY
-};
+template <>
+Maybe<Acpi::Fadt &> Acpi::Xsdt::get_table<Acpi::Fadt>() const
+{
+    void *ret = get_table("FACP"_s);
+    if (ret == nullptr)
+        return None();
 
-// Initializes the framebuffer. You must call this before calling any other
-// framebuffer function.
-void initialize(const EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE &gop_mode);
-
-// Redraws the entire screen in the current background color.
-void clear_screen();
-
-void set_foreground_color(Color color);
-
-void set_background_color(Color color);
-
-void put_char(char c);
-
-void put_string(StringRef x);
-
-} // namespace Framebuffer end
+    return *static_cast<Fadt *>(ret);
+}

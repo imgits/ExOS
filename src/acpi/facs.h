@@ -16,45 +16,37 @@
 
 #pragma once
 
-#include "lib/immut_array_ref.h"
+#include <cstdint>
 
-struct EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE;
+#include "lib/array.h"
 
-namespace Framebuffer {
-
-// Currently accepted colors.
-enum class Color {
-    BLACK,
-    WHITE,
-    RED,
-    LIME,
-    BLUE,
-    YELLOW,
-    CYAN,
-    MAGENTA,
-    SILVER,
-    GRAY,
-    MAROON,
-    OLIVE,
-    GREEN,
-    PURPLE,
-    TEAL,
-    NAVY
+struct GlobalLock {
+    uint32_t pending : 1;
+    uint32_t owned : 1;
+    uint32_t reserevd : 30;
 };
 
-// Initializes the framebuffer. You must call this before calling any other
-// framebuffer function.
-void initialize(const EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE &gop_mode);
+struct FacsFlags {
+    uint32_t s4bios_f : 1;
+    uint32_t _64bit_wake_supported_f : 1;
+    uint32_t reserved : 30;
+};
 
-// Redraws the entire screen in the current background color.
-void clear_screen();
+struct FacsOspmFlags {
+    uint32_t _64bit_wake_f : 1;
+    uint32_t reserved : 31;
+};
 
-void set_foreground_color(Color color);
-
-void set_background_color(Color color);
-
-void put_char(char c);
-
-void put_string(StringRef x);
-
-} // namespace Framebuffer end
+struct Facs {
+    String<4> signature;
+    uint32_t length;
+    uint32_t hardware_signature;
+    uint32_t firmware_waking_vector;
+    GlobalLock global_lock;
+    FacsFlags flags;
+    void *x_firmware_waking_vector;
+    uint8_t version;
+    uint8_t reserved[3];
+    FacsOspmFlags ospm_flags;
+    uint8_t reserved3[24];
+};

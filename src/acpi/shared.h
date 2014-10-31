@@ -16,45 +16,30 @@
 
 #pragma once
 
-#include "lib/immut_array_ref.h"
+#include <cstdint>
 
-struct EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE;
+#include "lib/array.h"
 
-namespace Framebuffer {
+namespace Acpi {
 
-// Currently accepted colors.
-enum class Color {
-    BLACK,
-    WHITE,
-    RED,
-    LIME,
-    BLUE,
-    YELLOW,
-    CYAN,
-    MAGENTA,
-    SILVER,
-    GRAY,
-    MAROON,
-    OLIVE,
-    GREEN,
-    PURPLE,
-    TEAL,
-    NAVY
+struct GenericAddress {
+    uint8_t address_space_id;
+    uint8_t register_bit_width;
+    uint8_t register_bit_offset;
+    uint8_t access_size;
+    void *address __attribute__((packed));
 };
 
-// Initializes the framebuffer. You must call this before calling any other
-// framebuffer function.
-void initialize(const EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE &gop_mode);
+struct TableHeader {
+    String<4> signature;
+    uint32_t length;
+    uint8_t revision;
+    uint8_t checksum;
+    String<6> oem_id;
+    String<8> oem_table_id;
+    uint32_t oem_revision;
+    uint32_t creator_id;
+    uint32_t creator_revision;
+};
 
-// Redraws the entire screen in the current background color.
-void clear_screen();
-
-void set_foreground_color(Color color);
-
-void set_background_color(Color color);
-
-void put_char(char c);
-
-void put_string(StringRef x);
-
-} // namespace Framebuffer end
+} // namespace Acpi end

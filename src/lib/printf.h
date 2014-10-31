@@ -254,6 +254,12 @@ constexpr bool flags_valid<char>(StringRef fmt)
 }
 
 template <>
+constexpr bool flags_valid<unsigned char>(StringRef fmt)
+{
+    return flags_valid<unsigned long long>(fmt);
+}
+
+template <>
 constexpr bool flags_valid<const void *>(StringRef fmt)
 {
     return flags_valid<unsigned long long>(fmt);

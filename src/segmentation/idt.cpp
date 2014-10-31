@@ -29,7 +29,7 @@ Array<Descriptors::InterruptAndTrapGate, 256> idt;
 
 Descriptors::InterruptAndTrapGate make_intr_gate(void (*func)())
 {
-    auto x = reinterpret_cast<uint64_t>(func);
+    const uint64_t x = reinterpret_cast<uint64_t>(func);
 
     return Descriptors::InterruptAndTrapGate {
         .target_offset_15_0 = x & 0xffff,
@@ -67,7 +67,7 @@ void Idt::setup()
     idt[18] = make_intr_gate(intr_machine_check);
     idt[19] = make_intr_gate(intr_simd_floating_point);
 
-    Descriptors::TableRegister dtr = {
+    const Descriptors::TableRegister dtr = {
         .limit = sizeof(idt) - 1,
         .base_address = reinterpret_cast<uint64_t>(&idt)
     };

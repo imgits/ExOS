@@ -19,6 +19,7 @@
 #include "uefi/systab.h"
 #include "uefi/protocols/console_support/all.h"
 #include "lib/immut_array_ref.h"
+#include "lib/maybe.h"
 
 namespace Acpi {
 struct Rsdp;
@@ -49,7 +50,7 @@ struct MemoryMap {
 EFI_STATUS get_memory_map(const EFI_BOOT_SERVICES &bs, MemoryMap &map);
 
 // Either returns a pointer to the ACPI RSDP table if found, or NULL.
-Acpi::Rsdp *get_acpi_rsdp(const EFI_SYSTEM_TABLE &systab);
+Maybe<Acpi::Rsdp &> get_acpi_rsdp(const EFI_SYSTEM_TABLE &systab);
 
 // Returns the first instance of a GOP that supports RGB or BGR.
 // If no suitable GOP was found, gop will be NULL, and either EFI_SUCCESS or
@@ -62,9 +63,8 @@ EFI_STATUS get_gop(EFI_HANDLE handle, const EFI_BOOT_SERVICES &bs,
 const CHAR16 *status_to_string(EFI_STATUS status);
 
 // Prints "@s: 'status translated to string'\n" and then halts.
-[[noreturn]]
-void die(EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL &conout, EFI_STATUS status,
-         const CHAR16 *s);
+[[noreturn]] void
+die(EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL &conout, EFI_STATUS status, const CHAR16 *s);
 
 StringRef memory_type_to_string(EFI_MEMORY_TYPE type);
 

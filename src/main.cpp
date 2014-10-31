@@ -22,6 +22,7 @@
 #include "segmentation/gdt.h"
 #include "segmentation/idt.h"
 #include "paging/paging.h"
+#include "acpi/acpi.h"
 
 extern "C" EFI_STATUS kmain(EFI_HANDLE handle, EFI_SYSTEM_TABLE *systab) EFIAPI;
 
@@ -44,9 +45,15 @@ EFI_STATUS kmain(EFI_HANDLE handle, EFI_SYSTEM_TABLE *systab)
         __builtin_unreachable();
     }
 
-    Framebuffer::init(*gop->Mode);
+    Framebuffer::initialize(*gop->Mode);
 
     Framebuffer::clear_screen();
+
+    const Maybe<Acpi::Rsdp &> rsdp = Uefi::get_acpi_rsdp(*systab);
+    if (rsdp.is_none()) {
+        printf("No ACPI table found! Halting...\n"_cts);
+        Asm::hlt();
+    }
 
     Uefi::MemoryMap memory_map;
     status = Uefi::get_memory_map(bs, memory_map);
@@ -63,13 +70,11 @@ EFI_STATUS kmain(EFI_HANDLE handle, EFI_SYSTEM_TABLE *systab)
 
     Paging::setup(memory_map);
 
-    printf("Welcome! [CPU: ()]\n\n"_cts, Cpuid::get_vendor_string().ref());
+    Cpuid::initialize();
 
-    printf("Testing if interrupts are working ((dividing by zero)...\n\n"_cts);
+    printf("Welcome to ExOS!\n\n"_cts);
 
-    volatile int x = 0;
-    volatile int y = 42 / x;
-    (void)y;
+    printf("Boot was successful. Halting...\n"_cts);
 
-    __builtin_unreachable();
+    Asm::hlt();
 }

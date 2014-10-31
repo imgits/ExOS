@@ -97,7 +97,7 @@ void put_glyph(Font::Glyph glyph)
 
 } // end anonymous namespace
 
-void Framebuffer::init(const EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE &gop_mode)
+void Framebuffer::initialize(const EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE &gop_mode)
 {
     g_framebuffer = reinterpret_cast<uint32_t *>(gop_mode.FrameBufferBase);
     g_framebuffer_size = gop_mode.FrameBufferSize;
