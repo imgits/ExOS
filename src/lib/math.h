@@ -16,6 +16,10 @@
 
 #pragma once
 
+#include <cstdint>
+
+#include "lib/assert.h"
+
 bool add_overflow(unsigned x, unsigned y, unsigned &sum);
 bool add_overflow(unsigned long x, unsigned long y, unsigned long &sum);
 bool add_overflow(unsigned long long x, unsigned long long y, unsigned long long &sum);
@@ -36,3 +40,37 @@ bool mul_overflow(unsigned long long x, unsigned long long y, unsigned long long
 bool mul_overflow(int x, int y, int &prod);
 bool mul_overflow(long x, long y, long &prod);
 bool mul_overflow(long long x, long long y, long long &prod);
+
+// Wrapper of a number with (runtime) range checking on construction.
+template <class T>
+class RangedNumber {
+private:
+    T m_num;
+
+public:
+    constexpr RangedNumber(T x, intmax_t min, uintmax_t max) :
+    m_num(x)
+    {
+        assert(x >= min);
+        assert(x <= max);
+    }
+
+    constexpr operator T() const
+    {
+        return m_num;
+    }
+};
+
+class Radix {
+private:
+    RangedNumber<unsigned> m_num;
+
+public:
+    constexpr Radix(unsigned x) :
+    m_num(x, 2, 36) { }
+
+    constexpr operator unsigned() const
+    {
+        return m_num;
+    }
+};

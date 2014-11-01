@@ -22,13 +22,8 @@
 // A char array can be parsed to a number.
 template <>
 template <class T>
-Maybe<T> StringRef::to_number(Maybe<unsigned> base, Maybe<StringRef &> end) const
+Maybe<T> StringRef::to_number(Maybe<Radix> base, Maybe<StringRef &> end) const
 {
-    if (base.is_some()) {
-        assert(base.get() >= 2);
-        assert(base.get() <= 36);
-    }
-
     if (m_size == 0)
         return None();
 
@@ -62,34 +57,37 @@ Maybe<T> StringRef::to_number(Maybe<unsigned> base, Maybe<StringRef &> end) cons
         break;
     }
 
-    unsigned radix;
-
-    switch (m_ptr[i]) {
-    case '0':
-        ++i;
-
-        if (i == m_size)
-            return None();
-
+    // Create and immediately call a lambda to turn a switch statement
+    // into an expression.
+    auto tmp_radix = [this, &i]() -> Maybe<Radix> {
         switch (m_ptr[i]) {
-        case 'x':
-        case 'X':
+        case '0':
             ++i;
 
             if (i == m_size)
-               return None();
+                return None();
 
-            radix = 16;
-            break;
+            switch (m_ptr[i]) {
+            case 'x':
+            case 'X':
+                ++i;
+
+                if (i == m_size)
+                    return None();
+
+                return Radix(16);
+            default:
+                return Radix(8);
+            }
         default:
-            radix = 8;
-            break;
+            return Radix(10);
         }
-        break;
-    default:
-        radix = base.is_some() ? base.get() : 10;
-        break;
-    }
+    }();
+
+    if (tmp_radix.is_none())
+        return None();
+
+    Radix radix = base.is_some() ? base.get() : tmp_radix.get();
 
     size_t begin_num = i;
 
@@ -131,12 +129,12 @@ Maybe<T> StringRef::to_number(Maybe<unsigned> base, Maybe<StringRef &> end) cons
 }
 
 // Explicit instantiation for all relevant types.
-template Maybe<int> StringRef::to_number(Maybe<unsigned> base, Maybe<StringRef &> end) const;
-template Maybe<unsigned> StringRef::to_number(Maybe<unsigned> base, Maybe<StringRef &> end) const;
-template Maybe<long> StringRef::to_number(Maybe<unsigned> base, Maybe<StringRef &> end) const;
-template Maybe<unsigned long> StringRef::to_number(Maybe<unsigned> base, Maybe<StringRef &> end) const;
-template Maybe<long long> StringRef::to_number(Maybe<unsigned> base, Maybe<StringRef &> end) const;
-template Maybe<unsigned long long> StringRef::to_number(Maybe<unsigned> base, Maybe<StringRef &> end) const;
+template Maybe<int> StringRef::to_number(Maybe<Radix> base, Maybe<StringRef &> end) const;
+template Maybe<unsigned> StringRef::to_number(Maybe<Radix> base, Maybe<StringRef &> end) const;
+template Maybe<long> StringRef::to_number(Maybe<Radix> base, Maybe<StringRef &> end) const;
+template Maybe<unsigned long> StringRef::to_number(Maybe<Radix> base, Maybe<StringRef &> end) const;
+template Maybe<long long> StringRef::to_number(Maybe<Radix> base, Maybe<StringRef &> end) const;
+template Maybe<unsigned long long> StringRef::to_number(Maybe<Radix> base, Maybe<StringRef &> end) const;
 
 bool operator==(StringRef x, StringRef y)
 {

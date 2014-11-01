@@ -20,6 +20,7 @@
 
 #include "lib/assert.h"
 #include "lib/maybe.h"
+#include "lib/math.h"
 
 // Reference to an immutable(const) array. Small enough to be passed by-value.
 
@@ -93,7 +94,7 @@ public:
     //
     // Only defined for T = char and U = int,unsigned,long,...
     template <class U>
-    Maybe<U> to_number(Maybe<unsigned> base, Maybe<ImmutArrayRef<char> &> end) const;
+    Maybe<U> to_number(Maybe<Radix> base, Maybe<ImmutArrayRef<char> &> end) const;
 };
 
 using StringRef = ImmutArrayRef<char>;

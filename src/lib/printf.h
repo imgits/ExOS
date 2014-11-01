@@ -136,7 +136,7 @@ constexpr size_t format(MutStringRef &buf, StringRef fmt, Arg arg, Args... args)
     }
 
     StringRef end(nullptr, 0);
-    Maybe<unsigned> min_length = fmt.slice_from(i).to_number<unsigned>(10, end);
+    Maybe<unsigned> min_length = fmt.slice_from(i).to_number<unsigned>(Radix(10), end);
     if (min_length.is_some()) {
         flags.min_field_width = min_length.get();
         i += fmt.slice_from(i).length() - end.length();
