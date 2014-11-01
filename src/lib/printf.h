@@ -46,7 +46,7 @@ enum class Case : uint8_t {
 struct ConvFlags {
     unsigned min_field_width;
     Case letter_case;
-    uint8_t base;
+    Radix base;
     char pad_char;
 };
 
@@ -66,10 +66,10 @@ template <class T>
 constexpr ConvFlags default_flags()
 {
     return ConvFlags {
-        .base = 10,
+        .min_field_width = 0,
         .letter_case = Case::LOWER,
-        .pad_char = ' ',
-        .min_field_width = 0
+        .base = 10,
+        .pad_char = ' '
     };
 }
 
@@ -77,10 +77,10 @@ template <>
 constexpr ConvFlags default_flags<const void *>()
 {
     return ConvFlags {
-        .base = 16,
+        .min_field_width = 0,
         .letter_case = Case::LOWER,
-        .pad_char = ' ',
-        .min_field_width = 0
+        .base = 16,
+        .pad_char = ' '
     };
 }
 

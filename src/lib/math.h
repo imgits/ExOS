@@ -42,13 +42,13 @@ bool mul_overflow(long x, long y, long &prod);
 bool mul_overflow(long long x, long long y, long long &prod);
 
 // Wrapper of a number with (runtime) range checking on construction.
-template <class T>
+template <class T, intmax_t min, uintmax_t max>
 class RangedNumber {
 private:
     T m_num;
 
 public:
-    constexpr RangedNumber(T x, intmax_t min, uintmax_t max) :
+    constexpr RangedNumber(T x) :
     m_num(x)
     {
         assert(x >= min);
@@ -61,16 +61,5 @@ public:
     }
 };
 
-class Radix {
-private:
-    RangedNumber<unsigned> m_num;
-
-public:
-    constexpr Radix(unsigned x) :
-    m_num(x, 2, 36) { }
-
-    constexpr operator unsigned() const
-    {
-        return m_num;
-    }
-};
+using Radix = RangedNumber<uint8_t, 2, 36>;
+using Digit = RangedNumber<uint8_t, 0, 36>;
