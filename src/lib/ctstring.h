@@ -24,7 +24,7 @@ template <char... Chars>
 struct CTString { };
 
 template <class T, T... Ts>
-constexpr CTString<Ts...> operator"" _cts()
+constexpr CTString<Ts...> operator"" _c()
 {
     return CTString<Ts...>();
 }

@@ -22,7 +22,7 @@
 void abort(const char *cond, size_t cond_size, const char *func,
            size_t func_size, const char *file, size_t file_size, int line)
 {
-    printf("():(): (): Assertion '()' failed.\n"_cts,
+    printf("():(): (): Assertion '()' failed.\n"_c,
            StringRef(file, file_size), line, StringRef(func, func_size),
            StringRef(cond, cond_size));
     Asm::hlt();

@@ -112,40 +112,40 @@ void Framebuffer::initialize(const EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE &gop_mode)
 
     switch (gop_mode.Info->PixelFormat) {
     case PixelRedGreenBlueReserved8BitPerColor:
-        g_color_array[to_underlying_type(Color::BLACK)] = 0x00000000;
-        g_color_array[to_underlying_type(Color::WHITE)] = 0x00ffffff;
-        g_color_array[to_underlying_type(Color::RED)] = 0x000000ff;
-        g_color_array[to_underlying_type(Color::LIME)] = 0x0000ff00;
-        g_color_array[to_underlying_type(Color::BLUE)] = 0x00ff0000;
-        g_color_array[to_underlying_type(Color::YELLOW)] = 0x0000ffff;
-        g_color_array[to_underlying_type(Color::CYAN)] = 0x00ffff00;
+        g_color_array[to_underlying_type(Color::BLACK)]   = 0x00000000;
+        g_color_array[to_underlying_type(Color::WHITE)]   = 0x00ffffff;
+        g_color_array[to_underlying_type(Color::RED)]     = 0x000000ff;
+        g_color_array[to_underlying_type(Color::LIME)]    = 0x0000ff00;
+        g_color_array[to_underlying_type(Color::BLUE)]    = 0x00ff0000;
+        g_color_array[to_underlying_type(Color::YELLOW)]  = 0x0000ffff;
+        g_color_array[to_underlying_type(Color::CYAN)]    = 0x00ffff00;
         g_color_array[to_underlying_type(Color::MAGENTA)] = 0x00ff00ff;
-        g_color_array[to_underlying_type(Color::SILVER)] = 0x00c0c0c0;
-        g_color_array[to_underlying_type(Color::GRAY)] = 0x00808080;
-        g_color_array[to_underlying_type(Color::MAROON)] = 0x00000080;
-        g_color_array[to_underlying_type(Color::OLIVE)] = 0x00008080;
-        g_color_array[to_underlying_type(Color::GREEN)] = 0x00008000;
-        g_color_array[to_underlying_type(Color::PURPLE)] = 0x00800080;
-        g_color_array[to_underlying_type(Color::TEAL)] = 0x00808000;
-        g_color_array[to_underlying_type(Color::NAVY)] = 0x00800000;
+        g_color_array[to_underlying_type(Color::SILVER)]  = 0x00c0c0c0;
+        g_color_array[to_underlying_type(Color::GRAY)]    = 0x00808080;
+        g_color_array[to_underlying_type(Color::MAROON)]  = 0x00000080;
+        g_color_array[to_underlying_type(Color::OLIVE)]   = 0x00008080;
+        g_color_array[to_underlying_type(Color::GREEN)]   = 0x00008000;
+        g_color_array[to_underlying_type(Color::PURPLE)]  = 0x00800080;
+        g_color_array[to_underlying_type(Color::TEAL)]    = 0x00808000;
+        g_color_array[to_underlying_type(Color::NAVY)]    = 0x00800000;
         break;
     case PixelBlueGreenRedReserved8BitPerColor:
-        g_color_array[to_underlying_type(Color::BLACK)] = 0x00000000;
-        g_color_array[to_underlying_type(Color::WHITE)] = 0x00ffffff;
-        g_color_array[to_underlying_type(Color::RED)] = 0x00ff0000;
-        g_color_array[to_underlying_type(Color::LIME)] = 0x0000ff00;
-        g_color_array[to_underlying_type(Color::BLUE)] = 0x000000ff;
-        g_color_array[to_underlying_type(Color::YELLOW)] = 0x00ffff00;
-        g_color_array[to_underlying_type(Color::CYAN)] = 0x0000ffff;
+        g_color_array[to_underlying_type(Color::BLACK)]   = 0x00000000;
+        g_color_array[to_underlying_type(Color::WHITE)]   = 0x00ffffff;
+        g_color_array[to_underlying_type(Color::RED)]     = 0x00ff0000;
+        g_color_array[to_underlying_type(Color::LIME)]    = 0x0000ff00;
+        g_color_array[to_underlying_type(Color::BLUE)]    = 0x000000ff;
+        g_color_array[to_underlying_type(Color::YELLOW)]  = 0x00ffff00;
+        g_color_array[to_underlying_type(Color::CYAN)]    = 0x0000ffff;
         g_color_array[to_underlying_type(Color::MAGENTA)] = 0x00ff00ff;
-        g_color_array[to_underlying_type(Color::SILVER)] = 0x00c0c0c0;
-        g_color_array[to_underlying_type(Color::GRAY)] = 0x00808080;
-        g_color_array[to_underlying_type(Color::MAROON)] = 0x00800000;
-        g_color_array[to_underlying_type(Color::OLIVE)] = 0x00808000;
-        g_color_array[to_underlying_type(Color::GREEN)] = 0x00008000;
-        g_color_array[to_underlying_type(Color::PURPLE)] = 0x00800080;
-        g_color_array[to_underlying_type(Color::TEAL)] = 0x00008080;
-        g_color_array[to_underlying_type(Color::NAVY)] = 0x00000080;
+        g_color_array[to_underlying_type(Color::SILVER)]  = 0x00c0c0c0;
+        g_color_array[to_underlying_type(Color::GRAY)]    = 0x00808080;
+        g_color_array[to_underlying_type(Color::MAROON)]  = 0x00800000;
+        g_color_array[to_underlying_type(Color::OLIVE)]   = 0x00808000;
+        g_color_array[to_underlying_type(Color::GREEN)]   = 0x00008000;
+        g_color_array[to_underlying_type(Color::PURPLE)]  = 0x00800080;
+        g_color_array[to_underlying_type(Color::TEAL)]    = 0x00008080;
+        g_color_array[to_underlying_type(Color::NAVY)]    = 0x00000080;
         break;
     case PixelBitMask:
     case PixelBltOnly:

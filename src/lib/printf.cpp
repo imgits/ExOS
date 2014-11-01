@@ -97,7 +97,7 @@ size_t _Private::to_string(MutStringRef &buf, ConvFlags flags, unsigned long lon
         arg /= flags.base;
     } while (arg != 0);
 
-    for (; flags.min_field_width-->0; ) {
+    while (flags.min_field_width-->0) {
         ++cnt;
 
         if (buf.is_space_left())

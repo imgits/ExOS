@@ -90,3 +90,27 @@ T *align(T *x, size_t alignment)
 {
     return reinterpret_cast<T *>(align(reinterpret_cast<uintptr_t>(x), alignment));
 }
+
+// Some RAII + macro magic to create a lightweight defer facility.
+template <class T>
+class Defer {
+private:
+    T m_x;
+
+public:
+    constexpr Defer(T x) : m_x(x) { }
+
+    constexpr Defer(Defer&&) = default;
+
+    ~Defer() { m_x(); }
+};
+
+template <class T>
+constexpr Defer<T> make_defer(T x)
+{
+    return Defer<T>(x);
+}
+
+#define CONCAT_IMPL(x, y) x##y
+#define CONCAT(x, y) CONCAT_IMPL(x, y)
+#define defer(x) auto CONCAT(deferred, __COUNTER__) = make_defer((x))

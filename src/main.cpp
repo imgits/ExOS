@@ -49,11 +49,11 @@ EFI_STATUS kmain(EFI_HANDLE handle, EFI_SYSTEM_TABLE *systab)
 
     Framebuffer::clear_screen();
 
-    printf("Welcome to ExOS!\n\n"_cts);
+    printf("Welcome to ExOS!\n"_c);
 
     const Maybe<Acpi::Rsdp &> rsdp = Uefi::get_acpi_rsdp(*systab);
     if (rsdp.is_none()) {
-        printf("No ACPI table found! Halting...\n"_cts);
+        printf("No ACPI table found! Halting...\n"_c);
         Asm::hlt();
     }
 
@@ -74,7 +74,7 @@ EFI_STATUS kmain(EFI_HANDLE handle, EFI_SYSTEM_TABLE *systab)
 
     Cpuid::initialize();
 
-    printf("Boot was successful. Halting...\n"_cts);
+    printf("Boot was successful. Halting...\n"_c);
 
     Asm::hlt();
 }

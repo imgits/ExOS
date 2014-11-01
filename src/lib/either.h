@@ -43,7 +43,7 @@ namespace _Private {
 // As another limitation, we sadly need to do this outside the class.
 
 template <class T, class U, bool B = std::is_lvalue_reference<T>::value>
-struct dummy { };
+struct dummy;
 
 template <class T, class U>
 struct dummy<T, U, true> {
@@ -91,22 +91,22 @@ private:
 
     // Wrap the dummy structs's functions for convenience.
 
-    static constexpr A construct_left(T x)
+    static constexpr A construct(T x)
     {
         return _Private::dummy<T, A>::construct(x);
     }
 
-    static constexpr B construct_right(U x)
+    static constexpr B construct(U x)
     {
         return _Private::dummy<U, B>::construct(x);
     }
 
-    static constexpr T ret_left(A x)
+    static constexpr T ret(A x)
     {
         return _Private::dummy<T, A>::ret(x);
     }
 
-    static constexpr U ret_right(B x)
+    static constexpr U ret(B x)
     {
         return _Private::dummy<U, B>::ret(x);
     }
@@ -119,13 +119,13 @@ private:
 
 public:
     constexpr Either(T x)
-    : m_left(construct_left(x))
+    : m_left(construct(x))
     , m_tag(Tag::LEFT)
     {
     }
 
     constexpr Either(U x)
-    : m_right(construct_right(x))
+    : m_right(construct(x))
     , m_tag(Tag::RIGHT)
     {
     }
@@ -133,13 +133,13 @@ public:
     constexpr T left() const
     {
         assert(is_left());
-        return ret_left(m_left);
+        return ret(m_left);
     }
 
     constexpr U right() const
     {
         assert(is_right());
-        return ret_right(m_right);
+        return ret(m_right);
     }
 
     constexpr bool is_left() const

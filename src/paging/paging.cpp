@@ -38,13 +38,15 @@ void *get_largest_free_memory_region(const Uefi::MemoryMap &map, size_t &limit)
     EFI_MEMORY_DESCRIPTOR *desc = &map.memory_map[0];
     UINTN cnt = map.memory_map_size / map.descriptor_size;
 
-    for (; cnt-->0; inc_ptr_by_num_bytes(desc, map.descriptor_size)) {
+    while (cnt-->0) {
         if (desc->Type == EfiConventionalMemory && desc->NumberOfPages > num_pages) {
             num_pages = desc->NumberOfPages;
             addr = reinterpret_cast<void *>(desc->PhysicalStart);
         }
 
         limit = desc->PhysicalStart / Paging::PAGE_SIZE + desc->NumberOfPages;
+
+        inc_ptr_by_num_bytes(desc, map.descriptor_size);
     }
 
     assert(addr != nullptr);

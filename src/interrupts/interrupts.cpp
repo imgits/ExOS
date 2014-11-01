@@ -29,7 +29,7 @@ StringRef priv_to_string(uint8_t priv)
     switch (priv) {
     case to_underlying_type(Descriptors::PrivilegeLevel::KERNEL): return "Kernel"_s;
     case to_underlying_type(Descriptors::PrivilegeLevel::USER):   return "User"_s;
-    default: return ""_s;
+    default: assert(0 && "Invalid privilege level");
     }
 }
 
@@ -38,25 +38,24 @@ StringRef ti_to_string(uint8_t ti)
     switch (ti) {
     case to_underlying_type(Descriptors::TableIndicator::GDT): return "GDT"_s;
     case to_underlying_type(Descriptors::TableIndicator::LDT): return "LDT"_s;
-    default: return ""_s;
+    default: assert(0 && "Invalid Table Indicator");
     }
 }
 
 void print_selector(Descriptors::SegmentSelector sel)
 {
-    printf("() ()[()]\n"_cts, priv_to_string(sel.requestor_privilege_level),
-                              ti_to_string(sel.table_indicator),
-                              sel.selector_index / 2);
+    printf("() ()[()]\n"_c, priv_to_string(sel.requestor_privilege_level),
+           ti_to_string(sel.table_indicator), sel.selector_index / 2);
 }
 
 void print_stack(const Interrupts::StackNoErrorCode &stack)
 {
-    printf("RIP: 0x(016x)\n"_cts, stack.return_rip);
-    printf("CS: "_cts);
+    printf("RIP: 0x(016x)\n"_c, stack.return_rip);
+    printf("CS: "_c);
     print_selector(stack.return_cs);
-    printf("RFLAGS: 0x(016x)\n"_cts, *reinterpret_cast<const uint64_t *>(&stack.rflags));
-    printf("RSP: 0x(016x)\n"_cts, stack.return_rsp);
-    printf("SS: "_cts);
+    printf("RFLAGS: 0x(016x)\n"_c, *reinterpret_cast<const uint64_t *>(&stack.rflags));
+    printf("RSP: 0x(016x)\n"_c, stack.return_rsp);
+    printf("SS: "_c);
     print_selector(stack.return_ss);
 }
 
@@ -70,7 +69,7 @@ extern "C" {
 [[noreturn]] SYSV_ABI void
 intr_div_by_zero_cpp(const Interrupts::StackNoErrorCode *stack)
 {
-    printf("[INTERRUPT]: Division by Zero\n"_cts);
+    printf("[INTERRUPT]: Division by Zero\n"_c);
     print_stack(*stack);
     Asm::hlt();
 }
@@ -78,7 +77,7 @@ intr_div_by_zero_cpp(const Interrupts::StackNoErrorCode *stack)
 [[noreturn]] SYSV_ABI void
 intr_debug_cpp(const Interrupts::StackNoErrorCode *stack)
 {
-    printf("[INTERRUPT]: Debug\n"_cts);
+    printf("[INTERRUPT]: Debug\n"_c);
     print_stack(*stack);
     Asm::hlt();
 }
@@ -86,7 +85,7 @@ intr_debug_cpp(const Interrupts::StackNoErrorCode *stack)
 [[noreturn]] SYSV_ABI void
 intr_nmi_cpp(const Interrupts::StackNoErrorCode *stack)
 {
-    printf("[INTERRUPT]: NMI\n"_cts);
+    printf("[INTERRUPT]: NMI\n"_c);
     print_stack(*stack);
     Asm::hlt();
 }
@@ -94,7 +93,7 @@ intr_nmi_cpp(const Interrupts::StackNoErrorCode *stack)
 [[noreturn]] SYSV_ABI void
 intr_breakpoint_cpp(const Interrupts::StackNoErrorCode *stack)
 {
-    printf("[INTERRUPT]: Breakpoint\n"_cts);
+    printf("[INTERRUPT]: Breakpoint\n"_c);
     print_stack(*stack);
     Asm::hlt();
 }
@@ -102,7 +101,7 @@ intr_breakpoint_cpp(const Interrupts::StackNoErrorCode *stack)
 [[noreturn]] SYSV_ABI void
 intr_overflow_cpp(const Interrupts::StackNoErrorCode *stack)
 {
-    printf("[INTERRUPT]: Overflow\n"_cts);
+    printf("[INTERRUPT]: Overflow\n"_c);
     print_stack(*stack);
     Asm::hlt();
 }
@@ -110,7 +109,7 @@ intr_overflow_cpp(const Interrupts::StackNoErrorCode *stack)
 [[noreturn]] SYSV_ABI void
 intr_bound_range_cpp(const Interrupts::StackNoErrorCode *stack)
 {
-    printf("[INTERRUPT]: Bound Range\n"_cts);
+    printf("[INTERRUPT]: Bound Range\n"_c);
     print_stack(*stack);
     Asm::hlt();
 }
@@ -118,7 +117,7 @@ intr_bound_range_cpp(const Interrupts::StackNoErrorCode *stack)
 [[noreturn]] SYSV_ABI void
 intr_invalid_opcode_cpp(const Interrupts::StackNoErrorCode *stack)
 {
-    printf("[INTERRUPT]: Invalid Opcode\n"_cts);
+    printf("[INTERRUPT]: Invalid Opcode\n"_c);
     print_stack(*stack);
     Asm::hlt();
 }
@@ -126,7 +125,7 @@ intr_invalid_opcode_cpp(const Interrupts::StackNoErrorCode *stack)
 [[noreturn]] SYSV_ABI void
 intr_device_not_available_cpp(const Interrupts::StackNoErrorCode *stack)
 {
-    printf("[INTERRUPT]: Device not Available\n"_cts);
+    printf("[INTERRUPT]: Device not Available\n"_c);
     print_stack(*stack);
     Asm::hlt();
 }
@@ -134,7 +133,7 @@ intr_device_not_available_cpp(const Interrupts::StackNoErrorCode *stack)
 [[noreturn]] SYSV_ABI void
 intr_double_fault_cpp(const Interrupts::StackWithErrorCode *stack)
 {
-    printf("[INTERRUPT]: Double Fault\n"_cts);
+    printf("[INTERRUPT]: Double Fault\n"_c);
     print_stack(stack->rest_of_stack);
     Asm::hlt();
 }
@@ -142,7 +141,7 @@ intr_double_fault_cpp(const Interrupts::StackWithErrorCode *stack)
 [[noreturn]] SYSV_ABI void
 intr_invalid_tss_cpp(const Interrupts::StackWithErrorCode *stack)
 {
-    printf("[INTERRUPT]: Invalid TSS\n"_cts);
+    printf("[INTERRUPT]: Invalid TSS\n"_c);
     print_stack(stack->rest_of_stack);
     Asm::hlt();
 }
@@ -150,7 +149,7 @@ intr_invalid_tss_cpp(const Interrupts::StackWithErrorCode *stack)
 [[noreturn]] SYSV_ABI void
 intr_segment_not_present_cpp(const Interrupts::StackWithErrorCode *stack)
 {
-    printf("[INTERRUPT]: Segment not Present\n"_cts);
+    printf("[INTERRUPT]: Segment not Present\n"_c);
     print_stack(stack->rest_of_stack);
     Asm::hlt();
 }
@@ -158,7 +157,7 @@ intr_segment_not_present_cpp(const Interrupts::StackWithErrorCode *stack)
 [[noreturn]] SYSV_ABI void
 intr_stack_cpp(const Interrupts::StackWithErrorCode *stack)
 {
-    printf("[INTERRUPT]: Stack\n"_cts);
+    printf("[INTERRUPT]: Stack\n"_c);
     print_stack(stack->rest_of_stack);
     Asm::hlt();
 }
@@ -166,7 +165,7 @@ intr_stack_cpp(const Interrupts::StackWithErrorCode *stack)
 [[noreturn]] SYSV_ABI void
 intr_general_protection_cpp(const Interrupts::StackWithErrorCode *stack)
 {
-    printf("[INTERRUPT]: General Protection\n"_cts);
+    printf("[INTERRUPT]: General Protection\n"_c);
     print_stack(stack->rest_of_stack);
     Asm::hlt();
 }
@@ -174,7 +173,7 @@ intr_general_protection_cpp(const Interrupts::StackWithErrorCode *stack)
 [[noreturn]] SYSV_ABI void
 intr_page_fault_cpp(const Interrupts::StackWithErrorCode *stack)
 {
-    printf("[INTERRUPT]: Page Fault\n"_cts);
+    printf("[INTERRUPT]: Page Fault\n"_c);
     print_stack(stack->rest_of_stack);
     Asm::hlt();
 }
@@ -182,7 +181,7 @@ intr_page_fault_cpp(const Interrupts::StackWithErrorCode *stack)
 [[noreturn]] SYSV_ABI void
 intr_x87_floating_point_cpp(const Interrupts::StackNoErrorCode *stack)
 {
-    printf("[INTERRUPT]: x87 Floating Point\n"_cts);
+    printf("[INTERRUPT]: x87 Floating Point\n"_c);
     print_stack(*stack);
     Asm::hlt();
 }
@@ -190,7 +189,7 @@ intr_x87_floating_point_cpp(const Interrupts::StackNoErrorCode *stack)
 [[noreturn]] SYSV_ABI void
 intr_alignment_check_cpp(const Interrupts::StackWithErrorCode *stack)
 {
-    printf("[INTERRUPT]: Alignment Check\n"_cts);
+    printf("[INTERRUPT]: Alignment Check\n"_c);
     print_stack(stack->rest_of_stack);
     Asm::hlt();
 }
@@ -198,7 +197,7 @@ intr_alignment_check_cpp(const Interrupts::StackWithErrorCode *stack)
 [[noreturn]] SYSV_ABI void
 intr_machine_check_cpp(const Interrupts::StackNoErrorCode *stack)
 {
-    printf("[INTERRUPT]: Machine Check\n"_cts);
+    printf("[INTERRUPT]: Machine Check\n"_c);
     print_stack(*stack);
     Asm::hlt();
 }
@@ -206,7 +205,7 @@ intr_machine_check_cpp(const Interrupts::StackNoErrorCode *stack)
 [[noreturn]] SYSV_ABI void
 intr_simd_floating_point_cpp(const Interrupts::StackNoErrorCode *stack)
 {
-    printf("[INTERRUPT]: SIMD Floating Point\n"_cts);
+    printf("[INTERRUPT]: SIMD Floating Point\n"_c);
     print_stack(*stack);
     Asm::hlt();
 }
